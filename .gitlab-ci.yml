@@ -1,0 +1,13 @@
+image: docker/compose:1.25.0-alpine
+
+before_script:
+  - docker-compose -v
+  
+stages:
+  - build
+
+build:
+  stage: build
+  script:
+    - docker-compose build
+    - docker-compose run --rm backend yarn

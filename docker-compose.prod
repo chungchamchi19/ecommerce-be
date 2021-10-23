@@ -1,0 +1,44 @@
+version: "3"
+
+networks:
+  ecommerce:
+    external:
+      name: ecommerce
+
+services:
+  mariadb:
+    image: mariadb:latest
+    # restart: always
+    volumes:
+      - ecommerce-mariadb:/var/lib/mysql
+
+    networks:
+      - ecommerce
+    environment:
+      - TZ=Asia/Ho_Chi_Minh
+      - MYSQL_ROOT_PASSWORD=123qwe
+      - MYSQl_TCP_PORT=33030
+      - MYSQL_UNIX_PORT=33020
+    ports:
+      - "3307:3306"
+  backend:
+    build:
+      context: .
+      dockerfile: ${DOCKER_FILE}
+    command: yarn start:prod
+    volumes:
+      - ./:/app:cached
+    networks:
+      - ecommerce
+    # restart: always
+    ports:
+      - ${PORT}:${PORT}
+    environment:
+      - TZ=Asia/Ho_Chi_Minh
+      - PORT=${PORT}
+    depends_on:
+      - mariadb
+
+volumes:
+  ecommerce-mariadb:
+  notused:
