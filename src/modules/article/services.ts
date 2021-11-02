@@ -1,8 +1,9 @@
-import { ArticleCreateParamsType, ArticleUpdateParamsType } from '../../../types/type.article';
-import articleTagServices from '../../articleTag/services';
-import articleDao from '../daos/article';
+import { ArticleCreateParamsType, ArticleUpdateParamsType } from "../../types/type.article";
+import { Pagination } from "../../types/type.pagination";
+import articleTagServices from "../articleTag/services";
+import articleDao from "./daos";
 
-const createArticle = async (article: ArticleCreateParamsType, tags: { id: number }[]) => {
+const createArticle = async (article: ArticleCreateParamsType, tags: { id: number }[] = []) => {
   const newArticle = await articleDao.createArticle(article);
   await tags.forEach(async (tag) => {
     await articleTagServices.create({
@@ -43,4 +44,8 @@ const updateArticleById = async (
   return await articleDao.updateArticle(articleId, articleData, tags);
 };
 
-export default { createArticle, getArticlesByUserId, getArticleById, updateArticleById };
+const getAllArticles = async (params: Pagination) => {
+  return await articleDao.getAllArticles(params);
+};
+
+export default { createArticle, getArticlesByUserId, getArticleById, updateArticleById, getAllArticles };

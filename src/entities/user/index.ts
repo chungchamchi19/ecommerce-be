@@ -1,6 +1,6 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Article } from '../article';
-import { Tag } from '../tag';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Article } from "../article";
+import { Tag } from "../tag";
 
 @Entity()
 export class User {
@@ -18,6 +18,12 @@ export class User {
 
   @Column()
   password: string;
+
+  @Column({ type: "enum", default: "user" })
+  role: "admin" | "user";
+
+  @Column({ nullable: true })
+  deviceId: string | null;
 
   @OneToMany(() => Article, (article) => article.user) articles?: Article[];
 

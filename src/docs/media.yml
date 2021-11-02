@@ -1,0 +1,51 @@
+paths:
+  /api/v1/media:
+    post:
+      summary: create media
+      tags:
+        - Media
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                files:
+                  type: file
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  result:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      token:
+                        type: string
+  /api/v1/media/{id}:
+    get:
+      summary: get media
+      tags:
+        - Media
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          description: media id
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object

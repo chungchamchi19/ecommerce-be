@@ -1,0 +1,85 @@
+paths:
+  /api/v1/articles:
+    post:
+      summary: Create an article
+      tags:
+        - Articles
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                content:
+                  type: string
+                avatar:
+                  type: number
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  result:
+                    type: object
+
+  /api/v1/customers/articles:
+    get:
+      summary: get all article
+      tags:
+        - Articles
+      parameters:
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: The number of items to skip before starting to collect the result set
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: The number of items to collect the result set
+
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  result:
+                    type: object
+  /api/v1/articles/{id}:
+    get:
+      summary: get all article
+      tags:
+        - Articles
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: article id
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  result:
+                    type: object
