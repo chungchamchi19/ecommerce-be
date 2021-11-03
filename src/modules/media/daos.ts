@@ -12,8 +12,6 @@ const createMedia = async (params: {
   media.link = params.url;
   media.targetId = params.targetId || null;
   media.targetType = params.targetType || null;
-  media.createdAt = new Date();
-  media.updatedAt = new Date();
   media.type = params.type;
   return await mediaRepo.save(media);
 };
@@ -24,9 +22,16 @@ const getMediaById = async (id: number): Promise<Media> => {
   return media;
 };
 
+const updateMedia = async (id: number, data: Media): Promise<Media> => {
+  const mediaRepo = getRepository(Media);
+  await mediaRepo.update(id, data);
+  return data;
+};
+
 const mediaDaos = {
   createMedia,
   getMediaById,
+  updateMedia,
 };
 
 export default mediaDaos;

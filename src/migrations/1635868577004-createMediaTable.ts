@@ -30,10 +30,13 @@ export class createMediaTable1635868577004 implements MigrationInterface {
           {
             name: "createdAt",
             type: "datetime",
+            default: "CURRENT_TIMESTAMP(6)",
           },
           {
             name: "updatedAt",
             type: "datetime",
+            default: "CURRENT_TIMESTAMP(6)",
+            onUpdate: "CURRENT_TIMESTAMP(6)",
           },
           {
             name: "type",
