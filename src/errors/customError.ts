@@ -1,4 +1,4 @@
-import getErrorMessage from './getErrorMessage';
+import getErrorMessage from "./getErrorMessage";
 
 class CustomError {
   private code: number;
@@ -6,7 +6,7 @@ class CustomError {
 
   constructor(code: number, message?: string) {
     this.code = code;
-    this.message = getErrorMessage(code) || message as string;
+    this.message = message || getErrorMessage(code) || "Bad Request";
   }
 }
 

@@ -1,6 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Article } from "../article";
-import { Tag } from "../tag";
+import { Article } from "./article";
+import { Tag } from "./tag";
 
 @Entity()
 export class User {

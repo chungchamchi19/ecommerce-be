@@ -1,9 +1,8 @@
 import { getRepository } from "typeorm";
-import { User } from "../../../entities/user";
 import codes from "../../../errors/codes";
 import CustomError from "../../../errors/customError";
 import { Register } from "../../../types/type.auth";
-import { User as UserType } from "../../../entities/user";
+import { User } from "../../../entities/user";
 
 const createUser = async (dataRegister: Register) => {
   const userReposity = getRepository(User);
@@ -25,7 +24,7 @@ const createUser = async (dataRegister: Register) => {
 
 const findUser = async (dataFind: { email?: string; id?: number; deviceId?: string }) => {
   const userReposity = getRepository(User);
-  let user: UserType;
+  let user: User;
   if (dataFind.email) {
     user = await userReposity.findOne({
       where: {

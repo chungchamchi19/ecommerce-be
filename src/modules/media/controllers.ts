@@ -11,7 +11,7 @@ const uploadImage = async (req: Request, res: Response) => {
   }
   const listMedia: Media[] = await mediaServices.createMedia(req.files as Express.Multer.File[]);
   res.status(200).json({
-    stats: "success",
+    status: "success",
     result: listMedia,
   });
 };
