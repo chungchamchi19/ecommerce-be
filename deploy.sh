@@ -3,5 +3,5 @@
 cp docker-compose.prod docker-compose.yml && \
 cp Dockerfile.prod Dockerfile && \
 docker-compose build && \
-docker-compose run --rm web yarn && \
+docker-compose run --rm backend yarn && \
 docker-compose up -d --force-recreate
