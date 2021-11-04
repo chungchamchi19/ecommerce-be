@@ -3,7 +3,13 @@ import { Request, Response } from "express";
 import productServices from "./services";
 
 const createProduct = async (req: Request, res: Response) => {
-  const { title, description, status, price, comparePrice, url, vendorId, featureImageId } = req.body;
+  const { title, description, status, price, comparePrice, url, vendorId, featureImageId, media } = req.body;
+  let formatMedia =
+    media?.map((item: number) => {
+      return {
+        id: item,
+      };
+    }) || 0;
   const productData: Product = {
     title,
     description,
@@ -13,6 +19,7 @@ const createProduct = async (req: Request, res: Response) => {
     url,
     vendorId,
     featureImageId,
+    media: formatMedia,
   };
   const newProduct = await productServices.createProduct(productData);
   res.status(200).json({
@@ -41,7 +48,14 @@ const getProducts = async (req: Request, res: Response) => {
 
 const updateProduct = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const data: Product = req.body;
+  const data = req.body;
+  if (data.media && data.media.length) {
+    data.media = data.media.map((item: number) => {
+      return {
+        id: item,
+      };
+    });
+  }
   const product = await productServices.updateProduct(Number(id), data);
   res.status(200).json({
     status: "success",

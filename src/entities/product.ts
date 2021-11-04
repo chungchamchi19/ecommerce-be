@@ -37,7 +37,10 @@ export class Product {
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP", onUpdate: "CURRENT_TIMESTAMP" })
   updatedAt?: Date;
 
-  @OneToOne(() => Media, (media) => media.id)
-  @JoinColumn({ name: "featureImageId" })
+  @OneToOne(() => Media, (media) => media.product)
+  @JoinColumn({ name: "featureImageId", referencedColumnName: "id" })
   featureImage?: Media;
+
+  @OneToMany(() => Media, (media) => media.product)
+  media?: Media[];
 }

@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm";
 import "reflect-metadata";
+import { Product } from "./product";
 
 @Entity()
 export class Media {
@@ -12,7 +13,7 @@ export class Media {
   @Column({ nullable: true })
   targetType?: string;
 
-  @Column()
+  @Column({ select: false })
   link?: string;
 
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
@@ -23,4 +24,8 @@ export class Media {
 
   @Column()
   type?: string;
+
+  @ManyToOne(() => Product, (product) => product.media)
+  @JoinColumn({ name: "targetId", referencedColumnName: "id" })
+  product?: Product;
 }

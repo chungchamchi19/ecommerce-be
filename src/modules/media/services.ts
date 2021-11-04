@@ -22,19 +22,24 @@ const getMediaById = async (id: number): Promise<Media> => {
   return await mediaDaos.getMediaById(id);
 };
 
-const updateMedia = async (id: number, mediaData: Media): Promise<Media> => {
+const updateMedia = async (
+  id: number,
+  mediaData: Media,
+  oldTargetData?: { targetId: number; targetType: string },
+): Promise<Media> => {
   const updateMedia = await mediaDaos.getMediaById(id);
   if (!updateMedia) {
     throw new CustomError(codes.NOT_FOUND, "Media not found!");
   }
-  // nếu media này đã đc gắn với 1 sản phầm nào đó thì tạo ra 1 record mới
-  if (updateMedia.targetId) {
-    return await mediaDaos.createMedia({
-      url: updateMedia.link,
-      type: updateMedia.type,
-      targetType: mediaData.targetType,
-      targetId: mediaData.targetId,
-    });
+  // nếu media này đã đc gắn với 1 sản phầm nào đó thì dung lai
+  if (
+    updateMedia.targetId &&
+    updateMedia.targetType &&
+    (!oldTargetData ||
+      updateMedia.targetId !== oldTargetData.targetId ||
+      updateMedia.targetType !== oldTargetData.targetType)
+  ) {
+    throw new CustomError(codes.BAD_REQUEST, "Media can not update!");
   }
   delete mediaData.id;
   const newMedia = {

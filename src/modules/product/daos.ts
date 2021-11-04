@@ -12,7 +12,12 @@ const createProduct = async (productData: Product): Promise<Product> => {
 
 const getProductById = async (id: number): Promise<Product> => {
   const productRepo = getRepository(Product);
-  const product = await productRepo.findOne(id);
+  const product = await productRepo
+    .createQueryBuilder("p")
+    .leftJoinAndSelect("p.media", "m", `m.targetType='product'`)
+    .leftJoinAndSelect("p.featureImage", "fm", "fm.targetType='product'")
+    .where(`p.id=${id}`)
+    .getOne();
   return product;
 };
 
@@ -20,6 +25,8 @@ const getProducts = async (params: { pagination: Pagination; url?: string }): Pr
   const productRepo = getRepository(Product);
   const products = await productRepo
     .createQueryBuilder("p")
+    .leftJoinAndSelect("p.media", "m", "m.targetType='product'")
+    .leftJoinAndSelect("p.featureImage", "fm", "fm.targetType='product'")
     .skip(params.pagination.offset)
     .take(params.pagination.limit)
     .getMany();

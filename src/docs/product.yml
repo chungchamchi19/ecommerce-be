@@ -26,6 +26,10 @@ paths:
                   type: number
                 featureImageId:
                   type: number
+                media:
+                  type: array
+                  items:
+                    type: number
       responses:
         "200": # status code
           description: Json format of srt file
@@ -115,6 +119,10 @@ paths:
                   type: number
                 featureImageId:
                   type: number
+                media:
+                  type: array
+                  items:
+                    type: number
       responses:
         "200": # status code
           description: Json format of srt file
