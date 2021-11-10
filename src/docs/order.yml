@@ -1,0 +1,122 @@
+paths:
+  /api/v1/orders:
+    post:
+      summary: Create an order
+      tags:
+        - Orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: number
+                customerAddress:
+                  type: string
+                customerEmail:
+                  type: string
+                customerName:
+                  type: string
+                customerPhone:
+                  type: string
+                paymentMethod:
+                  type: string
+                status: 
+                  type: string
+                deliveryMethod:
+                  type: string
+                orderItems:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      variantId:
+                        type: number
+                      quantity:
+                        type: number
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  result:
+                    type: object
+    get:
+      summary: get orders
+      tags:
+        - Orders
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: number
+          description: limit order
+        - in: query
+          name: offset
+          schema:
+            type: number
+          description: skip number
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+  
+  /api/v1/orders/{id}:
+    get:
+      summary: get order by id
+      tags:
+        - Orders
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: order id
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  result:
+                    type: object
+  /api/v1/orders/getorderByUserId/{userId}:
+    get:
+      summary: get order by userId
+      tags:
+        - Orders
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+          description: userId
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  result:
+                    type: object
+    
+

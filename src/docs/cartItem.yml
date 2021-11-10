@@ -1,0 +1,140 @@
+paths:
+  /api/v1/cartItems:
+    post:
+      summary: Create an cartItem
+      tags:
+        - CartItems
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cartId:
+                  type: number
+                variantId:
+                  type: number
+                quantity:
+                  type: number
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  result:
+                    type: object
+
+    get:
+      summary: get all cartItem
+      tags:
+        - CartItems
+      parameters:
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: The number of items to skip before starting to collect the result set
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: The number of items to collect the result set
+
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  result:
+                    type: object
+  /api/v1/cartItems/{id}:
+    get:
+      summary: get all cartItem
+      tags:
+        - CartItems
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: cartItem id
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  result:
+                    type: object
+    put:
+      summary: Update an cartItem
+      tags:
+        - CartItems
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: cartItem id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cartId:
+                  type: number
+                variantId:
+                  type: number
+                quantity:
+                  type: number
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  result:
+                    type: object
+    delete:
+      summary: Update an cartItem
+      tags:
+        - CartItems
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: cartItem id
+      
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  result:
+                    type: object
+

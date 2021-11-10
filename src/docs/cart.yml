@@ -1,0 +1,74 @@
+paths:
+  /api/v1/carts:
+    post:
+      summary: Create an cart
+      tags:
+        - Carts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: number
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  result:
+                    type: object
+  /api/v1/carts/{id}:
+    get:
+      summary: get cart by id
+      tags:
+        - Carts
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: cart id
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  result:
+                    type: object
+  /api/v1/carts/getCartByUserId/{userId}:
+    get:
+      summary: get cart by userId
+      tags:
+        - Carts
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+          description: userId
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  result:
+                    type: object
+    
+

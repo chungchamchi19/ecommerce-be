@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToOne } from "typeorm";
 import "reflect-metadata";
 import { Product } from "./product";
+import { Variant } from "./variant";
 
 @Entity()
 export class Media {
@@ -28,4 +29,7 @@ export class Media {
   @ManyToOne(() => Product, (product) => product.media)
   @JoinColumn({ name: "targetId", referencedColumnName: "id" })
   product?: Product;
+
+  @OneToOne(() => Variant, (variant) => variant.featureImage)
+  variant?: Product;
 }

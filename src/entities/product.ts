@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany, OneToOne } from "typeorm";
 import "reflect-metadata";
 import { Media } from "./media";
+import { Variant } from "./variant";
 
 @Entity()
 export class Product {
@@ -43,4 +44,7 @@ export class Product {
 
   @OneToMany(() => Media, (media) => media.product)
   media?: Media[];
+
+  @OneToMany(() => Variant, (variant) => variant.product)
+  variants?: Variant[];
 }
