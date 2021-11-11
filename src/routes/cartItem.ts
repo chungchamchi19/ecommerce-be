@@ -5,19 +5,19 @@ import cartItemController from "../modules/cartItem/controllers";
 // import ROLES from "../constants/roles";
 const router = express.Router();
 
-router.post("/cartItems", 
+router.post("/cart-items", 
 // validateCreatecartItems(ROLES.ADMIN), 
 asyncMiddleware(cartItemController.createCartItem));
 router.put(
-  "/cartItems/:id",
+  "/cart-items/:id",
 //   validateCreatecartItems(ROLES.ADMIN),
   asyncMiddleware(cartItemController.updateCartItem),
 );
-router.get("/cartItems", asyncMiddleware(cartItemController.getCartItems));
+// router.get("/cart-items", asyncMiddleware(cartItemController.getCartItems));
 // router.get("/cartItems/cartItems", asyncMiddleware(cartItemController.getAllcartItems));
-router.get("/cartItems/:id", asyncMiddleware(cartItemController.getCartItemById));
+router.get("/cart-items/:id", asyncMiddleware(cartItemController.getCartItemById));
 router.delete(
-  "/cartItems/:id",
+  "/cart-items/:id",
 //   validateCreatecartItems(ROLES.ADMIN),
   asyncMiddleware(cartItemController.deleteCartItem),
 );

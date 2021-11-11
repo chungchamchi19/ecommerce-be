@@ -48,6 +48,9 @@ const getOrderById = async (id: number): Promise<Order> => {
   const order = await orderRepo
     .createQueryBuilder("c")
     .leftJoinAndSelect("c.orderItems", "orderItems")
+    .leftJoinAndSelect("orderItems.variant", "variant", "variant.id=orderItems.variantId")
+    .leftJoinAndSelect("variant.product", "product", "variant.productId=product.id")
+    
     // .leftJoinAndSelect("ci.featureImage", "fm", "fm.targetType='product'")
     .where(`c.id=${id}`)
     .getOne();
@@ -59,6 +62,8 @@ const getOrderByUserId = async (userId: number): Promise<Order[]> => {
   const order = await orderRepo
     .createQueryBuilder("o")
     .leftJoinAndSelect("o.orderItems", "orderItems")
+    .leftJoinAndSelect("orderItems.variant", "variant", "variant.id=orderItems.variantId")
+    .leftJoinAndSelect("variant.product", "product", "variant.productId=product.id")
     .where(`o.userId=${userId}`)
     .getMany();
   return order;
@@ -68,6 +73,9 @@ const getOrders = async (params: { pagination: Pagination }): Promise<Order[]> =
   return await orderRepo
     .createQueryBuilder("c")
     .leftJoinAndSelect("c.orderItems", "orderItems")
+    .leftJoinAndSelect("orderItems.variant", "variant", "variant.id=orderItems.variantId")
+    .leftJoinAndSelect("variant.product", "product", "variant.productId=product.id")
+    
     .skip(params.pagination.offset)
     .take(params.pagination.limit)
     .getMany();

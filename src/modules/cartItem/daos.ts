@@ -16,6 +16,7 @@ const getCartItemById = async (id: number): Promise<CartItem> => {
   const cartItem = await cartItemRepo
     .createQueryBuilder("ci")
     .leftJoinAndSelect("ci.variant", "variant")
+    .leftJoinAndSelect("variant.product", "product", "variant.productId=product.id")
     // .leftJoinAndSelect("ci.featureImage", "fm", "fm.targetType='product'")
     .where(`ci.id=${id}`)
     .getOne();
@@ -27,6 +28,7 @@ const getCartItems = async (params: { pagination: Pagination }): Promise<CartIte
   return await cartItemRepo
     .createQueryBuilder("ci")
     .leftJoinAndSelect("ci.variant", "variant")
+    .leftJoinAndSelect("variant.product", "product", "variant.productId=product.id")
     .skip(params.pagination.offset)
     .take(params.pagination.limit)
     .getMany();

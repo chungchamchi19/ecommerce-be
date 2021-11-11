@@ -15,8 +15,9 @@ const getCartById = async (id: number): Promise<Cart> => {
   const cart = await cartRepo
     .createQueryBuilder("c")
     .leftJoinAndSelect("c.cartItems", "cartItems")
-    // .leftJoinAndSelect("ci.featureImage", "fm", "fm.targetType='product'")
-    .where(`c.id=${id}`)
+    .leftJoinAndSelect("cartItems.variant", "variant", "variant.id=cartItems.variantId")
+    .leftJoinAndSelect("variant.product", "product", "variant.productId=product.id")
+    .where(`cartItems.id=${id}`)
     .getOne();
   return cart;
 };
@@ -26,6 +27,8 @@ const getCartByUserId = async (userId: number): Promise<Cart> => {
   const cart = await cartRepo
     .createQueryBuilder("c")
     .leftJoinAndSelect("c.cartItems", "cartItems")
+    .leftJoinAndSelect("cartItems.variant", "variant", "variant.id=cartItems.variantId")
+    .leftJoinAndSelect("variant.product", "product", "variant.productId=product.id")
     // .leftJoinAndSelect("ci.featureImage", "fm", "fm.targetType='product'")
     .where(`c.userId=${userId}`)
     .getOne();

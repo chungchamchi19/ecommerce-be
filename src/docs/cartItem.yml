@@ -1,5 +1,5 @@
 paths:
-  /api/v1/cartItems:
+  /api/v1/cart-items:
     post:
       summary: Create an cartItem
       tags:
@@ -29,35 +29,7 @@ paths:
                   result:
                     type: object
 
-    get:
-      summary: get all cartItem
-      tags:
-        - CartItems
-      parameters:
-        - in: query
-          name: offset
-          schema:
-            type: integer
-          description: The number of items to skip before starting to collect the result set
-        - in: query
-          name: limit
-          schema:
-            type: integer
-          description: The number of items to collect the result set
-
-      responses:
-        "200": # status code
-          description: Json format of srt file
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                  result:
-                    type: object
-  /api/v1/cartItems/{id}:
+  /api/v1/cart-items/{id}:
     get:
       summary: get all cartItem
       tags:
