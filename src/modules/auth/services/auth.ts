@@ -17,9 +17,9 @@ const register = async (dataRegister: Register) => {
 const login = async (dataLogin: Login) => {
   const { email, password } = dataLogin;
   const user: User = await userDao.findUser({ email });
-  if (!user) throw new CustomError(codes.USER_NOT_FOUND);
+  if (!user) throw new CustomError(codes.NOT_FOUND, "User not found!");
   const isCorrectPassword = await compareBcrypt(password, user.password);
-  if (!isCorrectPassword) throw new CustomError(codes.WRONG_PASSWORD);
+  if (!isCorrectPassword) throw new CustomError(codes.NOT_FOUND, "Wrong password!");
   const userId = user.id;
   const token = await generateAccessToken(userId);
   return {
