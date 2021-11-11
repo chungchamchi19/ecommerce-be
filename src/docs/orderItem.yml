@@ -1,0 +1,106 @@
+paths:
+  /api/v1/orderItems:
+    post:
+      summary: Create an orderItem
+      tags:
+        - OrderItems
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                orderId:
+                  type: number
+                variantId:
+                  type: number
+                quantity:
+                  type: number
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  result:
+                    type: object
+
+    get:
+      summary: get all orderItem
+      tags:
+        - OrderItems
+      parameters:
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: The number of items to skip before starting to collect the result set
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: The number of items to collect the result set
+
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  result:
+                    type: object
+  /api/v1/orderItems/{id}:
+    get:
+      summary: get all orderItem
+      tags:
+        - OrderItems
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: orderItem id
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  result:
+                    type: object
+    delete:
+      summary: Delete an orderItem
+      tags:
+        - OrderItems
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: orderItem id
+      
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  result:
+                    type: object
+
