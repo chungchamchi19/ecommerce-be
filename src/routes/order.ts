@@ -12,7 +12,7 @@ router.get("/orders",
 router.post("/orders",
  asyncMiddleware(orderController.createOrder));
 router.get(
-  "/orders/getorderByUserId/:userId",
+  "/users/:userId/orders",
   asyncMiddleware(orderController.getOrderByUserId),
 );
 router.get("/orders/:id", asyncMiddleware(orderController.getOrderById));

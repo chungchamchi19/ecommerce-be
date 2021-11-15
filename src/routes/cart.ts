@@ -9,7 +9,7 @@ router.post("/carts",
 //  validateCreateCarts(ROLES.User), 
  asyncMiddleware(cartController.createCart));
 router.get(
-  "/carts/getCartByUserId/:userId",
+  "/users/:userId/carts",
   // validateCreateCarts(ROLES.User),
   asyncMiddleware(cartController.getCartByUserId),
 );

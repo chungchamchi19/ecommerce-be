@@ -1,5 +1,5 @@
 paths:
-  /api/v1/orderItems:
+  /api/v1/order-items:
     post:
       summary: Create an orderItem
       tags:
@@ -57,7 +57,7 @@ paths:
                     type: string
                   result:
                     type: object
-  /api/v1/orderItems/{id}:
+  /api/v1/order-items/{id}:
     get:
       summary: get all orderItem
       tags:

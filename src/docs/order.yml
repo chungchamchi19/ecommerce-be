@@ -95,7 +95,7 @@ paths:
                     type: string
                   result:
                     type: object
-  /api/v1/orders/getorderByUserId/{userId}:
+  /api/v1/users/{userId}/orders:
     get:
       summary: get order by userId
       tags:
