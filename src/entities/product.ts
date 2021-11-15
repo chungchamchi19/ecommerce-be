@@ -1,3 +1,4 @@
+import { MediaMap } from "./mediaMap";
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany, OneToOne } from "typeorm";
 import "reflect-metadata";
 import { Media } from "./media";
@@ -42,9 +43,11 @@ export class Product {
   @JoinColumn({ name: "featureImageId", referencedColumnName: "id" })
   featureImage?: Media;
 
-  @OneToMany(() => Media, (media) => media.product)
-  media?: Media[];
+  @OneToMany(() => MediaMap, (mediaMap) => mediaMap.product)
+  mediaMaps?: MediaMap[];
 
   @OneToMany(() => Variant, (variant) => variant.product)
   variants?: Variant[];
+
+  media?: Media[];
 }

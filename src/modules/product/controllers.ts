@@ -1,9 +1,17 @@
 import { Product } from "./../../entities/product";
 import { Request, Response } from "express";
 import productServices from "./services";
+import CustomError from "../../errors/customError";
+import codes from "../../errors/codes";
 
 const createProduct = async (req: Request, res: Response) => {
   const { title, description, status, price, comparePrice, url, vendorId, featureImageId, media } = req.body;
+  if (!featureImageId) {
+    throw new CustomError(codes.BAD_REQUEST, "Missing field featureImageId!");
+  }
+  if (!media) {
+    throw new CustomError(codes.BAD_REQUEST, "Missing field media!");
+  }
   let formatMedia =
     media?.map((item: number) => {
       return {

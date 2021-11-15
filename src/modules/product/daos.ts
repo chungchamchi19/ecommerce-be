@@ -14,8 +14,9 @@ const getProductById = async (id: number): Promise<Product> => {
   const productRepo = getRepository(Product);
   const product = await productRepo
     .createQueryBuilder("p")
-    .leftJoinAndSelect("p.media", "m", `m.targetType='product'`)
-    .leftJoinAndSelect("p.featureImage", "fm", "fm.targetType='product'")
+    .leftJoinAndSelect("p.mediaMaps", "mm", `mm.targetType='product'`)
+    .leftJoinAndSelect("mm.media", "m")
+    .leftJoinAndSelect("p.featureImage", "fm")
     .where(`p.id=${id}`)
     .getOne();
   return product;
@@ -25,10 +26,12 @@ const getProducts = async (params: { pagination: Pagination; url?: string }): Pr
   const productRepo = getRepository(Product);
   const products = await productRepo
     .createQueryBuilder("p")
-    .leftJoinAndSelect("p.media", "m", "m.targetType='product'")
-    .leftJoinAndSelect("p.featureImage", "fm", "fm.targetType='product'")
+    .leftJoinAndSelect("p.mediaMaps", "mm", "mm.targetType='product'")
+    .leftJoinAndSelect("mm.media", "m")
+    .leftJoinAndSelect("p.featureImage", "fm")
     .skip(params.pagination.offset)
     .take(params.pagination.limit)
+    .orderBy("p.createdAt", "DESC")
     .getMany();
   return products;
 };
