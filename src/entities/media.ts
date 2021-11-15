@@ -9,7 +9,7 @@ export class Media {
   @PrimaryGeneratedColumn()
   id?: number;
 
-  @Column({ select: false })
+  @Column()
   link?: string;
 
   @Column()
