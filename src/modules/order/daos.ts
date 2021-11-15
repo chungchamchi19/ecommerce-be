@@ -2,8 +2,8 @@ import { getRepository } from "typeorm";
 import { Pagination } from "../../types/type.pagination";
 import { Order } from "../../entities/order";
 import orderItemServices from "../orderItem/services"
-import varriantServices from "../varriant/services"
-import variantServices from "../varriant/services";
+import varriantServices from "../variant/services"
+import variantServices from "../variant/services";
 import orderServices from "./services";
 
 const createOrder = async (orderData: Order): Promise<Order> => {

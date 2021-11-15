@@ -1,7 +1,7 @@
 import { OrderItem } from "../../entities/orderItem";
 import { Request, Response } from "express";
 import orderItemServices from "./services";
-import variantServices from "../varriant/services";
+import variantServices from "../variant/services";
 
 const createOrderItem = async (req: Request, res: Response) => {
     const { orderId, variantId, quantity } = req.body;
