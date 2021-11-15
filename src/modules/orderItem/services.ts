@@ -7,7 +7,7 @@ import mediaServices from "../media/services";
 import CustomError from "../../errors/customError";
 import codes from "../../errors/codes";
 import { Media } from "../../entities/media";
-import variantServices from '../varriant/services'
+import variantServices from '../variant/services'
 
 const createOrderItem = async (orderItemData: OrderItem) => {
     //   if (orderItemData.orderId && orderItemData.variantId) {
