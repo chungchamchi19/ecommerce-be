@@ -1,8 +1,7 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "esnext",
     "module": "commonjs",
-    "rootDir": "./",
     "outDir": "./build",
     "experimentalDecorators": true,
     "strictPropertyInitialization": false,
@@ -12,5 +11,7 @@
     "typeRoots": ["./src/types"],
     "types": ["node"],
     "emitDecoratorMetadata": true
-  }
+  },
+  "include": ["./src/**/*.tsx", "./src/**/*.ts"],
+  "exclude": ["node_modules"]
 }

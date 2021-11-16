@@ -5,12 +5,13 @@
   "main": "index.js",
   "scripts": {
     "start": "yarn migrate:run && ./node_modules/.bin/ts-node-dev --respawn --transpile-only --rs --watch src/docs src/index.ts",
-    "start:prod": "yarn build && node build/src/index.js",
+    "start:prod": "yarn build && yarn migrate:run && node build/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "migrate:create": "./node_modules/.bin/ts-node ./node_modules/typeorm/cli.js migration:create -n",
-    "migrate:run": "./node_modules/.bin/ts-node ./node_modules/typeorm/cli.js migration:run",
-    "migrate:revert": "./node_modules/.bin/ts-node ./node_modules/typeorm/cli.js migration:revert",
-    "build": "tsc"
+    "migrate:create": "./node_modules/.bin/ts-node ./node_modules/typeorm/cli.js -f /src/database/ormconfig.ts migration:create -n",
+    "migrate:run": "./node_modules/.bin/ts-node ./node_modules/typeorm/cli.js -f /src/database/ormconfig.ts migration:run",
+    "migrate:revert": "./node_modules/.bin/ts-node ./node_modules/typeorm/cli.js -f /database/db/ormconfig.ts migration:revert",
+    "build": "rm -rf build && tsc",
+    "typeorm": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm -f ./src/db/ormconfig.ts"
   },
   "keywords": [],
   "author": "",
