@@ -3,6 +3,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMan
 import "reflect-metadata";
 import { Media } from "./media";
 import { Variant } from "./variant";
+import { Option } from "./option";
 
 @Entity()
 export class Product {
@@ -48,6 +49,9 @@ export class Product {
 
   @OneToMany(() => Variant, (variant) => variant.product)
   variants?: Variant[];
+
+  @OneToMany(() => Option, (option) => option.product)
+  options?: Option[];
 
   media?: Media[];
 }
