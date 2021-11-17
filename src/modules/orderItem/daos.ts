@@ -27,7 +27,7 @@ const getOrderItemById = async (id: number): Promise<OrderItem> => {
     return orderItem;
 };
 
-const getorderItems = async (params: { pagination: Pagination }): Promise<OrderItem[]> => {
+const getOrderItems = async (params: { pagination: Pagination }): Promise<OrderItem[]> => {
     const orderItemRepo = getRepository(OrderItem);
     return await orderItemRepo
         .createQueryBuilder("ci")
@@ -38,13 +38,13 @@ const getorderItems = async (params: { pagination: Pagination }): Promise<OrderI
 };
 
 
-const updateorderItem = async (id: number, orderData: OrderItem): Promise<OrderItem> => {
-    const orderItemRepo = getRepository(OrderItem);
-    const newUpdate = await orderItemRepo.update(id, orderData);
-    return newUpdate.raw;
-};
+// const updateOrderItem = async (id: number, orderData: OrderItem): Promise<OrderItem> => {
+//     const orderItemRepo = getRepository(OrderItem);
+//     const newUpdate = await orderItemRepo.update(id, orderData);
+//     return newUpdate.raw;
+// };
 
-const deleteorderItem = async (id: number) => {
+const deleteOrderItem = async (id: number) => {
     const orderItemRepo = getRepository(OrderItem);
     await orderItemRepo.delete(id);
 };
@@ -52,10 +52,9 @@ const deleteorderItem = async (id: number) => {
 const orderItemDaos = {
     createOrderItem,
     getOrderItemById,
-    getorderItems,
-    updateorderItem,
-    deleteorderItem,
-
+    getOrderItems,
+    // updateOrderItem,
+    deleteOrderItem,
 };
 
 export default orderItemDaos;

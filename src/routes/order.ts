@@ -6,15 +6,18 @@ import { validateCreateOrders } from "../validations/orders";
 import ROLES from "../constants/roles";
 const router = express.Router();
 
-router.get("/orders",
+router.get("/user/orders",
+ validateCreateOrders(ROLES.User), 
+ asyncMiddleware(orderController.userGetOrders));
+ router.get("/admin/orders",
  validateCreateOrders(ROLES.ADMIN), 
- asyncMiddleware(orderController.getOrders));
+ asyncMiddleware(orderController.adminGetOrders));
 router.post("/orders",
  asyncMiddleware(orderController.createOrder));
-router.get(
-  "/users/:userId/orders",
-  asyncMiddleware(orderController.getOrderByUserId),
-);
+// router.get(
+//   "/:userId/orders",
+//   asyncMiddleware(orderController.getOrderByUserId),
+// );
 router.get("/orders/:id", asyncMiddleware(orderController.getOrderById));
 
 export default router;
