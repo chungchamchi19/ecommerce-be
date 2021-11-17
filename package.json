@@ -9,9 +9,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "migrate:create": "./node_modules/.bin/ts-node ./node_modules/typeorm/cli.js -f /src/database/ormconfig.ts migration:create -n",
     "migrate:run": "./node_modules/.bin/ts-node ./node_modules/typeorm/cli.js -f /src/database/ormconfig.ts migration:run",
-    "migrate:revert": "./node_modules/.bin/ts-node ./node_modules/typeorm/cli.js -f /database/db/ormconfig.ts migration:revert",
+    "migrate:revert": "./node_modules/.bin/ts-node ./node_modules/typeorm/cli.js -f /src/database/ormconfig.ts migration:revert",
     "build": "rm -rf build && tsc",
-    "typeorm": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm -f ./src/db/ormconfig.ts"
+    "typeorm": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm -f /src/database/ormconfig.ts"
   },
   "keywords": [],
   "author": "",
