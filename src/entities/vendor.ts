@@ -11,4 +11,7 @@ export class Vendor {
 
   @Column()
   name?: string;
+
+  @OneToMany(() => Product, (product) => product.vendor)
+  product?: Product[];
 }
