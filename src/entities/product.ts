@@ -56,6 +56,6 @@ export class Product {
 
   media?: Media[];
 
-  @ManyToOne(() => Vendor, (vendor) => vendor.product)
+  @ManyToOne(() => Vendor, (vendor) => vendor.products)
   vendor?: Vendor;
 }

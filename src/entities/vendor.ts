@@ -12,7 +12,7 @@ export class Vendor {
   @Column()
   name?: string;
 
-  @OneToMany(() => Product, (products) => products.vendor)
+  @OneToMany(() => Product, (product) => product.vendor)
   @JoinColumn({ name: "vendorId", referencedColumnName: "id" })
-  product?: Product[];
+  products?: Product[];
 }
