@@ -21,13 +21,13 @@ const updateVendor = async (id: number, vendorData: Vendor): Promise<Vendor> => 
         ...updateVendor,
         ...vendorData,
     };
-    vendorDaos.updateVendor(id, vendorData);
+    await vendorDaos.updateVendor(id, vendorData);
     return newVendor;
 };
 
 const deleteVendor = async(id: number) => {
     const findVendor = await getVendorById(id);
-    vendorDaos.deleteVendor(id);
+    await vendorDaos.deleteVendor(id);
     return findVendor;
 }
 

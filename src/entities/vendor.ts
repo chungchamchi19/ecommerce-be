@@ -12,6 +12,7 @@ export class Vendor {
   @Column()
   name?: string;
 
-  @OneToMany(() => Product, (product) => product.vendor)
+  @OneToMany(() => Product, (products) => products.vendor)
+  @JoinColumn({ name: "vendorId", referencedColumnName: "id" })
   product?: Product[];
 }
