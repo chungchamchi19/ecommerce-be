@@ -55,11 +55,13 @@ export class Product {
   @OneToMany(() => Option, (option) => option.product)
   options?: Option[];
 
-  media?: Media[];
-
   @ManyToOne(() => Vendor, (vendor) => vendor.products)
   vendor?: Vendor;
 
   @OneToMany(() => ProductCollection, (productCollection) => productCollection.product)
   productCollections?: ProductCollection[];
+
+  // custom field
+  media?: Media[];
+  availableNumber?: number;
 }

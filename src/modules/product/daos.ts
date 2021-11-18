@@ -17,6 +17,8 @@ const getProductById = async (id: number): Promise<Product> => {
     .leftJoinAndSelect("p.mediaMaps", "mm", `mm.targetType='product'`)
     .leftJoinAndSelect("mm.media", "m")
     .leftJoinAndSelect("p.featureImage", "fm")
+    .leftJoinAndSelect("p.options", "o")
+    .leftJoinAndSelect("o.optionValues", "ov")
     .where(`p.id=${id}`)
     .getOne();
   return product;

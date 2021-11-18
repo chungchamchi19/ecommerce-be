@@ -5,12 +5,27 @@ import CustomError from "../../errors/customError";
 import codes from "../../errors/codes";
 
 const createProduct = async (req: Request, res: Response) => {
-  const { title, description, status, price, comparePrice, url, vendorId, featureImageId, media } = req.body;
+  const {
+    title,
+    description,
+    status,
+    price,
+    comparePrice,
+    url,
+    vendorId,
+    featureImageId,
+    media,
+    availableNumber,
+    options,
+  } = req.body;
   if (!featureImageId) {
     throw new CustomError(codes.BAD_REQUEST, "Missing field featureImageId!");
   }
   if (!media) {
     throw new CustomError(codes.BAD_REQUEST, "Missing field media!");
+  }
+  if (options?.length > 3) {
+    throw new CustomError(codes.BAD_REQUEST, "Max length of options is 3!");
   }
   let formatMedia =
     media?.map((item: number) => {
@@ -28,6 +43,8 @@ const createProduct = async (req: Request, res: Response) => {
     vendorId,
     featureImageId,
     media: formatMedia,
+    availableNumber: availableNumber || 0,
+    options,
   };
   const newProduct = await productServices.createProduct(productData);
   res.status(200).json({

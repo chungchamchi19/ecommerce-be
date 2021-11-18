@@ -24,6 +24,8 @@ paths:
                   type: string
                 vendorId:
                   type: number
+                availableNumber:
+                  type: number
                 featureImageId:
                   type: number
                 media:
