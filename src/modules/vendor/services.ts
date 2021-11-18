@@ -18,8 +18,7 @@ const getVendors = async (params: { pagination: Pagination }): Promise<Vendor[]>
     limit: params.pagination.limit || configs.MAX_RECORDS_PER_REQ,
     offset: params.pagination.offset || 0,
   };
-  let listVendor = await vendorDaos.getVendors({ pagination });
-  return listVendor;
+  return await vendorDaos.getVendors({ pagination });
 };
 
 const updateVendor = async (id: number, vendorData: Vendor): Promise<Vendor> => {
