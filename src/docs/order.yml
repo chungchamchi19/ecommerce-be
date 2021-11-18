@@ -106,11 +106,22 @@ paths:
                     type: string
                   result:
                     type: object
-  /api/v1/users/orders:
+  /api/v1/user/orders:
     get:
       summary: get order by userId
       tags:
         - Orders
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: number
+          description: limit order
+        - in: query
+          name: offset
+          schema:
+            type: number
+          description: skip number
       responses:
         "200": # status code
           description: Json format of srt file

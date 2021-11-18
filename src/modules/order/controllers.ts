@@ -74,6 +74,7 @@ const deleteOrder = async (req: Request, res: Response) => {
 const userGetOrders = async (req: Request, res: Response) => {
     const { limit, offset } = req.query;
     const user = req.user;
+    console.log("???",user,limit,offset);
     const orders = await orderServices.getUserOrders({ pagination: { limit: Number(limit), offset: Number(offset)}},user);
 
     res.status(200).json({

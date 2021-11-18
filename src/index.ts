@@ -7,7 +7,7 @@ import authMiddleware from "./middlewares/auth";
 import asyncMiddleware from "./middlewares/async";
 import cors from "cors";
 import authRoleMiddleware from "./middlewares/authRole";
-import connectDB from "./utils/connectDB";
+import connectDB from "./database/connectDB";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import docOptions from "./constants/docs";

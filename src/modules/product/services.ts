@@ -1,23 +1,17 @@
+import { MediaMap } from "./../../entities/mediaMap";
 import { Pagination } from "./../../types/type.pagination";
 import { Product } from "./../../entities/product";
 import { convertToSlug } from "../../utils/convertToSlug";
 import productDaos from "./daos";
 import configs from "../../configs";
-import mediaServices from "../media/services";
 import CustomError from "../../errors/customError";
 import codes from "../../errors/codes";
 import { Media } from "../../entities/media";
+import mediaMapServices from "../mediaMap/services";
 
 const createProduct = async (product: Product) => {
   if (product.featureImageId && product.media) {
     checkProductMedia(product.media, product.featureImageId);
-  }
-  for (let i = 0; i < product.media.length; i++) {
-    const image = product.media[i]?.id;
-    const checkMedia = await mediaServices.getMediaById(Number(image));
-    if (checkMedia && checkMedia.targetId) {
-      throw new CustomError(codes.BAD_REQUEST, "Media is belong to another product!");
-    }
   }
   const productData: Product = product;
   if (!productData.url) {
@@ -34,20 +28,22 @@ const createProduct = async (product: Product) => {
   // create new product
   const newProduct = await productDaos.createProduct(productData);
   // update media for product
-  const listMedia = [];
-  for (let i = 0; i < cacheMedia.length; i++) {
-    const image = cacheMedia[i]?.id;
-    const updatedMedia = await mediaServices.updateMedia(Number(image), {
+  const listCreateMediaMap: MediaMap[] = cacheMedia.map((media: Media) => {
+    return {
+      mediaId: media.id,
       targetId: newProduct.id,
       targetType: "product",
-    });
-    listMedia.push(updatedMedia);
-  }
-  const featureImage = listMedia.find((media: Media) => media.id === newProduct.featureImageId);
+    };
+  });
+  const listMediaMaps = await mediaMapServices.createMediaMaps(listCreateMediaMap);
+  const featureImageMap = listMediaMaps.find((mediaMap: MediaMap) => mediaMap?.media?.id === newProduct.featureImageId);
+  const listMedia = listMediaMaps.map((mediaMap: MediaMap) => {
+    return mediaMap.media;
+  });
   return {
     ...newProduct,
     media: listMedia,
-    featureImage,
+    featureImage: featureImageMap.media,
   };
 };
 
@@ -58,6 +54,8 @@ const getProducts = async (params: { pagination: Pagination }): Promise<Product[
   };
   let listProduct = await productDaos.getProducts({ pagination });
   listProduct = listProduct.map((product: Product) => {
+    product.media = product.mediaMaps.map((mediaMap: MediaMap) => mediaMap.media);
+    delete product.mediaMaps;
     return {
       ...product,
       media: formatMedia(product.featureImage, product.media),
@@ -71,7 +69,9 @@ const getProductById = async (id: number): Promise<Product> => {
   if (!findProduct) {
     throw new CustomError(codes.NOT_FOUND, "Product not found!");
   }
+  findProduct.media = findProduct.mediaMaps.map((mediaMap: MediaMap) => mediaMap.media);
   const media = formatMedia(findProduct.featureImage, findProduct.media);
+  delete findProduct.mediaMaps;
   return {
     ...findProduct,
     media,
@@ -84,37 +84,45 @@ const updateProduct = async (id: number, data: Product): Promise<Product> => {
   if (data.featureImageId && data.media) {
     checkProductMedia(data.media, data.featureImageId);
   }
-  if (data.featureImageId) {
-    mediaServices.updateMedia(data.featureImageId, {
-      targetType: "product",
-      targetId: findProduct.id,
-    });
-  }
   if (data.media && !data.featureImageId && !data.media.find((item) => item.id === findProduct.featureImageId)) {
     throw new CustomError(codes.BAD_REQUEST, "Feature image id should have in media list!");
   }
+  if (data.featureImageId) {
+    if (findProduct.featureImageId !== data.featureImageId) {
+      findProduct.featureImageId && (await mediaMapServices.deleteMediaMapById(findProduct.featureImageId));
+      mediaMapServices.createMediaMaps([
+        {
+          mediaId: data.featureImageId,
+          targetType: "product",
+          targetId: findProduct.id,
+        },
+      ]);
+    }
+  }
   if (data.media) {
     const currentMedia = findProduct.media;
-    const deleteMedia = currentMedia.filter((media: Media) => {
-      return !data.media.find((item) => item.id === media.id);
-    });
-    const addMedia = data.media.filter((media: Media) => {
-      return !currentMedia.find((item) => item.id === media.id);
-    });
+    const deleteMedia = currentMedia
+      .filter((media: Media) => {
+        return !data.media.find((item) => item.id === media.id);
+      })
+      .map((item: Media) => {
+        return item.id;
+      });
+    const addMedia: MediaMap[] = data.media
+      .filter((media: Media) => {
+        return !currentMedia.find((item) => item.id === media.id);
+      })
+      .map((item: Media) => {
+        return {
+          mediaId: item.id,
+          targetType: "product",
+          targetId: findProduct.id,
+        };
+      });
     // delete media
-    for (let i = 0; i < deleteMedia.length; i++) {
-      const deteteItem = deleteMedia[i];
-      mediaServices.updateMedia(
-        deteteItem.id,
-        { targetId: null, targetType: null },
-        { targetId: findProduct.id, targetType: "product" },
-      );
-    }
+    mediaMapServices.deleteMediaMapsByListId(deleteMedia);
     // update media
-    for (let i = 0; i < addMedia.length; i++) {
-      const addItem = addMedia[i];
-      mediaServices.updateMedia(addItem.id, { targetId: id, targetType: "product" });
-    }
+    mediaMapServices.createMediaMaps(addMedia);
     delete data.media;
   }
   await productDaos.updateProduct(id, data);

@@ -4,7 +4,8 @@ import orderItemDaos from "./daos";
 import configs from "../../configs";
 import CustomError from "../../errors/customError";
 import codes from "../../errors/codes";
-import variantServices from '../varriant/services'
+import { Media } from "../../entities/media";
+import variantServices from '../variant/services'
 
 const createOrderItem = async (orderItemData: OrderItem) => {
     const neworderItem = await orderItemDaos.createOrderItem(orderItemData);

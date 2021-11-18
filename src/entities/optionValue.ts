@@ -1,19 +1,17 @@
+import { Option } from "./option";
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToOne, OneToMany } from "typeorm";
 import "reflect-metadata";
-import { Product } from "./product";
-import { Variant } from "./variant";
-import { MediaMap } from "./mediaMap";
 
 @Entity()
-export class Media {
+export class OptionValue {
   @PrimaryGeneratedColumn()
   id?: number;
 
   @Column()
-  link?: string;
+  value?: string;
 
   @Column()
-  type?: string;
+  optionId?: number;
 
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP", select: false })
   createdAt?: Date;
@@ -21,12 +19,7 @@ export class Media {
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP", onUpdate: "CURRENT_TIMESTAMP", select: false })
   updatedAt?: Date;
 
-  @OneToOne(() => Product, (product) => product.featureImage)
-  product?: Product;
-
-  @OneToOne(() => Variant, (variant) => variant.featureImage)
-  variant?: Variant;
-
-  @OneToMany(() => MediaMap, (mediaMap) => mediaMap.media)
-  mediaMaps: MediaMap[];
+  @ManyToOne(() => Option, (option) => option.optionValues)
+  @JoinColumn({ name: "optionId", referencedColumnName: "id" })
+  Option?: Option;
 }
