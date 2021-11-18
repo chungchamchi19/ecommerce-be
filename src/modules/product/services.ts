@@ -8,8 +8,18 @@ import CustomError from "../../errors/customError";
 import codes from "../../errors/codes";
 import { Media } from "../../entities/media";
 import mediaMapServices from "../mediaMap/services";
+import variantServices from "../variant/services";
+import { Variant } from "../../entities/variant";
+import optionServices from "../option/services";
+import { Option } from "../../entities/option";
+import optionValueServices from "../optionValue/services";
+import optionValueVariantServices from "../optionValueVariant/services";
 
 const createProduct = async (product: Product) => {
+  const cacheAvailableNumber = product.availableNumber;
+  const cacheProductOptions = product.options;
+  delete product.availableNumber;
+  delete product.options;
   if (product.featureImageId && product.media) {
     checkProductMedia(product.media, product.featureImageId);
   }
@@ -27,6 +37,8 @@ const createProduct = async (product: Product) => {
   delete product.media;
   // create new product
   const newProduct = await productDaos.createProduct(productData);
+  // auto create variants
+  const variants = await createVariants(newProduct, cacheAvailableNumber, cacheProductOptions);
   // update media for product
   const listCreateMediaMap: MediaMap[] = cacheMedia.map((media: Media) => {
     return {
@@ -44,7 +56,126 @@ const createProduct = async (product: Product) => {
     ...newProduct,
     media: listMedia,
     featureImage: featureImageMap.media,
+    variants: variants,
   };
+};
+
+const createVariants = async (
+  newProduct: Product,
+  cacheAvailableNumber: number,
+  createOptions: Option[],
+): Promise<Variant[]> => {
+  let variants = [];
+  const newVariant: Variant = {
+    price: newProduct.price,
+    comparePrice: newProduct.comparePrice,
+    featureImageId: newProduct.featureImageId,
+    availableNumber: cacheAvailableNumber,
+    productId: newProduct.id,
+  };
+  if (!createOptions || !createOptions?.length) {
+    const createdVariant = await variantServices.createVariant(newVariant);
+    variants.push(createdVariant);
+  } else {
+    const newOptions: { [key: string]: Option } = {};
+    // insert options
+    for (let i = 0; i < createOptions.length; i++) {
+      const option = createOptions[i];
+      const newOption = await optionServices.createOption({
+        position: i + 1,
+        productId: newProduct.id,
+        title: option.title,
+      });
+      newOptions[i + 1] = newOption;
+    }
+    // insert option_value và variant
+    if (createOptions.length === 1) {
+      for (let i = 0; i < createOptions[0].optionValues?.length; i++) {
+        const optionValue1 = createOptions[0].optionValues[i];
+        // create option_value
+        const newOptionsValue1 = await optionValueServices.createOptionValue({
+          value: optionValue1.value,
+          optionId: newOptions[1].id,
+        });
+        // create record variant
+        const createdVariant = await variantServices.createVariant(newVariant);
+        // create record option_value_variant
+        await optionValueVariantServices.createOptionValueVariant({
+          optionValueId: newOptionsValue1.id,
+          variantId: createdVariant.id,
+        });
+      }
+    }
+    if (createOptions.length === 2) {
+      for (let i = 0; i < createOptions[0].optionValues?.length; i++) {
+        const optionValue1 = createOptions[0].optionValues[i];
+        const newOptionsValue1 = await optionValueServices.createOptionValue({
+          value: optionValue1.value,
+          optionId: newOptions[1].id,
+        });
+        for (let j = 0; j < createOptions[1].optionValues?.length; j++) {
+          const optionValue2 = createOptions[1].optionValues[j];
+          // create option_value
+          const newOptionsValue2 = await optionValueServices.createOptionValue({
+            value: optionValue2.value,
+            optionId: newOptions[2].id,
+          });
+          // create variant
+          const createdVariant = await variantServices.createVariant(newVariant);
+          // create record option_value_variant
+          await optionValueVariantServices.createOptionValueVariant({
+            optionValueId: newOptionsValue1.id,
+            variantId: createdVariant.id,
+          });
+          await optionValueVariantServices.createOptionValueVariant({
+            optionValueId: newOptionsValue2.id,
+            variantId: createdVariant.id,
+          });
+        }
+      }
+    }
+    if (createOptions.length === 3) {
+      for (let i = 0; i < createOptions[0].optionValues?.length; i++) {
+        const optionValue1 = createOptions[0].optionValues[i];
+        const newOptionsValue1 = await optionValueServices.createOptionValue({
+          value: optionValue1.value,
+          optionId: newOptions[1].id,
+        });
+        for (let j = 0; j < createOptions[1].optionValues?.length; j++) {
+          const optionValue2 = createOptions[1].optionValues[j];
+          // create option_value
+          const newOptionsValue2 = await optionValueServices.createOptionValue({
+            value: optionValue2.value,
+            optionId: newOptions[2].id,
+          });
+          for (let k = 0; k < createOptions[2].optionValues?.length; k++) {
+            const optionValue3 = createOptions[2].optionValues[k];
+            // create option_value
+            const newOptionsValue3 = await optionValueServices.createOptionValue({
+              value: optionValue3.value,
+              optionId: newOptions[3].id,
+            });
+            // create variant
+            const createdVariant = await variantServices.createVariant(newVariant);
+            // create record option_value_variant
+            await optionValueVariantServices.createOptionValueVariant({
+              optionValueId: newOptionsValue1.id,
+              variantId: createdVariant.id,
+            });
+            await optionValueVariantServices.createOptionValueVariant({
+              optionValueId: newOptionsValue2.id,
+              variantId: createdVariant.id,
+            });
+            await optionValueVariantServices.createOptionValueVariant({
+              optionValueId: newOptionsValue3.id,
+              variantId: createdVariant.id,
+            });
+          }
+        }
+      }
+    }
+  }
+  return variants;
 };
 
 const getProducts = async (params: { pagination: Pagination }): Promise<Product[]> => {

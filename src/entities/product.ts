@@ -53,5 +53,7 @@ export class Product {
   @OneToMany(() => Option, (option) => option.product)
   options?: Option[];
 
+  // custom field
   media?: Media[];
+  availableNumber?: number;
 }
