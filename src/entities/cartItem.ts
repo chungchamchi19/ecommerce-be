@@ -19,8 +19,6 @@ export class CartItem {
   @Column()
   quantity?: number;
 
-
-
   @ManyToOne(() => Cart, (cart) => cart.id, { cascade: true })
   @JoinColumn({ name: "cartId", referencedColumnName: "id" })
   cart?: Cart;

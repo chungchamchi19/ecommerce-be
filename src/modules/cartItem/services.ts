@@ -9,12 +9,11 @@ import codes from "../../errors/codes";
 import { Media } from "../../entities/media";
 
 const createCartItem = async (cartItemData: CartItem) => {
-
   const foundItem = await cartItemDaos.checkExistedItem(cartItemData.cartId, cartItemData.variantId);
   // create new cartItem
   if (foundItem) {
-    cartItemData.quantity += (await foundItem).quantity 
-    return updateCartItem(foundItem.id,cartItemData);
+    cartItemData.quantity += (await foundItem).quantity;
+    return updateCartItem(foundItem.id, cartItemData);
   }
   const newcartItem = await cartItemDaos.createCartItem(cartItemData);
 };
@@ -25,11 +24,6 @@ const getCartItems = async (params: { pagination: Pagination }): Promise<CartIte
     offset: params.pagination.offset || 0,
   };
   let listCartItem = await cartItemDaos.getCartItems({ pagination });
-  // listCartItem = listCartItem.map((cartItem: CartItem) => {
-  //   return {
-  //     ...cartItem,
-  //   };
-  // });
   return listCartItem;
 };
 
@@ -38,11 +32,6 @@ const getCartItemById = async (id: number): Promise<CartItem> => {
   if (!findCartItem) {
     throw new CustomError(codes.NOT_FOUND, "cartItem not found!");
   }
-  // const media = formatMedia(findCartItem.featureImage, findcartItem.media);
-  // return {
-  //   ...findCartItem,
-  //   media,
-  // };
   return findCartItem;
 };
 
@@ -61,22 +50,10 @@ const deleteCartItem = async (id: number) => {
   if (!findCartItem) {
     throw new CustomError(codes.NOT_FOUND, "cartItem not found!");
   }
-  
+
   cartItemDaos.deleteCartItem(id);
   return findCartItem;
 };
-
-
-
-// const checkExistedItem =  (cartId :number,variantId: number) => {
-//   const checkExistedItem = cartItemDaos.checkExistedItem(cartId,variantId);
-//   if(checkExistedItem !== -1) {
-//     return null;
-//   }
-//   return checkExistedItem;
-
-// };
-
 const cartItemServices = {
   createCartItem,
   getCartItems,

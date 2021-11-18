@@ -18,7 +18,7 @@ export class Order {
   @Column()
   subTotal?: number;
   @Column()
-  customerName : string;
+  customerName: string;
   @Column()
   customerEmail: string;
   @Column()
