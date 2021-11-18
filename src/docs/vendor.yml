@@ -1,0 +1,33 @@
+paths:
+  /api/v1/vendors:
+    post:
+      summary: Create Vendor
+      tags:
+        - Vendor
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  result:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      name:
+                        type: string
+                      products:
+                        type: array

@@ -5,3 +5,4 @@ yarn-error.log
 docker-compose.yml
 Dockerfile
 uploads
+.vscode

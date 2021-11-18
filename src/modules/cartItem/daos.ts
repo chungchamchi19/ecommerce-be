@@ -32,9 +32,7 @@ const getCartItems = async (params: { pagination: Pagination }): Promise<CartIte
     .skip(params.pagination.offset)
     .take(params.pagination.limit)
     .getMany();
-
 };
-
 
 const updateCartItem = async (id: number, cartData: CartItem): Promise<CartItem> => {
   const cartItemRepo = getRepository(CartItem);
@@ -47,8 +45,8 @@ const deleteCartItem = async (id: number) => {
   return await cartItemRepo.delete(id);
 };
 const checkExistedItem = async (cartId: number, variantId: number) => {
-  return  await getRepository(CartItem).findOne({ cartId: cartId, variantId: variantId })
-}
+  return await getRepository(CartItem).findOne({ cartId: cartId, variantId: variantId });
+};
 
 const cartItemDaos = {
   createCartItem,
@@ -56,8 +54,7 @@ const cartItemDaos = {
   getCartItems,
   updateCartItem,
   deleteCartItem,
-  checkExistedItem
-
+  checkExistedItem,
 };
 
 export default cartItemDaos;

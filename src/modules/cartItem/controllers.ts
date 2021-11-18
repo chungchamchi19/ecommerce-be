@@ -3,12 +3,12 @@ import { Request, Response } from "express";
 import cartItemServices from "./services";
 
 const createCartItem = async (req: Request, res: Response) => {
-  const { cartId,variantId,quantity } = req.body;
+  const { cartId, variantId, quantity } = req.body;
 
   const cartData: CartItem = {
     cartId,
     variantId,
-    quantity
+    quantity,
   };
   const newCartItem = await cartItemServices.createCartItem(cartData);
   res.status(200).json({
@@ -28,7 +28,9 @@ const getCartItemById = async (req: Request, res: Response) => {
 
 const getCartItems = async (req: Request, res: Response) => {
   const { limit, offset } = req.query;
-  const cartItems = await cartItemServices.getCartItems({ pagination: { limit: Number(limit), offset: Number(offset) } });
+  const cartItems = await cartItemServices.getCartItems({
+    pagination: { limit: Number(limit), offset: Number(offset) },
+  });
   res.status(200).json({
     status: "success",
     result: cartItems,
@@ -62,7 +64,7 @@ const deleteCartItem = async (req: Request, res: Response) => {
 };
 
 const cartItemControllers = {
-    createCartItem,
+  createCartItem,
   getCartItemById,
   getCartItems,
   updateCartItem,
