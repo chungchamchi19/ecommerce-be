@@ -13,8 +13,11 @@ const createMediaMaps = async (mediaMaps: MediaMap[]): Promise<MediaMap[]> => {
   const listId = listMediaMap.map((mediaMap: MediaMap) => {
     return mediaMap.id;
   });
-  listMediaMap = await getMediaMapsByListId(listId);
-  return listMediaMap;
+  if (listId.length) {
+    listMediaMap = await getMediaMapsByListId(listId);
+    return listMediaMap;
+  }
+  return [];
 };
 
 const getMediaMapById = async (id: number): Promise<MediaMap> => {
@@ -43,8 +46,11 @@ const deleteMediaMapById = async (id: number) => {
   return await mediaMapDaos.deleteMediaMapById(id);
 };
 
-const deleteMediaMapsByListId = async (listId: number[]) => {
-  return await mediaMapDaos.deleteMediaMapsByListId(listId);
+const deleteMediaMaps = async (list: MediaMap[]) => {
+  if (list.length) {
+    return await mediaMapDaos.deleteMediaMaps(list);
+  }
+  return;
 };
 
 const mediaMapServices = {
@@ -53,7 +59,7 @@ const mediaMapServices = {
   updateMediaMap,
   getMediaMapsByListId,
   deleteMediaMapById,
-  deleteMediaMapsByListId,
+  deleteMediaMaps,
 };
 
 export default mediaMapServices;
