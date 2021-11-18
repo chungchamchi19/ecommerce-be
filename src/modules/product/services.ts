@@ -241,7 +241,7 @@ const updateProduct = async (id: number, data: Product): Promise<Product> => {
       });
     const addMedia: MediaMap[] = data.media
       .filter((media: Media) => {
-        return !currentMedia.find((item) => item.id === media.id);
+        return !currentMedia.find((item) => item.id === media.id) && media.id !== data.featureImageId;
       })
       .map((item: Media) => {
         return {
@@ -251,9 +251,16 @@ const updateProduct = async (id: number, data: Product): Promise<Product> => {
         };
       });
     // delete media
-    mediaMapServices.deleteMediaMapsByListId(deleteMedia);
+    const listDeleteMediaMap: MediaMap[] = deleteMedia.map((item: number) => {
+      return {
+        mediaId: item,
+        targetType: "product",
+        targetId: id,
+      };
+    });
+    await mediaMapServices.deleteMediaMaps(listDeleteMediaMap);
     // update media
-    mediaMapServices.createMediaMaps(addMedia);
+    await mediaMapServices.createMediaMaps(addMedia);
     delete data.media;
   }
   await productDaos.updateProduct(id, data);
