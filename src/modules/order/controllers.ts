@@ -4,35 +4,44 @@ import orderServices from "./services";
 import user from "../auth/daos/user";
 
 const createOrder = async (req: Request, res: Response) => {
-    const { userId,customerAddress,customerEmail,customerName,
-        customerPhone, paymentMethod,status,deliveryMethod,orderItems } = req.body;
-    
-    const orderData: Order = {
-        userId,
-        customerAddress,
-        customerEmail,
-        customerName,
-        customerPhone,
-        paymentMethod,
-        status,
-        deliveryMethod,
-        orderItems
-    };
-    const newOrder = await orderServices.createOrder(orderData);
-    res.status(200).json({
-        status: "success",
-        result: newOrder,
-    });
+  const {
+    userId,
+    customerAddress,
+    customerEmail,
+    customerName,
+    customerPhone,
+    paymentMethod,
+    status,
+    deliveryMethod,
+    orderItems,
+  } = req.body;
+
+  const orderData: Order = {
+    userId,
+    customerAddress,
+    customerEmail,
+    customerName,
+    customerPhone,
+    paymentMethod,
+    status,
+    deliveryMethod,
+    orderItems,
+  };
+  const newOrder = await orderServices.createOrder(orderData);
+  res.status(200).json({
+    status: "success",
+    result: newOrder,
+  });
 };
 
 //admin order
 const getOrderById = async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const order = await orderServices.getOrderById(Number(id));
-    res.status(200).json({
-        status: "success",
-        result: order,
-    });
+  const { id } = req.params;
+  const order = await orderServices.getOrderById(Number(id));
+  res.status(200).json({
+    status: "success",
+    result: order,
+  });
 };
 //admin
 // const getOrderByUserId = async (req: Request, res: Response) => {
@@ -46,50 +55,55 @@ const getOrderById = async (req: Request, res: Response) => {
 // };
 //admin
 const adminGetOrders = async (req: Request, res: Response) => {
-    let { limit, offset ,userId,search } = req.query;
-    console.log("search",search,userId);
-    search = search ? search :'';
-    userId = userId ? userId : "-1";
-    
-    const orders = await orderServices.getOrders({ pagination: { limit: Number(limit), offset: Number(offset) }},String(search),Number(userId));
+  let { limit, offset, userId, search } = req.query;
+  console.log("search", search, userId);
+  search = search ? search : "";
+  userId = userId ? userId : "-1";
 
-    res.status(200).json({
-        status: "success",
-        result: orders,
-    });
+  const orders = await orderServices.getOrders(
+    { pagination: { limit: Number(limit), offset: Number(offset) } },
+    String(search),
+    Number(userId),
+  );
+
+  res.status(200).json({
+    status: "success",
+    result: orders,
+  });
 };
 
 //adminOrder
 const deleteOrder = async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const order = await orderServices.deleteOrder(Number(id));
-    res.status(200).json({
-        status: "success",
-        result: order,
-    });
+  const { id } = req.params;
+  const order = await orderServices.deleteOrder(Number(id));
+  res.status(200).json({
+    status: "success",
+    result: order,
+  });
 };
 
-
-//User order 
+//User order
 const userGetOrders = async (req: Request, res: Response) => {
-    const { limit, offset } = req.query;
-    const user = req.user;
-    console.log("???",user,limit,offset);
-    const orders = await orderServices.getUserOrders({ pagination: { limit: Number(limit), offset: Number(offset)}},user);
+  const { limit, offset } = req.query;
+  const user = req.user;
+  console.log("???", user, limit, offset);
+  const orders = await orderServices.getUserOrders(
+    { pagination: { limit: Number(limit), offset: Number(offset) } },
+    user,
+  );
 
-    res.status(200).json({
-        status: "success",
-        result: orders,
-    });
+  res.status(200).json({
+    status: "success",
+    result: orders,
+  });
 };
 
 const orderControllers = {
-    createOrder,
-    // getOrderByUserId,
-    getOrderById,
-    deleteOrder,
-    userGetOrders,
-    adminGetOrders
+  createOrder,
+  getOrderById,
+  deleteOrder,
+  userGetOrders,
+  adminGetOrders,
 };
 
 export default orderControllers;

@@ -12,23 +12,22 @@ const createOrder = async (orderData: Order) => {
   return newOrder;
 };
 
-const getOrders = async (params: { pagination: Pagination },search: string,userId: number): Promise<Order[]> => {
+const getOrders = async (params: { pagination: Pagination }, search: string, userId: number): Promise<Order[]> => {
   const pagination = {
     limit: params.pagination.limit || configs.MAX_RECORDS_PER_REQ,
     offset: params.pagination.offset || 0,
   };
-  console.log(userId,search);
-  let listOrder = await orderDaos.getOrders({ pagination },userId,search);
+  console.log(userId, search);
+  let listOrder = await orderDaos.getOrders({ pagination }, userId, search);
 
   return listOrder;
 };
-const getUserOrders =async (params: { pagination: Pagination },user: User): Promise<Order[]> => {
+const getUserOrders = async (params: { pagination: Pagination }, user: User): Promise<Order[]> => {
   const pagination = {
     limit: params.pagination.limit || configs.MAX_RECORDS_PER_REQ,
     offset: params.pagination.offset || 0,
   };
-  let listOrder = await orderDaos.getUserOrders({ pagination },user.id);
-
+  let listOrder = await orderDaos.getUserOrders({ pagination }, user.id);
   return listOrder;
 };
 
@@ -40,10 +39,6 @@ const getOrderById = async (id: number): Promise<Order> => {
 
   return findOrder;
 };
-// const getOrderByUserId = async (userId: number): Promise<Order[]> => {
-//   const findOrder = await orderDaos.getOrderByUserId(userId);
-//   return findOrder;
-// };
 
 const deleteOrder = async (id: number) => {
   const findOrder = await getOrderById(id);
@@ -51,14 +46,13 @@ const deleteOrder = async (id: number) => {
   return findOrder;
 };
 
-
 const orderServices = {
   createOrder,
   getOrders,
   // getOrderByUserId,
   getOrderById,
   deleteOrder,
-  getUserOrders
+  getUserOrders,
 };
 
 export default orderServices;
