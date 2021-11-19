@@ -71,6 +71,38 @@ paths:
           schema:
             type: number
           description: skip number
+        - in: query
+          name: title
+          schema:
+            type: string
+          description: product title
+        - in: query
+          name: status
+          schema:
+            type: string
+          description: product status
+        - in: query
+          name: maxPrice
+          schema:
+            type: number
+          description: product maxPrice
+        - in: query
+          name: minPrice
+          schema:
+            type: number
+          description: product minPrice
+        - in: query
+          name: sortPrice
+          schema:
+            type: string
+            enum: [ASC, DESC]
+          description: product sortPrice
+        - in: query
+          name: createdAt
+          schema:
+            type: string
+            enum: [ASC, DESC]
+          description: product createdAt
       responses:
         "200": # status code
           description: Json format of srt file

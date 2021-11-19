@@ -77,11 +77,28 @@ const getProductById = async (req: Request, res: Response) => {
 };
 
 const getProducts = async (req: Request, res: Response) => {
-  const { limit, offset } = req.query;
-  const products = await productServices.getProducts({ pagination: { limit: Number(limit), offset: Number(offset) } });
+  const { limit, offset, title, status, collectionId, vendorId, minPrice, maxPrice, sortPrice, createdAt } = req.query;
+  if (sortPrice && sortPrice !== "DESC" && sortPrice !== "ASC") {
+    throw new CustomError(codes.BAD_REQUEST, "sortPrice should be DESC or ASC");
+  }
+  if (createdAt && createdAt !== "DESC" && createdAt !== "ASC") {
+    throw new CustomError(codes.BAD_REQUEST, "createdAt should be DESC or ASC");
+  }
+  const data = await productServices.getProducts({
+    pagination: { limit: Number(limit), offset: Number(offset) },
+    title: title as string,
+    status: status as string,
+    collectionId: Number(collectionId),
+    vendorId: Number(vendorId),
+    minPrice: Number(minPrice),
+    maxPrice: Number(maxPrice),
+    sortPrice: sortPrice as "DESC" | "ASC",
+    createdAt: createdAt as "DESC" | "ASC",
+  });
   res.status(200).json({
     status: "success",
-    result: products,
+    result: data.products,
+    total: data.total,
   });
 };
 
