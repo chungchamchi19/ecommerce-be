@@ -1,5 +1,5 @@
 paths:
-  /api/v1/products:
+  /api/v1/admin/products:
     post:
       summary: create product
       tags:
@@ -55,7 +55,7 @@ paths:
                     type: string
                   result:
                     type: object
-
+  /api/v1/products:
     get:
       summary: get products
       tags:
@@ -100,6 +100,7 @@ paths:
                 type: array
                 items:
                   type: object
+  /api/v1/admin/products/{id}:
     put:
       summary: update product
       tags:

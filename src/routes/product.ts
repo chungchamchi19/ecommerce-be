@@ -6,12 +6,20 @@ import { validatePermissionProducts } from "../validations/products";
 
 const router = express.Router();
 
-router.post("/products", validatePermissionProducts(ROLES.ADMIN), asyncMiddleware(productControllers.createProduct));
+router.post(
+  "/admin/products",
+  validatePermissionProducts(ROLES.ADMIN),
+  asyncMiddleware(productControllers.createProduct),
+);
 router.get("/products", asyncMiddleware(productControllers.getProducts));
 router.get("/products/:id", asyncMiddleware(productControllers.getProductById));
-router.put("/products/:id", validatePermissionProducts(ROLES.ADMIN), asyncMiddleware(productControllers.updateProduct));
+router.put(
+  "/admin/products/:id",
+  validatePermissionProducts(ROLES.ADMIN),
+  asyncMiddleware(productControllers.updateProduct),
+);
 router.delete(
-  "/products/:id",
+  "/admin/products/:id",
   validatePermissionProducts(ROLES.ADMIN),
   asyncMiddleware(productControllers.deleteProduct),
 );

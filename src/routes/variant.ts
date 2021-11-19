@@ -7,12 +7,12 @@ import { validatePermissionVariants } from "../validations/variant";
 const router = express.Router();
 
 router.post(
-  "/products/:productId/variants",
+  "/admin/products/:productId/variants",
   validatePermissionVariants(ROLES.ADMIN),
   asyncMiddleware(variantControllers.create),
 );
 router.put(
-  "/products/:productId/variants/:id",
+  "/admin/products/:productId/variants/:id",
   validatePermissionVariants(ROLES.ADMIN),
   asyncMiddleware(variantControllers.update),
 );
