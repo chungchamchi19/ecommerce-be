@@ -1,5 +1,5 @@
 paths:
-  /api/v1/vendors:
+  /api/v1/admin/vendors:
     post:
       summary: Create Vendor
       tags:
