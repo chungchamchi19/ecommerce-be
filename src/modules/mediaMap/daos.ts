@@ -7,7 +7,7 @@ const createMediaMap = async (params: MediaMap): Promise<MediaMap> => {
   mediaMap.targetId = params.targetId || null;
   mediaMap.targetType = params.targetType || null;
   mediaMap.mediaId = params.mediaId || null;
-  return await mediaMapRepo.save(mediaMap);
+  return await mediaMapRepo.save(mediaMapRepo.create(mediaMap));
 };
 
 const getMediaMapById = async (id: number): Promise<MediaMap> => {

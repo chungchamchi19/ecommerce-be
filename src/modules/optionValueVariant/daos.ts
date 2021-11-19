@@ -3,8 +3,7 @@ import { OptionValueVariant } from "../../entities/optionValueVariant";
 
 const createOptionValueVariant = async (data: OptionValueVariant): Promise<OptionValueVariant> => {
   const optionValueVariantRepo = getRepository(OptionValueVariant);
-  let newOptionValVariant = new OptionValueVariant();
-  newOptionValVariant = data;
+  const newOptionValVariant = optionValueVariantRepo.create(data);
   return await optionValueVariantRepo.save(newOptionValVariant);
 };
 
@@ -44,15 +43,15 @@ const updateOptionValueVariant = async (id: number, data: OptionValueVariant): P
 
 const deleteOptionValueVariants = async (data: OptionValueVariant) => {
   const optionValueVariantRepo = getRepository(OptionValueVariant);
-  let optionValVarQuery = optionValueVariantRepo.createQueryBuilder("ovv");
+  let optionValVarQuery = optionValueVariantRepo.createQueryBuilder();
   if (data.id) {
-    optionValVarQuery = optionValVarQuery.where("ovv.id=:id");
+    optionValVarQuery = optionValVarQuery.where("id=:id");
   }
   if (data.optionValueId) {
-    optionValVarQuery = optionValVarQuery.where("ovv.optionValueId=:optionValueId");
+    optionValVarQuery = optionValVarQuery.where("optionValueId=:optionValueId");
   }
   if (data.variantId) {
-    optionValVarQuery = optionValVarQuery.where("ovv.variantId=:variantId");
+    optionValVarQuery = optionValVarQuery.where("variantId=:variantId");
   }
   await optionValVarQuery
     .setParameters({
@@ -60,7 +59,8 @@ const deleteOptionValueVariants = async (data: OptionValueVariant) => {
       variantId: data.variantId,
       optionValueId: data.optionValueId,
     })
-    .delete();
+    .delete()
+    .execute();
 };
 
 const optionValueVariantDaos = {
