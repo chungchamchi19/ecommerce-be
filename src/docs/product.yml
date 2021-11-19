@@ -32,6 +32,17 @@ paths:
                   type: array
                   items:
                     type: number
+                options:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      title:
+                        type: string
+                      values:
+                        type: array
+                        items:
+                          type: string
       responses:
         "200": # status code
           description: Json format of srt file
@@ -125,6 +136,17 @@ paths:
                   type: array
                   items:
                     type: number
+                options:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      title:
+                        type: string
+                      values:
+                        type: array
+                        items:
+                          type: string
       responses:
         "200": # status code
           description: Json format of srt file

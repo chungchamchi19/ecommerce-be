@@ -4,8 +4,7 @@ import { Cart } from "../../entities/cart";
 
 const createCart = async (cartData: Cart): Promise<Cart> => {
   const cartRepo = getRepository(Cart);
-  let newCart = new Cart();
-  newCart = cartData;
+  const newCart = cartRepo.create(cartData);
   const cart = await cartRepo.save(newCart);
   return cart;
 };
@@ -36,15 +35,12 @@ const getCartByUserId = async (userId: number): Promise<Cart> => {
 };
 const getCarts = async (params: { pagination: Pagination }): Promise<Cart[]> => {
   const CartRepo = getRepository(Cart);
-  return await CartRepo
-    .createQueryBuilder("c")
+  return await CartRepo.createQueryBuilder("c")
     .leftJoinAndSelect("c.cartItems", "cartItems")
     .skip(params.pagination.offset)
     .take(params.pagination.limit)
     .getMany();
-
 };
-
 
 const updateCart = async (id: number, cartData: Cart): Promise<Cart> => {
   const cartRepo = getRepository(Cart);
@@ -63,7 +59,7 @@ const CartDaos = {
   getCarts,
   updateCart,
   deleteCart,
-  getCartByUserId
+  getCartByUserId,
 };
 
 export default CartDaos;

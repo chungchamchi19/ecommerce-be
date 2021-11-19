@@ -4,8 +4,7 @@ import { Pagination } from "../../types/type.pagination";
 
 const createCollection = async (data: Collection): Promise<Collection> => {
   const collectionRepo = getRepository(Collection);
-  let newCollection = new Collection();
-  newCollection = data;
+  const newCollection = collectionRepo.create(data);
   return await collectionRepo.save(newCollection);
 };
 
@@ -40,10 +39,11 @@ const deleteCollection = async (id: number) => {
 const deleteCollections = async (ids: number[]) => {
   const collectionRepo = getRepository(Collection);
   const collection = await collectionRepo
-    .createQueryBuilder("o")
-    .where(`c.id in :ids`)
+    .createQueryBuilder()
+    .where(`id in :ids`)
     .setParameters({ ids: `(${ids.join(",")})` })
-    .delete();
+    .delete()
+    .execute();
   return collection;
 };
 

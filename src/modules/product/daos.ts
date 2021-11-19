@@ -4,8 +4,7 @@ import { Pagination } from "../../types/type.pagination";
 
 const createProduct = async (productData: Product): Promise<Product> => {
   const productRepo = getRepository(Product);
-  let newProduct = new Product();
-  newProduct = productData;
+  const newProduct = productRepo.create(productData);
   const product = await productRepo.save(newProduct);
   return product;
 };
@@ -19,7 +18,13 @@ const getProductById = async (id: number): Promise<Product> => {
     .leftJoinAndSelect("p.featureImage", "fm")
     .leftJoinAndSelect("p.options", "o")
     .leftJoinAndSelect("o.optionValues", "ov")
-    .where(`p.id=${id}`)
+    .leftJoinAndSelect("p.variants", "v")
+    .leftJoinAndSelect("v.featureImage", "v_fm")
+    .leftJoinAndSelect("v.optionValueVariants", "ovv")
+    .leftJoinAndSelect("ovv.optionValue", "ovv_ov")
+    .leftJoinAndSelect("ovv_ov.option", "ovv_ov_o")
+    .where(`p.id=:id`)
+    .setParameters({ id: id })
     .getOne();
   return product;
 };

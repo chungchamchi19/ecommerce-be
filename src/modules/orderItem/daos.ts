@@ -11,7 +11,7 @@ const createOrderItem = async (orderItemData: OrderItem): Promise<OrderItem> => 
   newOrderItem = orderItemData;
   newOrderItem.price = variant.price;
   newOrderItem.comparePrice = variant.comparePrice;
-  const orderItem = await orderItemRepo.save(newOrderItem);
+  const orderItem = await orderItemRepo.save(orderItemRepo.create(newOrderItem));
   return orderItem;
 };
 

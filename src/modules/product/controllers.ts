@@ -3,6 +3,8 @@ import { Request, Response } from "express";
 import productServices from "./services";
 import CustomError from "../../errors/customError";
 import codes from "../../errors/codes";
+import { Option } from "../../entities/option";
+import { Media } from "../../entities/media";
 
 const createProduct = async (req: Request, res: Response) => {
   const {
@@ -27,10 +29,22 @@ const createProduct = async (req: Request, res: Response) => {
   if (options?.length > 3) {
     throw new CustomError(codes.BAD_REQUEST, "Max length of options is 3!");
   }
-  let formatMedia =
+  const formatMedia: Media[] =
     media?.map((item: number) => {
       return {
         id: item,
+      };
+    }) || 0;
+  const formatOption: Option[] =
+    options?.map((option: { title: string; values: string[] }) => {
+      const optionValues = option.values.map((optionVal) => {
+        return {
+          value: optionVal,
+        };
+      });
+      return {
+        title: option.title,
+        optionValues,
       };
     }) || 0;
   const productData: Product = {
@@ -44,7 +58,7 @@ const createProduct = async (req: Request, res: Response) => {
     featureImageId,
     media: formatMedia,
     availableNumber: availableNumber || 0,
-    options,
+    options: formatOption,
   };
   const newProduct = await productServices.createProduct(productData);
   res.status(200).json({

@@ -32,8 +32,7 @@ const getVariants = async (params: { pagination: Pagination }): Promise<Variant[
 
 const createVariant = async (data: Variant): Promise<Variant> => {
   const variantRepo = getRepository(Variant);
-  let newVariant = new Variant();
-  newVariant = data;
+  let newVariant = variantRepo.create(data);
   return await variantRepo.save(newVariant);
 };
 
