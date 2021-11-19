@@ -206,7 +206,7 @@ const getProducts = async (params: { pagination: Pagination }): Promise<ProductR
   };
   let listProduct = await productDaos.getProducts({ pagination });
   listProduct = listProduct.map((product: Product) => {
-    return productHelpers.formatProductResponse(product);
+    return productHelpers.formatProductResponse(product, { disableOptions: true, disableVariants: true });
   });
   return listProduct;
 };
