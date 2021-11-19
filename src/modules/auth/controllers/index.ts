@@ -36,9 +36,12 @@ const login = async (req: Request, res: Response) => {
 };
 
 const me = async (req: Request, res: Response) => {
+  const user = req.user;
+  delete user.password;
+  delete user.role;
   return res.status(200).json({
     status: "success",
-    result: req.user,
+    result: user,
   });
 };
 
