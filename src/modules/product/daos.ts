@@ -39,19 +39,19 @@ const getProducts = async (params: ProductSearchParams): Promise<{ products: Pro
     .leftJoinAndSelect("p.featureImage", "fm");
   // .leftJoinAndSelect("p.vendor", "vd");
   if (params.title) {
-    productQuery = productQuery.where("p.title like :title", { title: `%${params.title}%` });
+    productQuery = productQuery.andWhere("p.title like :title", { title: `%${params.title}%` });
   }
   // if (params.vendorId) {
-  //   productQuery = productQuery.where("vd.id = :vendorId", { vendorId: params.vendorId });
+  //   productQuery = productQuery.andWhere("vd.id = :vendorId", { vendorId: params.vendorId });
   // }
   if (params.status) {
-    productQuery = productQuery.where("p.status = :status", { status: params.status });
+    productQuery = productQuery.andWhere("p.status = :status", { status: params.status });
   }
   if (params.maxPrice) {
-    productQuery = productQuery.where("p.price < :maxPrice", { maxPrice: params.maxPrice });
+    productQuery = productQuery.andWhere("p.price < :maxPrice", { maxPrice: params.maxPrice });
   }
   if (params.minPrice) {
-    productQuery = productQuery.where("p.price >= :minPrice", { minPrice: params.minPrice });
+    productQuery = productQuery.andWhere("p.price >= :minPrice", { minPrice: params.minPrice });
   }
   if (params.sortPrice) {
     productQuery = productQuery.orderBy("p.price", params.sortPrice);
@@ -70,10 +70,10 @@ const countProducts = async (params: { url?: string; title?: string }): Promise<
   const productRepo = getRepository(Product);
   let countQuery = productRepo.createQueryBuilder("p");
   if (params.url) {
-    countQuery = countQuery.where(`url="${params.url}"`);
+    countQuery = countQuery.andWhere(`url="${params.url}"`);
   }
   if (params.title) {
-    countQuery = countQuery.where(`title="${params.title}"`);
+    countQuery = countQuery.andWhere(`title="${params.title}"`);
   }
   const count = await countQuery.getCount();
   return count;

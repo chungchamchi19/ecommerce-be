@@ -17,13 +17,13 @@ const getOptionValueVariants = async (data: OptionValueVariant): Promise<OptionV
   const optionValueVariantRepo = getRepository(OptionValueVariant);
   let optionValVarQuery = optionValueVariantRepo.createQueryBuilder("ovv");
   if (data.id) {
-    optionValVarQuery = optionValVarQuery.where("ovv.id=:id");
+    optionValVarQuery = optionValVarQuery.andWhere("ovv.id=:id");
   }
   if (data.optionValueId) {
-    optionValVarQuery = optionValVarQuery.where("ovv.optionValueId=:optionValueId");
+    optionValVarQuery = optionValVarQuery.andWhere("ovv.optionValueId=:optionValueId");
   }
   if (data.variantId) {
-    optionValVarQuery = optionValVarQuery.where("ovv.variantId=:variantId");
+    optionValVarQuery = optionValVarQuery.andWhere("ovv.variantId=:variantId");
   }
   const optionValVars = await optionValVarQuery
     .setParameters({
@@ -45,13 +45,13 @@ const deleteOptionValueVariants = async (data: OptionValueVariant) => {
   const optionValueVariantRepo = getRepository(OptionValueVariant);
   let optionValVarQuery = optionValueVariantRepo.createQueryBuilder();
   if (data.id) {
-    optionValVarQuery = optionValVarQuery.where("id=:id");
+    optionValVarQuery = optionValVarQuery.andWhere("id=:id");
   }
   if (data.optionValueId) {
-    optionValVarQuery = optionValVarQuery.where("optionValueId=:optionValueId");
+    optionValVarQuery = optionValVarQuery.andWhere("optionValueId=:optionValueId");
   }
   if (data.variantId) {
-    optionValVarQuery = optionValVarQuery.where("variantId=:variantId");
+    optionValVarQuery = optionValVarQuery.andWhere("variantId=:variantId");
   }
   await optionValVarQuery
     .setParameters({

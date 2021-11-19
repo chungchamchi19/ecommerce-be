@@ -63,10 +63,10 @@ const getOrders = async (params: { pagination: Pagination }, userId: number, sea
     .leftJoinAndSelect("orderItems.variant", "variant", "variant.id=orderItems.variantId")
     .leftJoinAndSelect("variant.product", "product", "variant.productId=product.id");
   if (userId != -1) {
-    query.where(`o.userId=${userId}`);
+    query.andWhere(`o.userId=${userId}`);
   }
   if (search != "") {
-    query.where("(o.customerName )LIKE :name OR o.customerEmail LIKE :name", { name: `%${search}%` });
+    query.andWhere("(o.customerName )LIKE :name OR o.customerEmail LIKE :name", { name: `%${search}%` });
   }
   query.skip(params.pagination.offset).take(params.pagination.limit);
   return await query.getMany();
