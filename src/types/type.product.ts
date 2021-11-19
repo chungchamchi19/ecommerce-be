@@ -2,6 +2,7 @@ import { Variant } from "./../entities/variant";
 import { Vendor } from "./../entities/vendor";
 import { Media } from "../entities/media";
 import { VariantResponse } from "./type.variant";
+import { Pagination } from "./type.pagination";
 
 export type OptionProductResponse = {
   id?: number;
@@ -28,4 +29,16 @@ export type ProductResponse = {
   vendor?: Vendor;
   media?: Media[];
   // productCollections?: ProductCollection[];
+};
+
+export type ProductSearchParams = {
+  title?: string;
+  status?: string;
+  collectionId?: number;
+  vendorId?: number;
+  minPrice?: number;
+  maxPrice?: number;
+  sortPrice?: "DESC" | "ASC";
+  pagination?: Pagination;
+  createdAt?: "DESC" | "ASC";
 };

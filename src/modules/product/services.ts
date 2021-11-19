@@ -1,5 +1,4 @@
 import { MediaMap } from "./../../entities/mediaMap";
-import { Pagination } from "./../../types/type.pagination";
 import { Product } from "./../../entities/product";
 import { convertToSlug } from "../../utils/convertToSlug";
 import productDaos from "./daos";
@@ -14,7 +13,7 @@ import optionServices from "../option/services";
 import { Option } from "../../entities/option";
 import optionValueServices from "../optionValue/services";
 import optionValueVariantServices from "../optionValueVariant/services";
-import { ProductResponse } from "../../types/type.product";
+import { ProductResponse, ProductSearchParams } from "../../types/type.product";
 import productHelpers from "./helpers";
 import { OptionValue } from "../../entities/optionValue";
 
@@ -199,16 +198,20 @@ const createVariants = async (newProduct: Product, cacheAvailableNumber: number,
  * @param params.pagination {limit, offset}
  * @returns list products
  */
-const getProducts = async (params: { pagination: Pagination }): Promise<ProductResponse[]> => {
+const getProducts = async (params: ProductSearchParams): Promise<{ products: ProductResponse[]; total: number }> => {
   const pagination = {
     limit: params.pagination.limit || configs.MAX_RECORDS_PER_REQ,
     offset: params.pagination.offset || 0,
   };
-  let listProduct = await productDaos.getProducts({ pagination });
-  listProduct = listProduct.map((product: Product) => {
+  const newParams = {
+    ...params,
+    pagination,
+  };
+  let result = await productDaos.getProducts(newParams);
+  result.products = result.products.map((product: Product) => {
     return productHelpers.formatProductResponse(product, { disableOptions: true, disableVariants: true });
   });
-  return listProduct;
+  return result;
 };
 
 /**
@@ -299,12 +302,24 @@ const deleteProduct = async (id: number) => {
   return findProduct;
 };
 
+/**
+ * countProducts đếm xem có bn product
+ * @param params.url url của product
+ * @param params.title title của product
+ * @returns total product
+ */
+const countProducts = async (params: { url?: string; title?: string }): Promise<number> => {
+  const count: number = await productDaos.countProducts(params);
+  return count;
+};
+
 const productServices = {
   createProduct,
   getProducts,
   updateProduct,
   deleteProduct,
   getProductById,
+  countProducts,
 };
 
 export default productServices;
