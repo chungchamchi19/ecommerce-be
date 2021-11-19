@@ -29,5 +29,95 @@ paths:
                         type: number
                       name:
                         type: string
-                      products:
+                      vendors:
                         type: array
+    get:
+      summary: get vendors
+      tags:
+        - Vendor
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: number
+          desctiption: limit vendor
+        - in: query
+          name: offset
+          schema:
+            type: number
+          description: skip number
+      responses:
+        "200":
+        description: Json format of srt file
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+  /api/v1/vendors/{id}:
+    get:
+      summary: get vendor by id
+      tags:
+        - Vendor
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: number
+          description: vendor id
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+    put:
+      summary: update vendor
+      tags:
+        - Vendor
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: number
+          description: vendor id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+    delete:
+      summary: delete vendor
+      tags:
+        - Vendor
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: number
+          description: vendor id
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
