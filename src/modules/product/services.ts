@@ -209,7 +209,7 @@ const getProducts = async (params: ProductSearchParams): Promise<{ products: Pro
   };
   let result = await productDaos.getProducts(newParams);
   result.products = result.products.map((product: Product) => {
-    return productHelpers.formatProductResponse(product, { disableOptions: true, disableVariants: true });
+    return productHelpers.formatProductResponse(product);
   });
   return result;
 };

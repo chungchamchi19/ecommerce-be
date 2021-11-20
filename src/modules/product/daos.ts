@@ -36,7 +36,14 @@ const getProducts = async (params: ProductSearchParams): Promise<{ products: Pro
     .createQueryBuilder("p")
     .leftJoinAndSelect("p.mediaMaps", "mm", "mm.targetType='product'")
     .leftJoinAndSelect("mm.media", "m")
-    .leftJoinAndSelect("p.featureImage", "fm");
+    .leftJoinAndSelect("p.featureImage", "fm")
+    .leftJoinAndSelect("p.options", "o")
+    .leftJoinAndSelect("o.optionValues", "ov")
+    .leftJoinAndSelect("p.variants", "v")
+    .leftJoinAndSelect("v.featureImage", "v_fm")
+    .leftJoinAndSelect("v.optionValueVariants", "ovv")
+    .leftJoinAndSelect("ovv.optionValue", "ovv_ov")
+    .leftJoinAndSelect("ovv_ov.option", "ovv_ov_o");
   // .leftJoinAndSelect("p.vendor", "vd");
   if (params.title) {
     productQuery = productQuery.andWhere("p.title like :title", { title: `%${params.title}%` });
