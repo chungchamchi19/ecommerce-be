@@ -55,6 +55,83 @@ paths:
                     type: string
                   result:
                     type: object
+  /api/v1/admin/products/{id}:
+    put:
+      summary: update product
+      tags:
+        - Product
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: number
+          description: product id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                status:
+                  type: string
+                price:
+                  type: number
+                comparePrice:
+                  type: number
+                url:
+                  type: string
+                vendorId:
+                  type: number
+                featureImageId:
+                  type: number
+                media:
+                  type: array
+                  items:
+                    type: number
+                options:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      title:
+                        type: string
+                      values:
+                        type: array
+                        items:
+                          type: string
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+    delete:
+      summary: delete product
+      tags:
+        - Product
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: number
+          description: product id
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
   /api/v1/products:
     get:
       summary: get products
@@ -132,79 +209,4 @@ paths:
                 type: array
                 items:
                   type: object
-  /api/v1/admin/products/{id}:
-    put:
-      summary: update product
-      tags:
-        - Product
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: number
-          description: product id
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                title:
-                  type: string
-                description:
-                  type: string
-                status:
-                  type: string
-                price:
-                  type: number
-                comparePrice:
-                  type: number
-                url:
-                  type: string
-                vendorId:
-                  type: number
-                featureImageId:
-                  type: number
-                media:
-                  type: array
-                  items:
-                    type: number
-                options:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      title:
-                        type: string
-                      values:
-                        type: array
-                        items:
-                          type: string
-      responses:
-        "200": # status code
-          description: Json format of srt file
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-    delete:
-      summary: delete product
-      tags:
-        - Product
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: number
-          description: product id
-      responses:
-        "200": # status code
-          description: Json format of srt file
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
+  
