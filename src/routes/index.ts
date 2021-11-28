@@ -7,7 +7,7 @@ const routes = async (app: any) => {
     if (
       fileName !== 'index.ts' &&
       fileName !== 'index.js' &&
-      (['ts'].indexOf(fileName.split('.').pop()) !== -1 || ['ts'].indexOf(fileName.split('.').pop()) !== -1)
+      (['ts'].indexOf(fileName.split('.').pop()) !== -1 || ['js'].indexOf(fileName.split('.').pop()) !== -1)
     ) {
       const route = await import(`./${fileName.split('.')[0]}`);
       app.use('/api/v1/', route.default);
