@@ -10,7 +10,7 @@ import authRoleMiddleware from "./middlewares/authRole";
 import connectDB from "./database/connectDB";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
-import docOptions from "./constants/docs";
+import docOptions from "./configs/docs";
 
 dotenv.config();
 const app = express();

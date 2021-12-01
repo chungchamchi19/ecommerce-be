@@ -1,21 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToOne } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToOne, OneToMany } from "typeorm";
 import "reflect-metadata";
 import { Product } from "./product";
 import { Media } from "./media";
+import { OptionValueVariant } from "./optionValueVariant";
 
 @Entity()
 export class Variant {
   @PrimaryGeneratedColumn()
   id?: number;
-
-  @Column()
-  option1?: string;
-
-  @Column()
-  option2?: string;
-
-  @Column()
-  option3?: string;
 
   @Column()
   price?: number;
@@ -39,4 +31,16 @@ export class Variant {
   @OneToOne(() => Media, (media) => media.variant)
   @JoinColumn({ name: "featureImageId", referencedColumnName: "id" })
   featureImage?: Media;
+
+  @OneToMany(() => OptionValueVariant, (optionValueVariant) => optionValueVariant.variant)
+  optionValueVariants?: OptionValueVariant[];
+
+  //custom field
+  option1?: string;
+  option2?: string;
+  option3?: string;
+  options?: string[];
+  available?: boolean;
+  name?: string;
+  publicTitle?: string;
 }

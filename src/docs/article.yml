@@ -1,5 +1,5 @@
 paths:
-  /api/v1/articles:
+  /api/v1/admin/articles:
     post:
       summary: Create an article
       tags:
@@ -31,7 +31,7 @@ paths:
                   result:
                     type: object
 
-  /api/v1/customers/articles:
+  /api/v1/articles:
     get:
       summary: get all article
       tags:

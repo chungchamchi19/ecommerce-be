@@ -1,11 +1,10 @@
 import { Product } from "./../../entities/product";
 import { getRepository } from "typeorm";
-import { Pagination } from "../../types/type.pagination";
+import { ProductSearchParams } from "../../types/type.product";
 
 const createProduct = async (productData: Product): Promise<Product> => {
   const productRepo = getRepository(Product);
-  let newProduct = new Product();
-  newProduct = productData;
+  const newProduct = productRepo.create(productData);
   const product = await productRepo.save(newProduct);
   return product;
 };
@@ -17,33 +16,71 @@ const getProductById = async (id: number): Promise<Product> => {
     .leftJoinAndSelect("p.mediaMaps", "mm", `mm.targetType='product'`)
     .leftJoinAndSelect("mm.media", "m")
     .leftJoinAndSelect("p.featureImage", "fm")
-    .where(`p.id=${id}`)
+    // .leftJoinAndSelect("p.vendor", "vd")
+    .leftJoinAndSelect("p.options", "o")
+    .leftJoinAndSelect("o.optionValues", "ov")
+    .leftJoinAndSelect("p.variants", "v")
+    .leftJoinAndSelect("v.featureImage", "v_fm")
+    .leftJoinAndSelect("v.optionValueVariants", "ovv")
+    .leftJoinAndSelect("ovv.optionValue", "ovv_ov")
+    .leftJoinAndSelect("ovv_ov.option", "ovv_ov_o")
+    .where(`p.id=:id`)
+    .setParameters({ id: id })
     .getOne();
   return product;
 };
 
-const getProducts = async (params: { pagination: Pagination; url?: string }): Promise<Product[]> => {
+const getProducts = async (params: ProductSearchParams): Promise<{ products: Product[]; total: number }> => {
   const productRepo = getRepository(Product);
-  const products = await productRepo
+  let productQuery = productRepo
     .createQueryBuilder("p")
     .leftJoinAndSelect("p.mediaMaps", "mm", "mm.targetType='product'")
     .leftJoinAndSelect("mm.media", "m")
     .leftJoinAndSelect("p.featureImage", "fm")
-    .skip(params.pagination.offset)
-    .take(params.pagination.limit)
-    .orderBy("p.createdAt", "DESC")
-    .getMany();
-  return products;
+    .leftJoinAndSelect("p.options", "o")
+    .leftJoinAndSelect("o.optionValues", "ov")
+    .leftJoinAndSelect("p.variants", "v")
+    .leftJoinAndSelect("v.featureImage", "v_fm")
+    .leftJoinAndSelect("v.optionValueVariants", "ovv")
+    .leftJoinAndSelect("ovv.optionValue", "ovv_ov")
+    .leftJoinAndSelect("ovv_ov.option", "ovv_ov_o");
+  // .leftJoinAndSelect("p.vendor", "vd");
+  if (params.title) {
+    productQuery = productQuery.andWhere("p.title like :title", { title: `%${params.title}%` });
+  }
+  // if (params.vendorId) {
+  //   productQuery = productQuery.andWhere("vd.id = :vendorId", { vendorId: params.vendorId });
+  // }
+  if (params.status) {
+    productQuery = productQuery.andWhere("p.status = :status", { status: params.status });
+  }
+  if (params.maxPrice) {
+    productQuery = productQuery.andWhere("p.price < :maxPrice", { maxPrice: params.maxPrice });
+  }
+  if (params.minPrice) {
+    productQuery = productQuery.andWhere("p.price >= :minPrice", { minPrice: params.minPrice });
+  }
+  if (params.sortPrice) {
+    productQuery = productQuery.orderBy("p.price", params.sortPrice);
+  } else {
+    productQuery = productQuery.orderBy("p.createdAt", params.createdAt ? params.createdAt : "DESC");
+  }
+  const products = await productQuery.skip(params.pagination.offset).take(params.pagination.limit).getMany();
+  const total = await productQuery.getCount();
+  return {
+    products,
+    total,
+  };
 };
 
 const countProducts = async (params: { url?: string; title?: string }): Promise<number> => {
   const productRepo = getRepository(Product);
   let countQuery = productRepo.createQueryBuilder("p");
   if (params.url) {
-    countQuery = countQuery.where(`url="${params.url}"`);
+    countQuery = countQuery.andWhere(`url="${params.url}"`);
   }
   if (params.title) {
-    countQuery = countQuery.where(`title="${params.title}"`);
+    countQuery = countQuery.andWhere(`title="${params.title}"`);
   }
   const count = await countQuery.getCount();
   return count;

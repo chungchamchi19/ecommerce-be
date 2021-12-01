@@ -53,3 +53,15 @@ paths:
                 type: array
                 items:
                   type: object
+  /api/v1/me:
+    get:
+      summary: get user info
+      tags:
+        - Auth
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: object

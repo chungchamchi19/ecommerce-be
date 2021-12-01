@@ -7,7 +7,7 @@ const createMediaMap = async (params: MediaMap): Promise<MediaMap> => {
   mediaMap.targetId = params.targetId || null;
   mediaMap.targetType = params.targetType || null;
   mediaMap.mediaId = params.mediaId || null;
-  return await mediaMapRepo.save(mediaMap);
+  return await mediaMapRepo.save(mediaMapRepo.create(mediaMap));
 };
 
 const getMediaMapById = async (id: number): Promise<MediaMap> => {
@@ -42,13 +42,22 @@ const deleteMediaMapById = async (id: number) => {
   return mediaMap;
 };
 
-const deleteMediaMapsByListId = async (listId: number[]) => {
+const deleteMediaMaps = async (list: MediaMap[]) => {
   const mediaMapRepo = getRepository(MediaMap);
-  const mediaMap = await mediaMapRepo
-    .createQueryBuilder("mm")
-    .where(`mm.id in (${listId.join(",")})`)
-    .delete();
-  return mediaMap;
+  for (let i = 0; i < list.length; i++) {
+    const mediaMap = list[i];
+    await mediaMapRepo
+      .createQueryBuilder()
+      .where("mediaId = :mediaId and targetId = :targetId and targetType = :targetType")
+      .setParameters({
+        mediaId: mediaMap.mediaId,
+        targetId: mediaMap.targetId,
+        targetType: mediaMap.targetType,
+      })
+      .delete()
+      .execute();
+  }
+  return list;
 };
 
 const mediaMapDaos = {
@@ -57,7 +66,7 @@ const mediaMapDaos = {
   updateMediaMap,
   getMediaMapsByListId,
   deleteMediaMapById,
-  deleteMediaMapsByListId,
+  deleteMediaMaps,
 };
 
 export default mediaMapDaos;

@@ -4,6 +4,8 @@ import "reflect-metadata";
 import { Media } from "./media";
 import { Variant } from "./variant";
 import { Option } from "./option";
+import { Vendor } from "./vendor";
+import { ProductCollection } from "./productCollection";
 
 @Entity()
 export class Product {
@@ -53,5 +55,13 @@ export class Product {
   @OneToMany(() => Option, (option) => option.product)
   options?: Option[];
 
+  @ManyToOne(() => Vendor, (vendor) => vendor.products)
+  vendor?: Vendor;
+
+  @OneToMany(() => ProductCollection, (productCollection) => productCollection.product)
+  productCollections?: ProductCollection[];
+
+  // custom field
   media?: Media[];
+  availableNumber?: number;
 }

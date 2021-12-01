@@ -5,8 +5,7 @@ import { Cart } from "../../entities/cart";
 
 const createCartItem = async (cartItemData: CartItem): Promise<CartItem> => {
   const cartItemRepo = getRepository(CartItem);
-  let newCartItem = new CartItem();
-  newCartItem = cartItemData;
+  const newCartItem = cartItemRepo.create(cartItemData);
   const cartItem = await cartItemRepo.save(newCartItem);
   return cartItem;
 };
