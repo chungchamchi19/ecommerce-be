@@ -3,19 +3,48 @@ import { Request, Response } from "express";
 import productServices from "./services";
 import CustomError from "../../errors/customError";
 import codes from "../../errors/codes";
+import { Option } from "../../entities/option";
+import { Media } from "../../entities/media";
 
 const createProduct = async (req: Request, res: Response) => {
-  const { title, description, status, price, comparePrice, url, vendorId, featureImageId, media } = req.body;
+  const {
+    title,
+    description,
+    status,
+    price,
+    comparePrice,
+    url,
+    vendorId,
+    featureImageId,
+    media,
+    availableNumber,
+    options,
+  } = req.body;
   if (!featureImageId) {
     throw new CustomError(codes.BAD_REQUEST, "Missing field featureImageId!");
   }
   if (!media) {
     throw new CustomError(codes.BAD_REQUEST, "Missing field media!");
   }
-  let formatMedia =
+  if (options?.length > 3) {
+    throw new CustomError(codes.BAD_REQUEST, "Max length of options is 3!");
+  }
+  const formatMedia: Media[] =
     media?.map((item: number) => {
       return {
         id: item,
+      };
+    }) || 0;
+  const formatOption: Option[] =
+    options?.map((option: { title: string; values: string[] }) => {
+      const optionValues = option.values.map((optionVal) => {
+        return {
+          value: optionVal,
+        };
+      });
+      return {
+        title: option.title,
+        optionValues,
       };
     }) || 0;
   const productData: Product = {
@@ -28,6 +57,8 @@ const createProduct = async (req: Request, res: Response) => {
     vendorId,
     featureImageId,
     media: formatMedia,
+    availableNumber: availableNumber || 0,
+    options: formatOption,
   };
   const newProduct = await productServices.createProduct(productData);
   res.status(200).json({
@@ -46,11 +77,28 @@ const getProductById = async (req: Request, res: Response) => {
 };
 
 const getProducts = async (req: Request, res: Response) => {
-  const { limit, offset } = req.query;
-  const products = await productServices.getProducts({ pagination: { limit: Number(limit), offset: Number(offset) } });
+  const { limit, offset, title, status, collectionId, vendorId, minPrice, maxPrice, sortPrice, createdAt } = req.query;
+  if (sortPrice && sortPrice !== "DESC" && sortPrice !== "ASC") {
+    throw new CustomError(codes.BAD_REQUEST, "sortPrice should be DESC or ASC");
+  }
+  if (createdAt && createdAt !== "DESC" && createdAt !== "ASC") {
+    throw new CustomError(codes.BAD_REQUEST, "createdAt should be DESC or ASC");
+  }
+  const data = await productServices.getProducts({
+    pagination: { limit: Number(limit), offset: Number(offset) },
+    title: title as string,
+    status: status as string,
+    collectionId: Number(collectionId),
+    vendorId: Number(vendorId),
+    minPrice: Number(minPrice),
+    maxPrice: Number(maxPrice),
+    sortPrice: sortPrice as "DESC" | "ASC",
+    createdAt: createdAt as "DESC" | "ASC",
+  });
   res.status(200).json({
     status: "success",
-    result: products,
+    result: data.products,
+    total: data.total,
   });
 };
 

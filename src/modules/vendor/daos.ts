@@ -5,8 +5,7 @@ import mediaDaos from "../media/daos";
 
 const createVendor = async (vendorData: Vendor): Promise<Vendor> => {
   const vendorRepo = getRepository(Vendor);
-  let newVendor = new Vendor();
-  newVendor = vendorData;
+  const newVendor = vendorRepo.create(vendorData);
   return await vendorRepo.save(newVendor);
 };
 

@@ -27,6 +27,6 @@ export class Option {
   @JoinColumn({ name: "productId", referencedColumnName: "id" })
   product?: Product;
 
-  @OneToMany(() => OptionValue, (optionValue) => optionValue.Option)
-  optionValues: OptionValue[];
+  @OneToMany(() => OptionValue, (optionValue) => optionValue.option)
+  optionValues?: OptionValue[];
 }

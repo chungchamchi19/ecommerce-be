@@ -7,21 +7,21 @@ import { Order } from "./order";
 export class OrderItem {
   @PrimaryGeneratedColumn()
   id?: number;
-  
+
   @Column()
   price?: number;
   @Column()
   comparePrice?: number;
 
   @Column()
-  quantity? :number;
+  quantity?: number;
   @Column()
   orderId?: number;
   @Column()
   variantId?: number;
-//   @Column()
-//   poductTitle: string;
-  
+  //   @Column()
+  //   poductTitle: string;
+
   @ManyToOne(() => Order, (order) => order.orderItems)
   @JoinColumn({ name: "orderId", referencedColumnName: "id" })
   order?: Order;

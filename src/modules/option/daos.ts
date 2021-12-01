@@ -3,8 +3,7 @@ import { Option } from "../../entities/option";
 
 const createOption = async (data: Option): Promise<Option> => {
   const optionRepo = getRepository(Option);
-  let newOption = new Option();
-  newOption = data;
+  const newOption = optionRepo.create(data);
   const option = await optionRepo.save(newOption);
   return option;
 };
@@ -23,10 +22,11 @@ const getOptionById = async (id: number): Promise<Option> => {
 const deleteOptions = async (ids: number[]) => {
   const optionRepo = getRepository(Option);
   const option = await optionRepo
-    .createQueryBuilder("o")
-    .where(`o.id in :ids`)
+    .createQueryBuilder()
+    .where(`id in :ids`)
     .setParameters({ ids: `(${ids.join(",")})` })
-    .delete();
+    .delete()
+    .execute();
   return option;
 };
 

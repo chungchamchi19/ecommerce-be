@@ -1,6 +1,7 @@
 import { Option } from "./option";
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToOne, OneToMany } from "typeorm";
 import "reflect-metadata";
+import { OptionValueVariant } from "./optionValueVariant";
 
 @Entity()
 export class OptionValue {
@@ -21,5 +22,8 @@ export class OptionValue {
 
   @ManyToOne(() => Option, (option) => option.optionValues)
   @JoinColumn({ name: "optionId", referencedColumnName: "id" })
-  Option?: Option;
+  option?: Option;
+
+  @OneToMany(() => OptionValueVariant, (optionValueVariant) => optionValueVariant.optionValue)
+  optionValueVariants?: OptionValueVariant[];
 }

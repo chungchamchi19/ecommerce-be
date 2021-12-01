@@ -5,16 +5,9 @@ import ROLES from "../constants/roles";
 import { validateCreateCarts } from "../validations/cart";
 const router = express.Router();
 
-router.post("/carts",
-//  validateCreateCarts(ROLES.User), 
- asyncMiddleware(cartController.createCart));
-router.get(
-  "/users/:userId/carts",
-  // validateCreateCarts(ROLES.User),
-  asyncMiddleware(cartController.getCartByUserId),
-);
+router.post("/carts", asyncMiddleware(cartController.createCart));
+router.get("/users/:userId/carts", asyncMiddleware(cartController.getCartByUserId));
 router.put("/carts/:id", asyncMiddleware(cartController));
-// /router.get("/carts/articles", asyncMiddleware(cartController.getAllArticles));
 router.get("/carts/:id", asyncMiddleware(cartController.getCartById));
 
 export default router;

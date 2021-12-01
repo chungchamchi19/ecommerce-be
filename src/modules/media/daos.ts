@@ -6,7 +6,7 @@ const createMedia = async (params: { url: string; type: string }): Promise<Media
   const media = new Media();
   media.link = params.url;
   media.type = params.type;
-  return await mediaRepo.save(media);
+  return await mediaRepo.save(mediaRepo.create(media));
 };
 
 const getMediaById = async (id: number): Promise<Media> => {
