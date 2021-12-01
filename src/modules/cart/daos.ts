@@ -28,7 +28,6 @@ const getCartByUserId = async (userId: number): Promise<Cart> => {
     .leftJoinAndSelect("c.cartItems", "cartItems")
     .leftJoinAndSelect("cartItems.variant", "variant", "variant.id=cartItems.variantId")
     .leftJoinAndSelect("variant.product", "product", "variant.productId=product.id")
-    // .leftJoinAndSelect("ci.featureImage", "fm", "fm.targetType='product'")
     .where(`c.userId=${userId}`)
     .getOne();
   return cart;
@@ -41,7 +40,6 @@ const getMyCart = async (userId: number): Promise<Cart> => {
     .leftJoinAndSelect("c.cartItems", "cartItems")
     .leftJoinAndSelect("cartItems.variant", "variant", "variant.id=cartItems.variantId")
     .leftJoinAndSelect("variant.product", "product", "variant.productId=product.id")
-    // .leftJoinAndSelect("ci.featureImage", "fm", "fm.targetType='product'")
     .where(`c.userId=${userId}`)
     .getOne();
   return cart;
