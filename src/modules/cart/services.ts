@@ -9,12 +9,10 @@ import codes from "../../errors/codes";
 import { Media } from "../../entities/media";
 
 const createCart = async (cartData: Cart) => {
-  if (cartData.userId) {
-    checkCart(cartData.userId);
-  }
-  // create new cart
+  const checkExist = await checkCart(cartData.userId);
+  if(checkExist) return checkCart;
   const newcart = await cartDaos.createCart(cartData);
-  
+  return newcart;
 };
 
 // const getCarts = async (params: { pagination: Pagination }): Promise<Cart[]> => {
@@ -36,11 +34,7 @@ const getCartById = async (id: number): Promise<Cart> => {
   if (!findCart) {
     throw new CustomError(codes.NOT_FOUND, "cart not found!");
   }
-  // const media = formatMedia(findCart.featureImage, findcart.media);
-  // return {
-  //   ...findCart,
-  //   media,
-  // };
+
   return findCart;
 };
 const getCartByUserId = async (userId: number): Promise<Cart> => {
@@ -55,7 +49,16 @@ const getCartByUserId = async (userId: number): Promise<Cart> => {
   // };
   return findCart;
 };
-
+const getMyCart = async (userId: number): Promise<Cart> => {
+  const findCart = await cartDaos.getMyCart(userId);
+  if (!findCart) {
+    let newCart = new Cart();
+    newCart.userId = userId;
+    await cartDaos.createCart(newCart);
+    return await cartDaos.getMyCart(userId);
+  }
+  return findCart;
+};
 
 const updateCart = async (id: number, data: Cart): Promise<Cart> => {
   const findCart = await getCartById(id);
@@ -73,21 +76,17 @@ const deleteCart = async (id: number) => {
   return findCart;
 };
 
-
-
-const checkCart = (userId :number) => {
-  // if (!media.find(() => .id === featureImageId)) {
-  //   throw new CustomError(codes.BAD_REQUEST, "Feature image id should have in media list!");
-  // }
+const checkCart = (userId: number) => {
+  return cartDaos.checkCart(userId);
 };
 
 const cartServices = {
   createCart,
-  // getCarts,
   getCartByUserId,
   updateCart,
   deleteCart,
   getCartById,
+  getMyCart,
 };
 
 export default cartServices;

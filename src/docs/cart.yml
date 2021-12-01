@@ -7,11 +7,22 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
-              type: object
-              properties:
-                userId:
-                  type: number
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  result:
+                    type: object
+    get:
+      summary: get my cart
+      tags:
+        - Carts
       responses:
         "200": # status code
           description: Json format of srt file
