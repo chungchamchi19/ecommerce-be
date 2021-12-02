@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany, Index } from "typeorm";
 import { User } from "./user";
 import "reflect-metadata";
 import { ArticleTag } from "./articleTag";
@@ -10,6 +10,7 @@ export class Cart {
   id?: number;
 
   @Column()
+  @Index({unique:true})
   userId?: number;
 
   @ManyToOne(() => User, (user) => user.articles)

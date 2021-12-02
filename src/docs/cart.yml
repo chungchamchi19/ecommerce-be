@@ -1,17 +1,12 @@
 paths:
-  /api/v1/carts:
+  /api/v1/cart:
     post:
       summary: Create an cart
       tags:
-        - Carts
+        - Cart
       requestBody:
         content:
           application/json:
-            schema:
-              type: object
-              properties:
-                userId:
-                  type: number
       responses:
         "200": # status code
           description: Json format of srt file
@@ -24,11 +19,27 @@ paths:
                     type: string
                   result:
                     type: object
-  /api/v1/carts/{id}:
+    get:
+      summary: get my cart
+      tags:
+        - Cart
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  result:
+                    type: object
+  /api/v1/cart/{id}:
     get:
       summary: get cart by id
       tags:
-        - Carts
+        - Cart
       parameters:
         - in: path
           name: id
@@ -47,11 +58,11 @@ paths:
                     type: string
                   result:
                     type: object
-  /api/v1/users/{userId}/carts:
+  /api/v1/user/{userId}/cart:
     get:
       summary: get cart by userId
       tags:
-        - Carts
+        - Cart
       parameters:
         - in: path
           name: userId
