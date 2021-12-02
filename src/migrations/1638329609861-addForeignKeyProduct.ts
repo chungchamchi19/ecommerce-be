@@ -1,17 +1,17 @@
 import { MigrationInterface, QueryRunner, TableForeignKey } from "typeorm";
 
-export class addForeignKeyVendor1637341925403 implements MigrationInterface {
+export class addForeignKeyProduct1638329609861 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     queryRunner.clearSqlMemory();
     const foreignKey = new TableForeignKey({
-      columnNames: ["vendorId"],
+      columnNames: ["productId"],
       referencedColumnNames: ["id"],
-      referencedTableName: "vendor",
+      referencedTableName: "product",
     });
-    await queryRunner.createForeignKey("product", foreignKey);
+    await queryRunner.createForeignKey("product_collection", foreignKey);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query("ALTER TABLE product DROP FOREIGN KEY FK_921582066aa70b502e78ea92012");
+    await queryRunner.query("ALTER TABLE product_collection DROP FOREIGN KEY FK_74939f2405997a66eab143bf3dc");
   }
 }

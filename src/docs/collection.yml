@@ -1,0 +1,132 @@
+paths:
+  /api/v1/admin/collections:
+    post:
+      summary: create collection
+      tags:
+        - Collection
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  result:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      title:
+                        type: string
+                      description:
+                        type: string
+                      collections:
+                        type: array
+    /api/v1/admin/collections/{id}:
+    put:
+      summary: update collection
+      tags:
+        - Collection
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: number
+          description: collection id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+    delete:
+      summary: delete collection
+      tags:
+        - Collection
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: number
+          description: collection id
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+  /api/v1/collections:
+    get:
+      summary: get collections
+      tags:
+        - Collection
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: number
+          desctiption: limit collection
+        - in: query
+          name: offset
+          schema:
+            type: number
+          description: skip number
+      responses:
+        "200":
+        description: Json format of srt file
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+  /api/v1/collections/{id}:
+    get:
+      summary: get collection by id
+      tags:
+        - Collection
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: number
+          description: collection id
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
