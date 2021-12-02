@@ -28,9 +28,25 @@ const getCartByUserId = async (userId: number): Promise<Cart> => {
     .leftJoinAndSelect("c.cartItems", "cartItems")
     .leftJoinAndSelect("cartItems.variant", "variant", "variant.id=cartItems.variantId")
     .leftJoinAndSelect("variant.product", "product", "variant.productId=product.id")
-    // .leftJoinAndSelect("ci.featureImage", "fm", "fm.targetType='product'")
     .where(`c.userId=${userId}`)
     .getOne();
+  return cart;
+};
+
+const getMyCart = async (userId: number): Promise<Cart> => {
+  const cartRepo = getRepository(Cart);
+  const cart = await cartRepo
+    .createQueryBuilder("c")
+    .leftJoinAndSelect("c.cartItems", "cartItems")
+    .leftJoinAndSelect("cartItems.variant", "variant", "variant.id=cartItems.variantId")
+    .leftJoinAndSelect("variant.product", "product", "variant.productId=product.id")
+    .where(`c.userId=${userId}`)
+    .getOne();
+  return cart;
+};
+const checkCart = async (userId: number): Promise<Cart> => {
+  const cartRepo = getRepository(Cart);
+  const cart = await cartRepo.findOne({userId :userId});
   return cart;
 };
 const getCarts = async (params: { pagination: Pagination }): Promise<Cart[]> => {
@@ -60,6 +76,8 @@ const CartDaos = {
   updateCart,
   deleteCart,
   getCartByUserId,
+  getMyCart,
+  checkCart
 };
 
 export default CartDaos;

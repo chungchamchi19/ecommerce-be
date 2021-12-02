@@ -9,5 +9,5 @@ router.post("/carts", asyncMiddleware(cartController.createCart));
 router.get("/users/:userId/carts", asyncMiddleware(cartController.getCartByUserId));
 router.put("/carts/:id", asyncMiddleware(cartController));
 router.get("/carts/:id", asyncMiddleware(cartController.getCartById));
-
+router.get("/carts", asyncMiddleware(cartController.getCarts));
 export default router;

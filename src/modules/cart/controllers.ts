@@ -3,8 +3,7 @@ import { Request, Response } from "express";
 import cartServices from "./services";
 
 const createCart = async (req: Request, res: Response) => {
-  const { userId } = req.body;
-
+  const userId  = req.user.id;
   const cartData: Cart = {
     userId
   };
@@ -33,6 +32,13 @@ const getCartByUserId = async (req: Request, res: Response) => {
     result: carts,
   });
 };
+const getCarts = async (req: Request, res: Response) => {
+  const carts = await cartServices.getMyCart(Number(req.user?.id));
+  res.status(200).json({
+    status: "success",
+    result: carts,
+  });
+};
 
 
 const deleteCart = async (req: Request, res: Response) => {
@@ -49,6 +55,7 @@ const cartControllers = {
   getCartByUserId,  
   getCartById,
   deleteCart,
+  getCarts,
 };
 
 export default cartControllers;
