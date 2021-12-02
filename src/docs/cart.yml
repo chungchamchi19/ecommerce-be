@@ -4,9 +4,6 @@ paths:
       summary: Create an cart
       tags:
         - Cart
-      requestBody:
-        content:
-          application/json:
       responses:
         "200": # status code
           description: Json format of srt file
