@@ -1,0 +1,85 @@
+paths:
+  /api/v1/contacts:
+    post:
+      summary: Create an article
+      tags:
+        - Contacts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                customerName:
+                  type: string
+                customerEmail:
+                  type: string
+                customerPhone:
+                  type: string
+                message:
+                  type: string
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  result:
+                    type: object
+
+  /api/v1/admin/contacts:
+    get:
+      summary: get all contact
+      tags:
+        - Contacts
+      parameters:
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: The number of items to skip before starting to collect the result set
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: The number of items to collect the result set
+
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  result:
+                    type: object
+  /api/v1/admin/contacts/{id}:
+    get:
+      summary: get contact by id
+      tags:
+        - Contacts
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: article id
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  result:
+                    type: object
