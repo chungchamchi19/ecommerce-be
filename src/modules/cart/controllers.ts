@@ -32,7 +32,7 @@ const getCartByUserId = async (req: Request, res: Response) => {
     result: carts,
   });
 };
-const getCarts = async (req: Request, res: Response) => {
+const getCart = async (req: Request, res: Response) => {
   const carts = await cartServices.getMyCart(Number(req.user?.id));
   res.status(200).json({
     status: "success",
@@ -55,7 +55,7 @@ const cartControllers = {
   getCartByUserId,  
   getCartById,
   deleteCart,
-  getCarts,
+  getCart,
 };
 
 export default cartControllers;

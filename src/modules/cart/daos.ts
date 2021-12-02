@@ -13,10 +13,10 @@ const getCartById = async (id: number): Promise<Cart> => {
   const cartRepo = getRepository(Cart);
   const cart = await cartRepo
     .createQueryBuilder("c")
-    .leftJoinAndSelect("c.cartItems", "cartItems")
+    .leftJoinAndSelect("c.cartItems", "cartItems","c.id=cartItems.cartId")
     .leftJoinAndSelect("cartItems.variant", "variant", "variant.id=cartItems.variantId")
     .leftJoinAndSelect("variant.product", "product", "variant.productId=product.id")
-    .where(`cartItems.id=${id}`)
+    .where(`c.id=${id}`)
     .getOne();
   return cart;
 };
@@ -25,7 +25,7 @@ const getCartByUserId = async (userId: number): Promise<Cart> => {
   const cartRepo = getRepository(Cart);
   const cart = await cartRepo
     .createQueryBuilder("c")
-    .leftJoinAndSelect("c.cartItems", "cartItems")
+    .leftJoinAndSelect("c.cartItems", "cartItems","c.id=cartItems.cartId")
     .leftJoinAndSelect("cartItems.variant", "variant", "variant.id=cartItems.variantId")
     .leftJoinAndSelect("variant.product", "product", "variant.productId=product.id")
     .where(`c.userId=${userId}`)
