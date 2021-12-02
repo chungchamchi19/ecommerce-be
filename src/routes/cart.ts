@@ -5,9 +5,9 @@ import ROLES from "../constants/roles";
 import { validateCreateCarts } from "../validations/cart";
 const router = express.Router();
 
-router.post("/cart", asyncMiddleware(cartController.createCart));
-router.get("/user/:userId/cart", asyncMiddleware(cartController.getCartByUserId));
-router.put("/cart/:id", asyncMiddleware(cartController));
-router.get("/cart/:id", asyncMiddleware(cartController.getCartById));
-router.get("/cart", asyncMiddleware(cartController.getCarts));
+router.post("/carts", asyncMiddleware(cartController.createCart));
+router.get("/users/:userId/carts", asyncMiddleware(cartController.getCartByUserId));
+router.put("/carts/:id", asyncMiddleware(cartController));
+router.get("/carts/:id", asyncMiddleware(cartController.getCartById));
+router.get("/carts", asyncMiddleware(cartController.getCarts));
 export default router;
