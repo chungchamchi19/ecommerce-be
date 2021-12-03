@@ -64,4 +64,5 @@ export class Product {
   // custom field
   media?: Media[];
   availableNumber?: number;
+  collections?: number[];
 }

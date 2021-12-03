@@ -16,6 +16,8 @@ import optionValueVariantServices from "../optionValueVariant/services";
 import { ProductResponse, ProductSearchParams } from "../../types/type.product";
 import productHelpers from "./helpers";
 import { OptionValue } from "../../entities/optionValue";
+import productCollectionServices from "../productCollection/services";
+import collectionServices from "../collection/services";
 
 /**
  * createProduct service tạo product
@@ -25,6 +27,8 @@ import { OptionValue } from "../../entities/optionValue";
 const createProduct = async (product: Product): Promise<ProductResponse> => {
   const cacheAvailableNumber = product.availableNumber;
   const cacheProductOptions = product.options;
+  const cacheCollections = product.collections;
+  delete product.collections;
   delete product.availableNumber;
   delete product.options;
   if (product.featureImageId && product.media) {
@@ -44,6 +48,16 @@ const createProduct = async (product: Product): Promise<ProductResponse> => {
   delete product.media;
   // create new product
   const newProduct = await productDaos.createProduct(productData);
+  // create product_collection
+  if (cacheCollections && cacheCollections.length) {
+    for (let i = 0; i < cacheCollections.length; i++) {
+      const collectionId = cacheCollections[i];
+      await productCollectionServices.createProductCollection({
+        productId: newProduct.id,
+        collectionId: collectionId,
+      });
+    }
+  }
   // auto create variants
   await createVariants(newProduct, cacheAvailableNumber, cacheProductOptions);
   // update media for product
@@ -313,6 +327,33 @@ const countProducts = async (params: { url?: string; title?: string }): Promise<
   return count;
 };
 
+/**
+ * getProductsByCollectionId get products service by collection id
+ * @param params.pagination {limit, offset}
+ * @returns list products
+ */
+const getProductsByCollectionId = async (
+  params: ProductSearchParams,
+): Promise<{ products: ProductResponse[]; total: number }> => {
+  const checkCollection = await collectionServices.getCollectionById(params.collectionId);
+  if (!checkCollection) {
+    throw new CustomError(codes.NOT_FOUND, "Collection not found!");
+  }
+  const pagination = {
+    limit: params.pagination.limit || configs.MAX_RECORDS_PER_REQ,
+    offset: params.pagination.offset || 0,
+  };
+  const newParams = {
+    ...params,
+    pagination,
+  };
+  let result = await productDaos.getProductsByCollectionId(newParams);
+  result.products = result.products.map((product: Product) => {
+    return productHelpers.formatProductResponse(product);
+  });
+  return result;
+};
+
 const productServices = {
   createProduct,
   getProducts,
@@ -320,6 +361,7 @@ const productServices = {
   deleteProduct,
   getProductById,
   countProducts,
+  getProductsByCollectionId,
 };
 
 export default productServices;
