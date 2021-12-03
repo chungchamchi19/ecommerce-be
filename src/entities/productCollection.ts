@@ -4,20 +4,20 @@ import { Product } from "./product";
 
 @Entity()
 export class ProductCollection {
-    @PrimaryGeneratedColumn()
-    id?: number;
+  @PrimaryGeneratedColumn()
+  id?: number;
 
-    @Column()
-    productId?: number;
+  @Column()
+  productId?: number;
 
-    @Column()
-    collectionId?: number;
+  @Column()
+  collectionId?: number;
 
-    @ManyToOne(() => Collection, (collection) => collection.productCollections)
-    collection?: Collection;
+  @ManyToOne(() => Collection, (collection) => collection.productCollections)
+  @JoinColumn({ name: "collectionId", referencedColumnName: "id" })
+  collection?: Collection;
 
-    @ManyToOne(() => Product, (product) => product.productCollections)
-    @JoinColumn({name: "productId", referencedColumnName: "id"})
-    product?: Product;
-
+  @ManyToOne(() => Product, (product) => product.productCollections)
+  @JoinColumn({ name: "productId", referencedColumnName: "id" })
+  product?: Product;
 }

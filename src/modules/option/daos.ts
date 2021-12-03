@@ -16,8 +16,7 @@ const updateOption = async (id: number, data: Option): Promise<Option> => {
 
 const getOptionById = async (id: number): Promise<Option> => {
   const optionRepo = getRepository(Option);
-  const option = await optionRepo.findOne(id);
-  return option;
+  return await optionRepo.findOne(id);
 };
 
 const deleteOptions = async (ids: number[]) => {
