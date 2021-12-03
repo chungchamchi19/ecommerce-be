@@ -79,7 +79,7 @@ const getProductById = async (req: Request, res: Response) => {
 };
 
 const getProducts = async (req: Request, res: Response) => {
-  const { limit, offset, title, status, vendorId, minPrice, maxPrice, sortPrice, createdAt } = req.query;
+  const { limit, offset, title, status, vendorId, collectionId, minPrice, maxPrice, sortPrice, createdAt } = req.query;
   if (sortPrice && sortPrice !== "DESC" && sortPrice !== "ASC") {
     throw new CustomError(codes.BAD_REQUEST, "sortPrice should be DESC or ASC");
   }
@@ -87,32 +87,6 @@ const getProducts = async (req: Request, res: Response) => {
     throw new CustomError(codes.BAD_REQUEST, "createdAt should be DESC or ASC");
   }
   const data = await productServices.getProducts({
-    pagination: { limit: Number(limit), offset: Number(offset) },
-    title: title as string,
-    status: status as string,
-    vendorId: Number(vendorId),
-    minPrice: Number(minPrice),
-    maxPrice: Number(maxPrice),
-    sortPrice: sortPrice as "DESC" | "ASC",
-    createdAt: createdAt as "DESC" | "ASC",
-  });
-  res.status(200).json({
-    status: "success",
-    result: data.products,
-    total: data.total,
-  });
-};
-
-const getProductsByCollectionId = async (req: Request, res: Response) => {
-  const { limit, offset, title, status, vendorId, minPrice, maxPrice, sortPrice, createdAt } = req.query;
-  const { collectionId } = req.params;
-  if (sortPrice && sortPrice !== "DESC" && sortPrice !== "ASC") {
-    throw new CustomError(codes.BAD_REQUEST, "sortPrice should be DESC or ASC");
-  }
-  if (createdAt && createdAt !== "DESC" && createdAt !== "ASC") {
-    throw new CustomError(codes.BAD_REQUEST, "createdAt should be DESC or ASC");
-  }
-  const data = await productServices.getProductsByCollectionId({
     pagination: { limit: Number(limit), offset: Number(offset) },
     title: title as string,
     status: status as string,
@@ -162,7 +136,6 @@ const productControllers = {
   getProducts,
   updateProduct,
   deleteProduct,
-  getProductsByCollectionId,
 };
 
 export default productControllers;

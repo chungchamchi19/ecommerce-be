@@ -327,33 +327,6 @@ const countProducts = async (params: { url?: string; title?: string }): Promise<
   return count;
 };
 
-/**
- * getProductsByCollectionId get products service by collection id
- * @param params.pagination {limit, offset}
- * @returns list products
- */
-const getProductsByCollectionId = async (
-  params: ProductSearchParams,
-): Promise<{ products: ProductResponse[]; total: number }> => {
-  const checkCollection = await collectionServices.getCollectionById(params.collectionId);
-  if (!checkCollection) {
-    throw new CustomError(codes.NOT_FOUND, "Collection not found!");
-  }
-  const pagination = {
-    limit: params.pagination.limit || configs.MAX_RECORDS_PER_REQ,
-    offset: params.pagination.offset || 0,
-  };
-  const newParams = {
-    ...params,
-    pagination,
-  };
-  let result = await productDaos.getProductsByCollectionId(newParams);
-  result.products = result.products.map((product: Product) => {
-    return productHelpers.formatProductResponse(product);
-  });
-  return result;
-};
-
 const productServices = {
   createProduct,
   getProducts,
@@ -361,7 +334,6 @@ const productServices = {
   deleteProduct,
   getProductById,
   countProducts,
-  getProductsByCollectionId,
 };
 
 export default productServices;
