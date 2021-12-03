@@ -12,6 +12,7 @@ router.post(
   asyncMiddleware(productControllers.createProduct),
 );
 router.get("/products", asyncMiddleware(productControllers.getProducts));
+router.get("/collections/:collectionId/products", asyncMiddleware(productControllers.getProductsByCollectionId));
 router.get("/products/:id", asyncMiddleware(productControllers.getProductById));
 router.put(
   "/admin/products/:id",

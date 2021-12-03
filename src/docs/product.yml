@@ -32,6 +32,10 @@ paths:
                   type: array
                   items:
                     type: number
+                collections:
+                  type: array
+                  items:
+                    type: number
                 options:
                   type: array
                   items:
@@ -189,6 +193,68 @@ paths:
                 type: array
                 items:
                   type: object
+  /api/v1/collections/{collectionId}/products:
+    get:
+      summary: get products by collection id
+      tags:
+        - Product
+      parameters:
+        - in: path
+          name: collectionId
+          schema:
+            type: number
+          description: collection id
+        - in: query
+          name: limit
+          schema:
+            type: number
+          description: limit product
+        - in: query
+          name: offset
+          schema:
+            type: number
+          description: skip number
+        - in: query
+          name: title
+          schema:
+            type: string
+          description: product title
+        - in: query
+          name: status
+          schema:
+            type: string
+          description: product status
+        - in: query
+          name: maxPrice
+          schema:
+            type: number
+          description: product maxPrice
+        - in: query
+          name: minPrice
+          schema:
+            type: number
+          description: product minPrice
+        - in: query
+          name: sortPrice
+          schema:
+            type: string
+            enum: [ASC, DESC]
+          description: product sortPrice
+        - in: query
+          name: createdAt
+          schema:
+            type: string
+            enum: [ASC, DESC]
+          description: product createdAt
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
   /api/v1/products/{id}:
     get:
       summary: get product
@@ -209,4 +275,3 @@ paths:
                 type: array
                 items:
                   type: object
-  

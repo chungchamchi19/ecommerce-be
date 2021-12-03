@@ -24,7 +24,7 @@ const getCollections = async (params: { pagination: Pagination }): Promise<Colle
   const collectionRepo = getRepository(Collection);
   const collections = await collectionRepo
     .createQueryBuilder("c")
-    .leftJoinAndSelect("c.productCollections", "pc")
+    // .leftJoinAndSelect("c.productCollections", "pc")
     .skip(params.pagination.offset)
     .take(params.pagination.limit)
     .getMany();
