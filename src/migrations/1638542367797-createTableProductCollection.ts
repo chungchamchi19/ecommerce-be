@@ -1,13 +1,13 @@
-import { MigrationInterface, QueryRunner, Table, TreeLevelColumn } from "typeorm";
+import { MigrationInterface, QueryRunner, Table, TableForeignKey } from "typeorm";
 
-export class productCollection1637200148390 implements MigrationInterface {
+export class createTableProductCollection1638542367797 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
         name: "product_collection",
         columns: [
           {
-            name: " id",
+            name: "id",
             type: "int",
             isPrimary: true,
             isGenerated: true,
@@ -36,6 +36,19 @@ export class productCollection1637200148390 implements MigrationInterface {
       }),
       true,
     );
+    await queryRunner.clearSqlMemory();
+    const foreignKeyCollection = new TableForeignKey({
+      columnNames: ["collectionId"],
+      referencedColumnNames: ["id"],
+      referencedTableName: "collection",
+    });
+    await queryRunner.createForeignKey("product_collection", foreignKeyCollection);
+    const foreignKeyProduct = new TableForeignKey({
+      columnNames: ["productId"],
+      referencedColumnNames: ["id"],
+      referencedTableName: "product",
+    });
+    await queryRunner.createForeignKey("product_collection", foreignKeyProduct);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {

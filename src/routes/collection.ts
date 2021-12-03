@@ -6,7 +6,7 @@ const router = express.Router();
 router.post("/admin/collections", asyncMiddleware(collectionControllers.createCollection));
 router.get("/collections", asyncMiddleware(collectionControllers.getCollections));
 router.get("/collections/:id", asyncMiddleware(collectionControllers.getCollectionById));
-router.put("/collections/:id", asyncMiddleware(collectionControllers.updateCollection));
-router.delete("/collections/:id", asyncMiddleware(collectionControllers.deleteCollection));
+router.put("/admin/collections/:id", asyncMiddleware(collectionControllers.updateCollection));
+router.delete("/admin/collections/:id", asyncMiddleware(collectionControllers.deleteCollection));
 
 export default router;

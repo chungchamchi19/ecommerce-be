@@ -15,6 +15,5 @@ export class Collection {
     description?: string;
 
     @OneToMany(() => ProductCollection, (productCollection) => productCollection.collection)
-    @JoinColumn({ name: "collectionId", referencedColumnName: "id" })
     productCollections?: ProductCollection[];
 }

@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner, TableForeignKey } from "typeorm";
 
-export class addForeignKeyVendor1637341925403 implements MigrationInterface {
+export class addForeignKeyForVendorIdInProduct1638542700781 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     queryRunner.clearSqlMemory();
     const foreignKey = new TableForeignKey({
