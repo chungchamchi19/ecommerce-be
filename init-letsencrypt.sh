@@ -5,10 +5,10 @@ if ! [ -x "$(command -v docker-compose)" ]; then
   exit 1
 fi
 
-domains=(chumchamchi.com)
+domains=(msd.japaneast.cloudapp.azure.com)
 rsa_key_size=4096
 data_path="./data/certbot"
-email="dinhchungkhtnk29@gmail.com" # Adding a valid address is strongly recommended
+email="chungvuihaha@gmail.com" # Adding a valid address is strongly recommended
 staging=0 # Set to 1 if you're testing your setup to avoid hitting request limits
 
 if [ -d "$data_path" ]; then
