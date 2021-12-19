@@ -28,5 +28,5 @@ export class Media {
   variant?: Variant;
 
   @OneToMany(() => MediaMap, (mediaMap) => mediaMap.media)
-  mediaMaps: MediaMap[];
+  mediaMaps?: MediaMap[];
 }

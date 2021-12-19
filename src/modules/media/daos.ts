@@ -1,3 +1,4 @@
+import { Pagination } from "./../../types/type.pagination";
 import { getRepository } from "typeorm";
 import { Media } from "../../entities/media";
 
@@ -21,10 +22,17 @@ const updateMedia = async (id: number, data: Media): Promise<Media> => {
   return data;
 };
 
+const getMedias = async (params: { pagination: Pagination }): Promise<Media[]> => {
+  const mediaRepo = getRepository(Media);
+  const medias = await mediaRepo.createQueryBuilder("m").skip(params.pagination.offset).take(params.pagination.limit).getMany();
+  return medias;
+};
+
 const mediaDaos = {
   createMedia,
   getMediaById,
   updateMedia,
+  getMedias,
 };
 
 export default mediaDaos;
