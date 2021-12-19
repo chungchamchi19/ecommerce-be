@@ -1,7 +1,9 @@
+import { Pagination } from "./../../types/type.pagination";
 import { Media } from "../../entities/media";
 import codes from "../../errors/codes";
 import CustomError from "../../errors/customError";
 import mediaDaos from "./daos";
+import configs from "../../configs";
 
 const createMedia = async (files: Express.Multer.File[]): Promise<Media[]> => {
   const listMedia: Media[] = [];
@@ -36,10 +38,19 @@ const updateMedia = async (id: number, mediaData: Media): Promise<Media> => {
   return newMedia;
 };
 
+const getMedias = async (params: { pagination: Pagination }): Promise<Media[]> => {
+  const pagination = {
+    limit: params.pagination.limit || configs.MAX_RECORDS_PER_REQ,
+    offset: params.pagination.offset || 0,
+  };
+  return await mediaDaos.getMedias({ pagination });
+};
+
 const mediaServices = {
   createMedia,
   getMediaById,
   updateMedia,
+  getMedias,
 };
 
 export default mediaServices;
