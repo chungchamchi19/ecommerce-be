@@ -1,12 +1,14 @@
 import { CartItem } from "../../entities/cartItem";
 import { Request, Response } from "express";
 import cartItemServices from "./services";
+import CartDaos from "../cart/daos";
 
 const createCartItem = async (req: Request, res: Response) => {
-  const { cartId, variantId, quantity } = req.body;
-
+  const userId  = req.user.id;
+  const cart = await CartDaos.getCartByUserId(userId);
+  const { variantId, quantity } = req.body;
   const cartData: CartItem = {
-    cartId,
+    cartId: cart?.id,
     variantId,
     quantity,
   };
@@ -40,13 +42,6 @@ const getCartItems = async (req: Request, res: Response) => {
 const updateCartItem = async (req: Request, res: Response) => {
   const { id } = req.params;
   const data = req.body;
-  if (data.media && data.media.length) {
-    data.media = data.media.map((item: number) => {
-      return {
-        id: item,
-      };
-    });
-  }
   const cartItem = await cartItemServices.updateCartItem(Number(id), data);
   res.status(200).json({
     status: "success",
