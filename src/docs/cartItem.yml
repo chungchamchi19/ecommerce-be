@@ -1,7 +1,7 @@
 paths:
   /api/v1/cart-items:
     post:
-      summary: Create an cartItem
+      summary: Add a item to cart
       tags:
         - CartItems
       requestBody:
@@ -10,8 +10,6 @@ paths:
             schema:
               type: object
               properties:
-                cartId:
-                  type: number
                 variantId:
                   type: number
                 quantity:
@@ -31,7 +29,7 @@ paths:
 
   /api/v1/cart-items/{id}:
     get:
-      summary: get all cartItem
+      summary: get infor of a item in cart
       tags:
         - CartItems
       parameters:
@@ -53,7 +51,7 @@ paths:
                   result:
                     type: object
     put:
-      summary: Update an cartItem
+      summary: Update item in a cart
       tags:
         - CartItems
       parameters:
@@ -68,8 +66,6 @@ paths:
             schema:
               type: object
               properties:
-                cartId:
-                  type: number
                 variantId:
                   type: number
                 quantity:
@@ -87,7 +83,7 @@ paths:
                   result:
                     type: object
     delete:
-      summary: Update an cartItem
+      summary: delete an cartItem
       tags:
         - CartItems
       parameters:
