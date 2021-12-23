@@ -31,7 +31,7 @@ paths:
                         type: string
                       vendors:
                         type: array
-    /api/v1/admin/vendors/{id}:
+  /api/v1/admin/vendors/{id}:
     put:
       summary: update vendor
       tags:
