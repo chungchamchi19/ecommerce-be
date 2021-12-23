@@ -10,15 +10,20 @@ const createVendor = async (vendorData: Vendor): Promise<Vendor> => {
 };
 
 const getVendorById = async (id: number): Promise<Vendor> => {
-  return await vendorDaos.getVendorById(id);
+  const vendor = await vendorDaos.getVendorById(id);
+  if (!vendor) {
+    throw new CustomError(codes.NOT_FOUND, "Vendor not found");
+  } else {
+    return vendor;
+  }
 };
 
-const getVendors = async (params: { pagination: Pagination }): Promise<Vendor[]> => {
+const getVendors = async (params: { pagination: Pagination }): Promise<{ vendors: Vendor[], total: number }> => {
   const pagination = {
     limit: params.pagination.limit || configs.MAX_RECORDS_PER_REQ,
     offset: params.pagination.offset || 0,
   };
-  return await vendorDaos.getVendors({ pagination });
+  return await vendorDaos.getVendors({ pagination }); 
 };
 
 const updateVendor = async (id: number, vendorData: Vendor): Promise<Vendor> => {
@@ -37,9 +42,14 @@ const updateVendor = async (id: number, vendorData: Vendor): Promise<Vendor> => 
 
 const deleteVendor = async (id: number) => {
   const findVendor = await getVendorById(id);
-  await vendorDaos.deleteVendor(id);
-  return findVendor;
+  if (!findVendor) {
+    throw new CustomError(codes.NOT_FOUND, "Vendor not found");
+  } else {
+    await vendorDaos.deleteVendor(id);
+    return findVendor;
+  }
 };
+
 
 const vendorServices = {
   createVendor,
