@@ -96,13 +96,13 @@ paths:
           description: skip number
       responses:
         "200":
-        description: Json format of srt file
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                type: object
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
   /api/v1/vendors/{id}:
     get:
       summary: get vendor by id
