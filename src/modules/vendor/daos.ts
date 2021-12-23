@@ -9,7 +9,7 @@ const createVendor = async (vendorData: Vendor): Promise<Vendor> => {
   return await vendorRepo.save(newVendor);
 };
 
-const getVendors = async (params: { pagination: Pagination }): Promise<{ vendors: Vendor[]; total: number }> => {
+const getVendors = async (params: { pagination: Pagination }): Promise<{ vendors: Vendor[], total: number }> => {
   const vendorRepo = getRepository(Vendor);
   let vendorQuery = await vendorRepo.createQueryBuilder("v").orderBy("v.createdAt", "DESC");
   const vendors = await vendorQuery.skip(params.pagination.offset).take(params.pagination.limit).getMany();
