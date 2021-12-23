@@ -23,10 +23,11 @@ const getVendorById = async (req: Request, res: Response) => {
 
 const getVendors = async (req: Request, res: Response) => {
   const { limit, offset } = req.query;
-  const vendors = await vendorServices.getVendors({ pagination: { limit: Number(limit), offset: Number(offset) } });
+  const data = await vendorServices.getVendors({ pagination: { limit: Number(limit), offset: Number(offset) } });
   res.status(200).json({
     status: "success",
-    result: vendors,
+    result: data.vendors,
+    total: data.total,
   });
 };
 

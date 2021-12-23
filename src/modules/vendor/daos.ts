@@ -9,15 +9,15 @@ const createVendor = async (vendorData: Vendor): Promise<Vendor> => {
   return await vendorRepo.save(newVendor);
 };
 
-const getVendors = async (params: { pagination: Pagination }): Promise<Vendor[]> => {
+const getVendors = async (params: { pagination: Pagination }): Promise<{ vendors: Vendor[]; total: number }> => {
   const vendorRepo = getRepository(Vendor);
-  const vendors = await vendorRepo
-    .createQueryBuilder("v")
-    .leftJoinAndSelect("v.products", "p")
-    .skip(params.pagination.offset)
-    .take(params.pagination.limit)
-    .getMany();
-  return vendors;
+  let vendorQuery = await vendorRepo.createQueryBuilder("v").orderBy("v.createdAt", "DESC");
+  const vendors = await vendorQuery.skip(params.pagination.offset).take(params.pagination.limit).getMany();
+  const total = await vendorQuery.getCount();
+  return {
+    vendors,
+    total,
+  };
 };
 
 const getVendorById = async (id: number): Promise<Vendor> => {
