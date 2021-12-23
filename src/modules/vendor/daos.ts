@@ -22,11 +22,7 @@ const getVendors = async (params: { pagination: Pagination }): Promise<Vendor[]>
 
 const getVendorById = async (id: number): Promise<Vendor> => {
   const vendorRepo = getRepository(Vendor);
-  const vendor = await vendorRepo
-    .createQueryBuilder("v")
-    .leftJoinAndSelect("v.products", "p")
-    .where(`v.id=${id}`)
-    .getOne();
+  const vendor = await vendorRepo.findOne(id);
   return vendor;
 };
 
