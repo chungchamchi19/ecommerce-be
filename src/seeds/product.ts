@@ -12,7 +12,7 @@ const productSeeding = async () => {
   const listMediaRecord = await mediaDaos.getMedias({ pagination: { limit: 25, offset: 0 } });
   const listMedia = listMediaRecord.map((item) => item.id);
   const listVendorRecord = await vendorServices.getVendors({ pagination: { limit: 25, offset: 0 } });
-  const listVendor = listVendorRecord.map((item) => item.id);
+  const listVendor = listVendorRecord.vendors.map((item) => item.id);
   const options = [
     {
       title: "Color",
