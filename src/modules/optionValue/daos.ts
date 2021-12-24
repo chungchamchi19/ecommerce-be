@@ -22,12 +22,7 @@ const getOptionValueById = async (id: number): Promise<OptionValue> => {
 
 const deleteOptionValues = async (ids: number[]) => {
   const optionValueRepo = getRepository(OptionValue);
-  const optionValue = await optionValueRepo
-    .createQueryBuilder()
-    .where(`id in :ids`)
-    .setParameters({ ids: `(${ids.join(",")})` })
-    .delete()
-    .execute();
+  const optionValue = await optionValueRepo.createQueryBuilder().where(`id in (:ids)`).setParameters({ ids: ids }).delete().execute();
   return optionValue;
 };
 

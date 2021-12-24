@@ -7,20 +7,7 @@ import { Option } from "../../entities/option";
 import { Media } from "../../entities/media";
 
 const createProduct = async (req: Request, res: Response) => {
-  const {
-    title,
-    description,
-    status,
-    price,
-    comparePrice,
-    url,
-    vendorId,
-    featureImageId,
-    media,
-    availableNumber,
-    options,
-    collections,
-  } = req.body;
+  const { title, description, status, price, comparePrice, url, vendorId, featureImageId, media, availableNumber, options, collections } = req.body;
   if (!featureImageId) {
     throw new CustomError(codes.BAD_REQUEST, "Missing field featureImageId!");
   }
@@ -113,6 +100,23 @@ const updateProduct = async (req: Request, res: Response) => {
         id: item,
       };
     });
+  }
+  if (data.options) {
+    data.options =
+      data.options?.map((option: { title: string; values: string[] }) => {
+        const optionValues = option.values.map((optionVal) => {
+          return {
+            value: optionVal,
+          };
+        });
+        return {
+          title: option.title,
+          optionValues,
+        };
+      }) || [];
+    if (data.options.length > 3) {
+      throw new CustomError(codes.BAD_REQUEST, "Maximum of options length is 3!");
+    }
   }
   const product = await productServices.updateProduct(Number(id), data);
   res.status(200).json({

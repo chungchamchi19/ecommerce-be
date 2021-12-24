@@ -24,7 +24,7 @@ export class Variant {
   @Column()
   productId?: number;
 
-  @ManyToOne(() => Product, (product) => product.id, { cascade: true })
+  @ManyToOne(() => Product, (product) => product.id, { cascade: true, onDelete: "CASCADE" })
   @JoinColumn({ name: "productId", referencedColumnName: "id" })
   product?: Product;
 
