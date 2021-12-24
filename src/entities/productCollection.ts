@@ -13,11 +13,11 @@ export class ProductCollection {
   @Column()
   collectionId?: number;
 
-  @ManyToOne(() => Collection, (collection) => collection.productCollections)
+  @ManyToOne(() => Collection, (collection) => collection.productCollections, { onDelete: "CASCADE" })
   @JoinColumn({ name: "collectionId", referencedColumnName: "id" })
   collection?: Collection;
 
-  @ManyToOne(() => Product, (product) => product.productCollections)
+  @ManyToOne(() => Product, (product) => product.productCollections, { onDelete: "CASCADE" })
   @JoinColumn({ name: "productId", referencedColumnName: "id" })
   product?: Product;
 }

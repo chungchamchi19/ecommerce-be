@@ -21,7 +21,7 @@ const updateOptionValue = async (id: number, data: OptionValue): Promise<OptionV
   };
 };
 
-const deleteOptions = async (ids: number[]) => {
+const deleteOptionValues = async (ids: number[]) => {
   if (!ids?.length) {
     throw new CustomError(codes.BAD_REQUEST, "Missing list id to delete!");
   }
@@ -32,7 +32,7 @@ const deleteOptions = async (ids: number[]) => {
 const optionValueServices = {
   createOptionValue,
   updateOptionValue,
-  deleteOptions,
+  deleteOptionValues,
 };
 
 export default optionValueServices;

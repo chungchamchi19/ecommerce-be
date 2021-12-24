@@ -20,11 +20,11 @@ export class OptionValueVariant {
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP", onUpdate: "CURRENT_TIMESTAMP", select: false })
   updatedAt?: Date;
 
-  @ManyToOne(() => OptionValue, (optionValue) => optionValue.optionValueVariants)
+  @ManyToOne(() => OptionValue, (optionValue) => optionValue.optionValueVariants, { onDelete: "CASCADE" })
   @JoinColumn({ name: "optionValueId", referencedColumnName: "id" })
   optionValue?: OptionValue;
 
-  @ManyToOne(() => Variant, (variant) => variant.optionValueVariants)
+  @ManyToOne(() => Variant, (variant) => variant.optionValueVariants, { onDelete: "CASCADE" })
   @JoinColumn({ name: "variantId", referencedColumnName: "id" })
   variant?: Variant;
 }

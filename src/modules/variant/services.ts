@@ -141,10 +141,18 @@ const updateVariant = async (id: number, data: Variant): Promise<Variant> => {
   };
 };
 
+const deleteVariantByIds = async (ids: number[]) => {
+  if (!ids.length) {
+    throw new CustomError(codes.BAD_REQUEST, "Missing list id to delete!");
+  }
+  await variantDaos.deleteVariantByIds(ids);
+};
+
 const variantServices = {
   getVariantById,
   createVariant,
   updateVariant,
+  deleteVariantByIds,
 };
 
 export default variantServices;
