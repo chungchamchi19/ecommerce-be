@@ -3,8 +3,8 @@ import collectionServices from "./services";
 import { Collection } from "../../entities/collection";
 
 const createCollection = async (req: Request, res: Response) => {
-  const { title, description } = req.body;
-  const collectionData: Collection = { title, description };
+  const { title, description, thumbnailId } = req.body;
+  const collectionData: Collection = { title, description, thumbnailId };
   const newCollection = await collectionServices.createCollection(collectionData);
   res.status(200).json({
     status: "success",
