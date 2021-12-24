@@ -32,13 +32,14 @@ const deleteContactById = async (id: number) => {
 
 
 const getAllContacts = async (params: Pagination) => {
+  console.log(params);
   const contactRepository = getRepository(Contact);
   const contacts = await contactRepository
     .createQueryBuilder("c")
     .orderBy("c.createdAt", "DESC")
     .skip(params.offset)
     .take(params.limit || configs.MAX_RECORDS_PER_REQ)
-    .getMany();
+    .getManyAndCount();
   return contacts;
 };
 
