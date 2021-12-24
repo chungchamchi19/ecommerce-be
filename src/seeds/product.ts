@@ -37,7 +37,7 @@ const productSeeding = async () => {
   for (let i = 0; i < 100; i++) {
     const collectionId = listCollection[Math.floor(Math.random() * listCollection.length)];
     const vendorId = listVendor[Math.floor(Math.random() * listVendor.length)];
-    const featureImageId = listMedia[Math.floor(Math.random() * listCollection.length)];
+    const featureImageId = listMedia[Math.floor(Math.random() * listMedia.length)];
     const formatMedia: Media[] = [featureImageId].map((item: number) => {
       return {
         id: item,

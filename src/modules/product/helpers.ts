@@ -1,3 +1,4 @@
+import { Collection } from "../../entities/collection";
 import { Media } from "../../entities/media";
 import { MediaMap } from "../../entities/mediaMap";
 import { Option } from "../../entities/option";
@@ -18,7 +19,7 @@ import { VariantResponse } from "../../types/type.variant";
  * @returns
  */
 const formatProductResponse = (product: Product, condition?: { disableOptions: boolean; disableVariants: boolean }): ProductResponse => {
-  const currentProduct = JSON.parse(JSON.stringify(product));
+  const currentProduct: Product = JSON.parse(JSON.stringify(product));
   // format options
   const formatOptions =
     currentProduct.options?.map((option: Option) => {
@@ -57,15 +58,21 @@ const formatProductResponse = (product: Product, condition?: { disableOptions: b
         publicTitle: newOptions.join(" / "),
       };
     }) || [];
+  // format collections
+  const formatCollections: Collection[] = currentProduct.productCollections.map((pc) => {
+    return pc.collection;
+  });
   // format product
   delete currentProduct.mediaMaps;
   delete currentProduct.vendorId;
   delete currentProduct.featureImageId;
+  delete currentProduct.productCollections;
   const formatProduct: ProductResponse = {
     ...currentProduct,
     options: !condition?.disableOptions ? formatOptions : undefined,
     media: formatMediaProd,
     variants: !condition?.disableOptions ? formatVariants : undefined,
+    collections: formatCollections,
   };
   return formatProduct;
 };
