@@ -14,7 +14,8 @@ paths:
                   type: string
                 description:
                   type: string
-
+                thumbnailId:
+                  type: number
       responses:
         "200": # status code
           description: Json format of srt file
@@ -34,6 +35,8 @@ paths:
                         type: string
                       description:
                         type: string
+                      thumbnailId:
+                        type: number
                       collections:
                         type: array
   /api/v1/admin/collections/{id}:
@@ -57,6 +60,8 @@ paths:
                   type: string
                 description:
                   type: string
+                thumbnailId:
+                  type: number
       responses:
         "200": # status code
           description: Json format of srt file

@@ -3,6 +3,7 @@ import "reflect-metadata";
 import { Product } from "./product";
 import { Variant } from "./variant";
 import { MediaMap } from "./mediaMap";
+import { Collection } from "./collection";
 
 @Entity()
 export class Media {
@@ -29,4 +30,7 @@ export class Media {
 
   @OneToMany(() => MediaMap, (mediaMap) => mediaMap.media)
   mediaMaps?: MediaMap[];
+
+  @OneToOne(() => Collection, (collection) => collection.media)
+  collection?: Collection;
 }

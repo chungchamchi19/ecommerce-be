@@ -10,7 +10,12 @@ const createCollection = async (collection: Collection): Promise<Collection> => 
 };
 
 const getCollectionById = async (id: number): Promise<Collection> => {
-  return await collectionDaos.getCollectionById(id);
+  const collection = await collectionDaos.getCollectionById(id);
+  if (!collection) {
+    throw new CustomError(codes.NOT_FOUND, "Collection not found");
+  } else {
+    return collection;
+  }
 };
 
 const updateCollection = async (id: number, collection: Collection): Promise<Collection> => {
@@ -37,8 +42,12 @@ const getCollections = async (params: { pagination: Pagination }): Promise<Colle
 
 const deleteCollection = async (id: number) => {
   const findCollection = await getCollectionById(id);
-  await collectionDaos.deleteCollection(id);
-  return findCollection;
+  if (!findCollection) {
+    throw new CustomError(codes.NOT_FOUND, "Vendor not found");
+  } else {
+    await collectionDaos.deleteCollection(id);
+    return findCollection;
+  }
 };
 
 const deleteCollections = async (ids: number[]) => {
