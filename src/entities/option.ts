@@ -23,7 +23,7 @@ export class Option {
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP", onUpdate: "CURRENT_TIMESTAMP", select: false })
   updatedAt?: Date;
 
-  @ManyToOne(() => Product, (product) => product.options)
+  @ManyToOne(() => Product, (product) => product.options, { onDelete: "CASCADE" })
   @JoinColumn({ name: "productId", referencedColumnName: "id" })
   product?: Product;
 

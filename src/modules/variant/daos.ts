@@ -47,12 +47,18 @@ const deleteVariant = async (id: number) => {
   await variantRepo.delete(id);
 };
 
+const deleteVariantByIds = async (ids: number[]) => {
+  const variantRepo = getRepository(Variant);
+  await variantRepo.createQueryBuilder().where(`id in (:ids)`).setParameters({ ids: ids }).delete().execute();
+};
+
 const variantDaos = {
   getVariantById,
   createVariant,
   updateVariant,
   deleteVariant,
   getVariants,
+  deleteVariantByIds,
 };
 
 export default variantDaos;

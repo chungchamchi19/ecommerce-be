@@ -1,3 +1,4 @@
+import { Collection } from "../../entities/collection";
 import { Media } from "../../entities/media";
 import { MediaMap } from "../../entities/mediaMap";
 import { Option } from "../../entities/option";
@@ -17,13 +18,11 @@ import { VariantResponse } from "../../types/type.variant";
  * @param condition.disableVariants có bỏ variants trong response hay không?
  * @returns
  */
-const formatProductResponse = (
-  product: Product,
-  condition?: { disableOptions: boolean; disableVariants: boolean },
-): ProductResponse => {
+const formatProductResponse = (product: Product, condition?: { disableOptions: boolean; disableVariants: boolean }): ProductResponse => {
+  const currentProduct: Product = JSON.parse(JSON.stringify(product));
   // format options
   const formatOptions =
-    product.options?.map((option: Option) => {
+    currentProduct.options?.map((option: Option) => {
       const newOptionValues = option.optionValues.map((optionVal: OptionValue) => optionVal.value);
       delete option.optionValues;
       return {
@@ -33,13 +32,13 @@ const formatProductResponse = (
     }) || [];
   // format media
   let formatMediaProd =
-    product.mediaMaps?.map((mediaMap: MediaMap) => {
+    currentProduct.mediaMaps?.map((mediaMap: MediaMap) => {
       return mediaMap.media;
     }) || [];
-  formatMediaProd = formatMedia(product.featureImage, formatMediaProd);
+  formatMediaProd = formatMedia(currentProduct.featureImage, formatMediaProd);
   // format variants
   const formatVariants: VariantResponse[] =
-    product.variants?.map((variant: Variant) => {
+    currentProduct.variants?.map((variant: Variant) => {
       const newOptionValues =
         variant.optionValueVariants.map((optionValVar: OptionValueVariant) => {
           return {
@@ -47,9 +46,7 @@ const formatProductResponse = (
             position: optionValVar?.optionValue?.option?.position,
           };
         }) || [];
-      const newOptions: string[] = newOptionValues
-        .sort((left, right) => left.position - right.position)
-        .map((item) => item.value);
+      const newOptions: string[] = newOptionValues.sort((left, right) => left.position - right.position).map((item) => item.value);
       delete variant.optionValueVariants;
       return {
         ...variant,
@@ -61,13 +58,21 @@ const formatProductResponse = (
         publicTitle: newOptions.join(" / "),
       };
     }) || [];
+  // format collections
+  const formatCollections: Collection[] = currentProduct.productCollections.map((pc) => {
+    return pc.collection;
+  });
   // format product
-  delete product.mediaMaps;
+  delete currentProduct.mediaMaps;
+  delete currentProduct.vendorId;
+  delete currentProduct.featureImageId;
+  delete currentProduct.productCollections;
   const formatProduct: ProductResponse = {
-    ...product,
+    ...currentProduct,
     options: !condition?.disableOptions ? formatOptions : undefined,
     media: formatMediaProd,
     variants: !condition?.disableOptions ? formatVariants : undefined,
+    collections: formatCollections,
   };
   return formatProduct;
 };

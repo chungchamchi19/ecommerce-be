@@ -1,8 +1,8 @@
-import { Variant } from "./../entities/variant";
 import { Vendor } from "./../entities/vendor";
 import { Media } from "../entities/media";
 import { VariantResponse } from "./type.variant";
 import { Pagination } from "./type.pagination";
+import { Collection } from "../entities/collection";
 
 export type OptionProductResponse = {
   id?: number;
@@ -28,6 +28,7 @@ export type ProductResponse = {
   options?: OptionProductResponse[];
   vendor?: Vendor;
   media?: Media[];
+  collections?: Collection[];
   // productCollections?: ProductCollection[];
 };
 
