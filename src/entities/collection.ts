@@ -1,19 +1,26 @@
-import { Column, Entity, OneToMany, JoinColumn, PrimaryGeneratedColumn } from "typeorm";
-import { collection1637198775086 } from "../migrations/1637198775086-collection";
-
+import { Column, Entity, OneToMany, JoinColumn, PrimaryGeneratedColumn, OneToOne } from "typeorm";
+import media from "../routes/media";
+import { Media } from "./media";
 import { ProductCollection } from "./productCollection";
 
 @Entity()
 export class Collection {
-    @PrimaryGeneratedColumn()
-    id?: number;
+  @PrimaryGeneratedColumn()
+  id?: number;
 
-    @Column()
-    title?: string;
+  @Column()
+  title?: string;
 
-    @Column()
-    description?: string;
+  @Column()
+  description?: string;
 
-    @OneToMany(() => ProductCollection, (productCollection) => productCollection.collection)
-    productCollections?: ProductCollection[];
+  @Column()
+  thumbnailId?: number;
+
+  @OneToMany(() => ProductCollection, (productCollection) => productCollection.collection)
+  productCollections?: ProductCollection[];
+
+  @OneToOne(() => Media, (media) => media.collection)
+  @JoinColumn({ name: "thumbnailId", referencedColumnName: "id" })
+  media?: Media;
 }
