@@ -222,10 +222,13 @@ const getProducts = async (params: ProductSearchParams): Promise<{ products: Pro
     pagination,
   };
   let result = await productDaos.getProducts(newParams);
-  result.products = result.products.map((product: Product) => {
+  const formatProducts = result.products.map((product: Product) => {
     return productHelpers.formatProductResponse(product, { disableOptions: true, disableVariants: true });
   });
-  return result;
+  return {
+    products: formatProducts,
+    total: result.total,
+  };
 };
 
 /**
