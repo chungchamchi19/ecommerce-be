@@ -32,7 +32,6 @@ const deleteContactById = async (id: number) => {
 
 
 const getAllContacts = async (params: Pagination) => {
-  console.log(params);
   const contactRepository = getRepository(Contact);
   const contacts = await contactRepository
     .createQueryBuilder("c")

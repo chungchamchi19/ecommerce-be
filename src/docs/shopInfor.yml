@@ -1,0 +1,52 @@
+paths:
+  /api/v1/shop-infor:
+    post:
+      summary: Create or update shopInfor
+      tags:
+        - ShopInfor
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bossName:
+                  type: string
+                email:
+                  type: string
+                facebook:
+                  type: string
+                zalo:
+                  type: string
+                bankAccountId:
+                  type: string
+                phone: 
+                  type: string
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  result:
+                    type: object
+    get:
+      summary: get shop information
+      tags:
+        - ShopInfor
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  result:
+                    type: object

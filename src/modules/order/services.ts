@@ -17,7 +17,6 @@ const getOrders = async (params: { pagination: Pagination }, search: string, use
     limit: params.pagination.limit || configs.MAX_RECORDS_PER_REQ,
     offset: params.pagination.offset || 0,
   };
-  console.log(userId, search);
   let listOrder = await orderDaos.getOrders({ pagination }, userId, search);
 
   return listOrder;
