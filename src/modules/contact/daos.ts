@@ -38,7 +38,7 @@ const getAllContacts = async (params: Pagination) => {
     .orderBy("c.createdAt", "DESC")
     .skip(params.offset)
     .take(params.limit || configs.MAX_RECORDS_PER_REQ)
-    .getMany();
+    .getManyAndCount();
   return contacts;
 };
 
