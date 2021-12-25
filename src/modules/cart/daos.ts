@@ -13,7 +13,7 @@ const getCartById = async (id: number): Promise<Cart> => {
   const cartRepo = getRepository(Cart);
   const cart = await cartRepo
     .createQueryBuilder("c")
-    .leftJoinAndSelect("c.cartItems", "cartItems","c.id=cartItems.cartId")
+    .leftJoinAndSelect("c.cartItems", "cartItems", "c.id=cartItems.cartId")
     .leftJoinAndSelect("cartItems.variant", "variant", "variant.id=cartItems.variantId")
     .leftJoinAndSelect("variant.product", "product", "variant.productId=product.id")
     .where(`c.id=${id}`)
@@ -25,7 +25,7 @@ const getCartByUserId = async (userId: number): Promise<Cart> => {
   const cartRepo = getRepository(Cart);
   const cart = await cartRepo
     .createQueryBuilder("c")
-    .leftJoinAndSelect("c.cartItems", "cartItems","c.id=cartItems.cartId")
+    .leftJoinAndSelect("c.cartItems", "cartItems", "c.id=cartItems.cartId")
     .leftJoinAndSelect("cartItems.variant", "variant", "variant.id=cartItems.variantId")
     .leftJoinAndSelect("variant.product", "product", "variant.productId=product.id")
     .where(`c.userId=${userId}`)
@@ -42,20 +42,17 @@ const getMyCart = async (userId: number): Promise<Cart> => {
     .leftJoinAndSelect("variant.product", "product", "variant.productId=product.id")
     .where(`c.userId=${userId}`)
     .getOne();
+  // console.log(cart);
   return cart;
 };
 const checkCart = async (userId: number): Promise<Cart> => {
   const cartRepo = getRepository(Cart);
-  const cart = await cartRepo.findOne({userId :userId});
+  const cart = await cartRepo.findOne({ userId: userId });
   return cart;
 };
 const getCarts = async (params: { pagination: Pagination }): Promise<Cart[]> => {
   const CartRepo = getRepository(Cart);
-  return await CartRepo.createQueryBuilder("c")
-    .leftJoinAndSelect("c.cartItems", "cartItems")
-    .skip(params.pagination.offset)
-    .take(params.pagination.limit)
-    .getMany();
+  return await CartRepo.createQueryBuilder("c").leftJoinAndSelect("c.cartItems", "cartItems").skip(params.pagination.offset).take(params.pagination.limit).getMany();
 };
 
 const updateCart = async (id: number, cartData: Cart): Promise<Cart> => {
@@ -77,7 +74,7 @@ const CartDaos = {
   deleteCart,
   getCartByUserId,
   getMyCart,
-  checkCart
+  checkCart,
 };
 
 export default CartDaos;

@@ -2,11 +2,8 @@ import { Pagination } from "../../types/type.pagination";
 import { Cart } from "../../entities/cart";
 // import { convertToSlug } from "../../utils/convertToSlug";
 import cartDaos from "./daos";
-import configs from "../../configs";
-import mediaServices from "../media/services";
 import CustomError from "../../errors/customError";
 import codes from "../../errors/codes";
-import { Media } from "../../entities/media";
 
 const createCart = async (cartData: Cart) => {
   const checkExist = await checkCart(cartData.userId);
@@ -14,21 +11,24 @@ const createCart = async (cartData: Cart) => {
   const newcart = await cartDaos.createCart(cartData);
   return newcart;
 };
+const returnCart = async(cart: any) => {
+  let totalPrice =0;
+  let totalComparePrice =0;
+  let totalCountItems = 0  
+  for(let i = 0; i< cart?.cartItems?.length;i++) {
+    cart.cartItems[i].linePrice = cart.cartItems[i].variant.price*cart.cartItems[i].quantity;
+    cart.cartItems[i].lineComparePrice = cart.cartItems[i].variant.comparePrice*cart.cartItems[i].quantity;
+    totalPrice += cart.cartItems[i].linePrice;
+    totalComparePrice += cart.cartItems[i].lineComparePrice; 
+    totalCountItems += cart.cartItems[i].quantity
+  }
+  cart["totalPrice"]= totalPrice;
+  cart["totalComparePrice"] = totalComparePrice;
+  cart["totalCountItems"] =totalCountItems;
+  console.log(cart)
+  return cart;
 
-// const getCarts = async (params: { pagination: Pagination }): Promise<Cart[]> => {
-//   const pagination = {
-//     limit: params.pagination.limit || configs.MAX_RECORDS_PER_REQ,
-//     offset: params.pagination.offset || 0,
-//   };
-//   let listCart = await cartDaos.getCarts({ pagination });
-//   // listCart = listCart.map((cart: Cart) => {
-//   //   return {
-//   //     ...cart,
-//   //   };
-//   // });
-//   return listCart;
-// };
-
+}
 const getCartById = async (id: number): Promise<Cart> => {
   const findCart = await cartDaos.getCartById(id);
   if (!findCart) {
@@ -42,11 +42,6 @@ const getCartByUserId = async (userId: number): Promise<Cart> => {
   if (!findCart) {
     throw new CustomError(codes.NOT_FOUND, "cart not found!");
   }
-  // const media = formatMedia(findCart.featureImage, findcart.media);
-  // return {
-  //   ...findCart,
-  //   media,
-  // };
   return findCart;
 };
 const getMyCart = async (userId: number): Promise<Cart> => {
@@ -87,6 +82,7 @@ const cartServices = {
   deleteCart,
   getCartById,
   getMyCart,
+  returnCart
 };
 
 export default cartServices;
