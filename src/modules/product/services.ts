@@ -273,7 +273,8 @@ const updateProduct = async (id: number, data: Product): Promise<ProductResponse
     }
   }
   if (data.media) {
-    const currentMedia = findProduct.media;
+    const formatProduct = productHelpers.formatProductResponse(findProduct);
+    const currentMedia = formatProduct.media;
     const deleteMedia = currentMedia
       .filter((media: Media) => {
         return !data.media.find((item) => item.id === media.id);
@@ -309,12 +310,48 @@ const updateProduct = async (id: number, data: Product): Promise<ProductResponse
     await updateVariantByOptions({ variants: findProduct.variants, options: findProduct.options, productId: findProduct.id }, data.options);
     delete data.options;
   }
+  if (data.collections) {
+    await updateCollectionsByProduct(data.collections, findProduct);
+    delete data.collections;
+  }
   if (JSON.stringify(data) !== "{}") {
     await productDaos.updateProduct(id, data);
   }
   return await getProductById(id);
 };
 
+/**
+ * updateCollectionsByProduct update product collection
+ * @param collections collections cần update
+ * @param product product cần update
+ */
+const updateCollectionsByProduct = async (collections: number[], product: Product) => {
+  const updated = [];
+  for (let i = 0; i < collections.length; i++) {
+    const collectionId = collections[i];
+    if (product.productCollections.length > i) {
+      const oldPC = product.productCollections[i];
+      if (oldPC.collectionId !== collectionId) {
+        await productCollectionServices.updateProductCollection(oldPC.id, { collectionId: collectionId });
+      }
+      updated.push(oldPC.id);
+    } else {
+      await productCollectionServices.createProductCollection({ collectionId: collectionId, productId: product.id });
+    }
+  }
+  for (let i = 0; i < product.productCollections.length; i++) {
+    const oldPC = product.productCollections[i];
+    if (!updated.find((id) => id === oldPC.id)) {
+      await productCollectionServices.deleteProductCollection(oldPC.id);
+    }
+  }
+};
+
+/**
+ * updateVariantByOptions xử lý thêm, sửa, xóa variant theo options mới
+ * @param oldData data cũ
+ * @param newOptions options mới
+ */
 const updateVariantByOptions = async (oldData: { variants: Variant[]; options: Option[]; productId: number }, newOptions: Option[]) => {
   // update option trước
   const oldOptions = oldData.options;
@@ -453,6 +490,11 @@ const updateVariantByOptions = async (oldData: { variants: Variant[]; options: O
   }
 };
 
+/**
+ * createVariantsFromExistOptions tạo variant từ options có sẵn trong db
+ * @param options options
+ * @param product product cần tạo variant
+ */
 const createVariantsFromExistOptions = async (options: Option[], product: Product) => {
   const newVariant: Variant = {
     price: product.price,
@@ -487,6 +529,13 @@ const createVariantsFromExistOptions = async (options: Option[], product: Produc
   }
 };
 
+/**
+ * createOrUpdateOptionValue thêm hoặc sửa option value theo options
+ * @param oldOptionValues optionValues cũ
+ * @param newOptionsValues optionValues mới
+ * @param optionId option id
+ * @returns những option values mới được tạo
+ */
 const createOrUpdateOptionValue = async (oldOptionValues: OptionValue[], newOptionsValues: OptionValue[], optionId: number) => {
   const newOptionValues = [];
   if (oldOptionValues?.length) {
