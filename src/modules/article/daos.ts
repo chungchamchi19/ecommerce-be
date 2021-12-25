@@ -46,7 +46,7 @@ const getArticlesByUserId = async (condition: { userId: number; exceptArticleId?
     .getMany();
   const total = await articleRepository.createQueryBuilder("a").where("a.userId = :userId and a.isDeleted = false", { userId: condition.userId }).getCount();
   return {
-    artilces: articles,
+    articles: articles,
     total,
   };
 };
