@@ -1,0 +1,105 @@
+paths:
+  /api/v1/admin/products/{productId}/variants:
+    post:
+      summary: create variant
+      tags:
+        - Variant
+      parameters:
+        - in: path
+          name: productId
+          schema:
+            type: number
+          description: product id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                price:
+                  type: number
+                comparePrice:
+                  type: number
+                availableNumber:
+                  type: number
+                featureImageId:
+                  type: number
+                options:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  result:
+                    type: object
+  /api/v1/admin/products/{productId}/variants/{id}:
+    put:
+      summary: update variant
+      tags:
+        - Variant
+      parameters:
+        - in: path
+          name: productId
+          schema:
+            type: number
+          description: product id
+        - in: path
+          name: id
+          schema:
+            type: number
+          description: variant id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                price:
+                  type: number
+                comparePrice:
+                  type: number
+                availableNumber:
+                  type: number
+                featureImageId:
+                  type: number
+                options:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+  /api/v1/admin/variants/{id}:
+    delete:
+      summary: update variant
+      tags:
+        - Variant
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: number
+          description: variant id
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object

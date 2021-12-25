@@ -10,6 +10,7 @@ import codes from "../../errors/codes";
 import CustomError from "../../errors/customError";
 import { ProductResponse } from "../../types/type.product";
 import { VariantResponse } from "../../types/type.variant";
+import variantHelpers from "../variant/helpers";
 
 /**
  * formatProductResponse: format response cho các apis product
@@ -39,24 +40,7 @@ const formatProductResponse = (product: Product, condition?: { disableOptions: b
   // format variants
   const formatVariants: VariantResponse[] =
     currentProduct.variants?.map((variant: Variant) => {
-      const newOptionValues =
-        variant.optionValueVariants.map((optionValVar: OptionValueVariant) => {
-          return {
-            value: optionValVar?.optionValue?.value,
-            position: optionValVar?.optionValue?.option?.position,
-          };
-        }) || [];
-      const newOptions: string[] = newOptionValues.sort((left, right) => left.position - right.position).map((item) => item.value);
-      delete variant.optionValueVariants;
-      return {
-        ...variant,
-        options: newOptions,
-        option1: newOptions.length >= 1 ? newOptions[0] : null,
-        option2: newOptions.length >= 2 ? newOptions[1] : null,
-        option3: newOptions.length >= 3 ? newOptions[2] : null,
-        available: Number(variant.availableNumber) > 0,
-        publicTitle: newOptions.join(" / "),
-      };
+      return variantHelpers.formatVariant(variant);
     }) || [];
   // format collections
   const formatCollections: Collection[] = currentProduct.productCollections.map((pc) => {
