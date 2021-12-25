@@ -1,0 +1,65 @@
+paths:
+  /api/v1/provinces:
+    get:
+      summary: get provinces
+      tags:
+        - Address
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  result:
+                    type: object
+
+  /api/v1/districts:
+    get:
+      summary: get districts by provinceId
+      tags:
+        - Address
+      parameters:
+        - in: query
+          name: provinceId
+          schema:
+            type: string
+          description: provinceId
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  result:
+                    type: object
+  /api/v1/wards:
+    get:
+      summary: get wards by districtId
+      tags:
+        - Address
+      parameters:
+        - in: query
+          name: districtId
+          schema:
+            type: string
+          description: districtId
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  result:
+                    type: object
