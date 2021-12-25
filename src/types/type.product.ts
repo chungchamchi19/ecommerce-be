@@ -42,4 +42,5 @@ export type ProductSearchParams = {
   sortPrice?: "DESC" | "ASC";
   pagination?: Pagination;
   createdAt?: "DESC" | "ASC";
+  bestSelling?: boolean;
 };

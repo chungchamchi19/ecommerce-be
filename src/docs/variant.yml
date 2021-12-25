@@ -85,7 +85,7 @@ paths:
                   type: object
   /api/v1/admin/variants/{id}:
     delete:
-      summary: update variant
+      summary: delete variant
       tags:
         - Variant
       parameters:

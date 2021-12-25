@@ -7,7 +7,7 @@ import { Option } from "../../entities/option";
 import { Media } from "../../entities/media";
 
 const createProduct = async (req: Request, res: Response) => {
-  const { title, description, status, price, comparePrice, url, vendorId, featureImageId, media, availableNumber, options, collections } = req.body;
+  const { title, description, status, price, comparePrice, url, vendorId, featureImageId, media, availableNumber, options, collections, bestSelling } = req.body;
   if (!featureImageId) {
     throw new CustomError(codes.BAD_REQUEST, "Missing field featureImageId!");
   }
@@ -48,6 +48,7 @@ const createProduct = async (req: Request, res: Response) => {
     availableNumber: availableNumber || 0,
     options: formatOption,
     collections,
+    bestSelling,
   };
   const newProduct = await productServices.createProduct(productData);
   res.status(200).json({
@@ -66,7 +67,7 @@ const getProductById = async (req: Request, res: Response) => {
 };
 
 const getProducts = async (req: Request, res: Response) => {
-  const { limit, offset, title, status, vendorId, collectionId, minPrice, maxPrice, sortPrice, createdAt } = req.query;
+  const { limit, offset, title, status, vendorId, collectionId, minPrice, maxPrice, sortPrice, createdAt, bestSelling } = req.query;
   if (sortPrice && sortPrice !== "DESC" && sortPrice !== "ASC") {
     throw new CustomError(codes.BAD_REQUEST, "sortPrice should be DESC or ASC");
   }
@@ -83,6 +84,7 @@ const getProducts = async (req: Request, res: Response) => {
     sortPrice: sortPrice as "DESC" | "ASC",
     createdAt: createdAt as "DESC" | "ASC",
     collectionId: Number(collectionId),
+    bestSelling: bestSelling === "true",
   });
   res.status(200).json({
     status: "success",

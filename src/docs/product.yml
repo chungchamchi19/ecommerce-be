@@ -28,6 +28,8 @@ paths:
                   type: number
                 featureImageId:
                   type: number
+                bestSelling:
+                  type: boolean
                 media:
                   type: array
                   items:
@@ -92,6 +94,8 @@ paths:
                   type: number
                 featureImageId:
                   type: number
+                bestSelling:
+                  type: boolean
                 media:
                   type: array
                   items:
@@ -183,6 +187,11 @@ paths:
             type: string
             enum: [ASC, DESC]
           description: product sortPrice
+        - in: query
+          name: bestSelling
+          schema:
+            type: boolean
+          description: product bestSelling
         - in: query
           name: createdAt
           schema:

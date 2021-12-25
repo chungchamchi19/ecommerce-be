@@ -36,6 +36,9 @@ export class Product {
   @Column()
   url?: string;
 
+  @Column()
+  bestSelling?: boolean;
+
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   createdAt?: Date;
 
