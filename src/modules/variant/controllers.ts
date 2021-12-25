@@ -39,9 +39,19 @@ const update = async (req: Request, res: Response) => {
   });
 };
 
+const deleteVariantById = async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const deletedVariant = await variantServices.deleteVariantById(Number(id));
+  res.status(200).json({
+    status: "success",
+    result: deletedVariant,
+  });
+};
+
 const variantControllers = {
   create,
   update,
+  deleteVariantById,
 };
 
 export default variantControllers;
