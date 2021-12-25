@@ -29,7 +29,7 @@ const getArticleById = async (id: number) => {
   return article;
 };
 
-const getArticlesByUserId = async (condition: { userId: number; exceptArticleId?: number; limit?: number }) => {
+const getArticlesByUserId = async (condition: { userId: number; exceptArticleId?: number; limit?: number; offset?: number }) => {
   const articleRepository = getRepository(Article);
   let whereConditionGetArticle = `a.userId = ${condition.userId} and a.isDeleted = false`;
   if (condition.exceptArticleId) {
@@ -41,33 +41,35 @@ const getArticlesByUserId = async (condition: { userId: number; exceptArticleId?
     .leftJoinAndSelect("at.tag", "t", "t.isDeleted = false")
     .where(whereConditionGetArticle)
     .orderBy("a.createdAt", "DESC")
+    .skip(condition.offset || 0)
     .take(condition.limit || configs.MAX_RECORDS_PER_REQ)
     .getMany();
-  return articles;
+  const total = await articleRepository.createQueryBuilder("a").where("a.userId = :userId and a.isDeleted = false", { userId: condition.userId }).getCount();
+  return {
+    artilces: articles,
+    total,
+  };
 };
 
-const updateArticle = async (
-  articleId: number,
-  data: ArticleUpdateParamsType,
-  tags: { id: number; articleTagId?: number }[],
-) => {
+const updateArticle = async (articleId: number, data: ArticleUpdateParamsType, tags: { id: number; articleTagId?: number }[]) => {
   const articleRepository = getRepository(Article);
   const articleData = {
     ...data,
     updatedAt: new Date(),
   };
   await articleRepository.update(articleId, articleData);
-  await tags.forEach(async (tag) => {
-    if (!tag.articleTagId) {
-      await articleTagDaos.createArticleTag({
-        articleId: articleId,
-        tagId: tag.id,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        isDeleted: false,
-      });
-    }
-  });
+  tags?.length &&
+    (await tags.forEach(async (tag) => {
+      if (!tag.articleTagId) {
+        await articleTagDaos.createArticleTag({
+          articleId: articleId,
+          tagId: tag.id,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          isDeleted: false,
+        });
+      }
+    }));
   const article: Article = await articleRepository.findOne(articleId);
   return article;
 };
@@ -103,7 +105,11 @@ const getAllArticles = async (params: Pagination) => {
     .skip(params.offset)
     .take(params.limit || configs.MAX_RECORDS_PER_REQ)
     .getMany();
-  return articles;
+  const total = await articleRepository.createQueryBuilder("a").where("a.isDeleted = false").getCount();
+  return {
+    articles,
+    total,
+  };
 };
 
 export default {
