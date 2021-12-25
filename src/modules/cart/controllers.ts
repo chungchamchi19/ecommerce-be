@@ -33,12 +33,18 @@ const getCartByUserId = async (req: Request, res: Response) => {
   });
 };
 const getCart = async (req: Request, res: Response) => {
-  const carts = await cartServices.getMyCart(Number(req.user?.id));
+  const cart = await cartServices.getMyCart(Number(req.user?.id));
+
+  // console.log(cart.cartItems[0].variant);
+  //function in tien (compare,line price,line_price   , total, count)
+  const returnCart = await cartServices.returnCart(cart);
+  // console.log(returnCart)
   res.status(200).json({
     status: "success",
-    result: carts,
+    result: returnCart,
   });
 };
+
 
 
 const deleteCart = async (req: Request, res: Response) => {
