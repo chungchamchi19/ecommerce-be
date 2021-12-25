@@ -22,13 +22,14 @@ const getArticles = async (req: Request, res: Response) => {
   if (!currentUserId) {
     throw new CustomError(codes.NOT_FOUND);
   }
-  const result = await articleService.getArticlesByUserId(currentUserId, {
+  const data = await articleService.getArticlesByUserId(currentUserId, {
     limit: Number(limit) || configs.MAX_RECORDS_PER_REQ,
     offset: Number(offset) || 0,
   });
   res.status(200).json({
     status: "success",
-    result: result,
+    result: data.articles,
+    total: data.total,
   });
 };
 
@@ -70,13 +71,14 @@ const updateArticleById = async (req: Request, res: Response) => {
 
 const getAllArticles = async (req: Request, res: Response) => {
   const { limit, offset } = req.query;
-  const result = await articleService.getAllArticles({
+  const data = await articleService.getAllArticles({
     limit: Number(limit) || configs.MAX_RECORDS_PER_REQ,
     offset: Number(offset) || 0,
   });
   res.status(200).json({
     status: "success",
-    result: result,
+    result: data.articles,
+    total: data.total,
   });
 };
 
