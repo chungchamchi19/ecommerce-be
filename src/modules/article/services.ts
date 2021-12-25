@@ -1,3 +1,5 @@
+import codes from "../../errors/codes";
+import CustomError from "../../errors/customError";
 import { ArticleCreateParamsType, ArticleUpdateParamsType } from "../../types/type.article";
 import { Pagination } from "../../types/type.pagination";
 import articleTagServices from "../articleTag/services";
@@ -18,13 +20,16 @@ const createArticle = async (article: ArticleCreateParamsType, tags: { id: numbe
   return articleRes;
 };
 
-const getArticlesByUserId = async (userId: number) => {
-  const articles = await articleDao.getArticlesByUserId({ userId });
-  return articles;
+const getArticlesByUserId = async (userId: number, pagination: Pagination) => {
+  const result = await articleDao.getArticlesByUserId({ userId, ...pagination });
+  return result;
 };
 
 const getArticleById = async (id: number) => {
   const article = await articleDao.getArticleById(id);
+  if (!article) {
+    throw new CustomError(codes.NOT_FOUND, "Article not found!");
+  }
   const relativeArticles = await articleDao.getArticlesByUserId({
     userId: article.userId,
     exceptArticleId: article.id,
@@ -36,11 +41,7 @@ const getArticleById = async (id: number) => {
   };
 };
 
-const updateArticleById = async (
-  articleId: number,
-  articleData: ArticleUpdateParamsType,
-  tags: { id: number; articleTagId?: number }[],
-) => {
+const updateArticleById = async (articleId: number, articleData: ArticleUpdateParamsType, tags: { id: number; articleTagId?: number }[]) => {
   return await articleDao.updateArticle(articleId, articleData, tags);
 };
 
