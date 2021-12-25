@@ -8,10 +8,7 @@ import articleService from "./services";
 const createArticle = async (req: Request, res: Response) => {
   const { title, description, content, avatar, tags } = req.body;
   const currentUserId = req.user.id;
-  const article = await articleService.createArticle(
-    { title, description, content, avatar, userId: currentUserId },
-    tags,
-  );
+  const article = await articleService.createArticle({ title, description, content, avatar, userId: currentUserId }, tags);
   delete article.userId;
   res.status(200).json({
     status: "success",
@@ -20,14 +17,18 @@ const createArticle = async (req: Request, res: Response) => {
 };
 
 const getArticles = async (req: Request, res: Response) => {
+  const { limit, offset } = req.query;
   const currentUserId: number = req.user?.id;
   if (!currentUserId) {
     throw new CustomError(codes.NOT_FOUND);
   }
-  const articles = await articleService.getArticlesByUserId(currentUserId);
+  const result = await articleService.getArticlesByUserId(currentUserId, {
+    limit: Number(limit) || configs.MAX_RECORDS_PER_REQ,
+    offset: Number(offset) || 0,
+  });
   res.status(200).json({
     status: "success",
-    result: articles,
+    result: result,
   });
 };
 
@@ -69,13 +70,13 @@ const updateArticleById = async (req: Request, res: Response) => {
 
 const getAllArticles = async (req: Request, res: Response) => {
   const { limit, offset } = req.query;
-  const articles = await articleService.getAllArticles({
+  const result = await articleService.getAllArticles({
     limit: Number(limit) || configs.MAX_RECORDS_PER_REQ,
     offset: Number(offset) || 0,
   });
   res.status(200).json({
     status: "success",
-    result: articles,
+    result: result,
   });
 };
 
