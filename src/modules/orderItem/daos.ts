@@ -1,4 +1,4 @@
-import { OrderItem } from "./../../entities/orderItem";
+import { OrderItem } from "../../entities/orderItem";
 import { getRepository } from "typeorm";
 import { Pagination } from "../../types/type.pagination";
 import { Order } from "../../entities/order";

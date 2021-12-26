@@ -10,9 +10,11 @@ paths:
             schema:
               type: object
               properties:
-                userId:
-                  type: number
                 customerAddress:
+                  type: string
+                detailCustomerAddress:
+                  type: string
+                comment:
                   type: string
                 customerEmail:
                   type: string
@@ -26,6 +28,8 @@ paths:
                   type: string
                 deliveryMethod:
                   type: string
+                shipFee:
+                  type: number
                 orderItems:
                   type: array
                   items:

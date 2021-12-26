@@ -16,7 +16,7 @@ export class Order {
   totalPrice?: number;
 
   @Column()
-  subTotal?: number;
+  totalComparePrice?: number;
   @Column()
   customerName: string;
   @Column()
@@ -26,11 +26,17 @@ export class Order {
   @Column()
   customerAddress: string;
   @Column()
+  detailCustomerAddress: string;
+  @Column()
   paymentMethod: string;
   @Column()
   status: string;
   @Column()
   deliveryMethod: string;
+  @Column()
+  shipFee: number;
+  @Column()
+  comment: string
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   createdAt?: Date;
 

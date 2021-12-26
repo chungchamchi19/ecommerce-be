@@ -1,4 +1,4 @@
-import { CartItem } from "./../../entities/cartItem";
+import { CartItem } from "../../entities/cartItem";
 import { getRepository } from "typeorm";
 import { Pagination } from "../../types/type.pagination";
 import { Cart } from "../../entities/cart";

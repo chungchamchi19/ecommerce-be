@@ -1,14 +1,18 @@
 import { Order } from "../../entities/order";
 import { Request, Response } from "express";
 import orderServices from "./services";
+import shopInforService from "../shopInfor/services";
 import user from "../auth/daos/user";
 
 const createOrder = async (req: Request, res: Response) => {
-  const { userId, customerAddress, customerEmail, customerName, customerPhone, paymentMethod, status, deliveryMethod, orderItems } = req.body;
+  const { customerAddress, detailCustomerAddress, customerEmail, customerName, customerPhone, paymentMethod, status, deliveryMethod, orderItems, shipFee, comment } = req.body;
 
+  console.log(">S>S>>S>s", detailCustomerAddress);
+  const userId = req.user.id;
   const orderData: Order = {
     userId,
     customerAddress,
+    detailCustomerAddress,
     customerEmail,
     customerName,
     customerPhone,
@@ -16,13 +20,41 @@ const createOrder = async (req: Request, res: Response) => {
     status,
     deliveryMethod,
     orderItems,
+    shipFee,
+    comment,
   };
+
   const newOrder = await orderServices.createOrder(orderData);
   res.status(200).json({
     status: "success",
     result: newOrder,
   });
 };
+
+// const checkOutAllItemInCart = async (req: Request, res: Response) => {
+//   const { customerAddress,detailCustomerAddress, customerEmail, customerName, customerPhone, paymentMethod, status, deliveryMethod, orderItems, shipFee,comment } = req.body;
+
+//   const userId =req.user.id;
+//   const orderData: Order = {
+//     userId,
+//     customerAddress,
+//     detailCustomerAddress,
+//     customerEmail,
+//     customerName,
+//     customerPhone,
+//     paymentMethod,
+//     status,
+//     deliveryMethod,
+//     shipFee,
+//     comment
+//   };
+//   const newOrder = await orderServices.checkoutAllItems(orderData);
+//   res.status(200).json({
+//     status: "success",
+//     result: newOrder,
+//   });
+// };
+
 
 //admin order
 const getOrderById = async (req: Request, res: Response) => {
@@ -50,11 +82,18 @@ const adminGetOrders = async (req: Request, res: Response) => {
   userId = userId ? userId : "-1";
 
   const orders = await orderServices.getOrders({ pagination: { limit: Number(limit), offset: Number(offset) } }, String(search), Number(userId));
+  const returnOrderList: any = [];
+  for(let i =0 ;i< orders.length;i++) {
+    let order = await orderServices.returnOrders(orders[i]);
+    returnOrderList.push(order);
+  }
+  console.log(returnOrderList)
 
   res.status(200).json({
     status: "success",
-    result: orders,
+    result: returnOrderList,
   });
+
 };
 
 //adminOrder
@@ -73,9 +112,17 @@ const userGetOrders = async (req: Request, res: Response) => {
   const user = req.user;
   const orders = await orderServices.getUserOrders({ pagination: { limit: Number(limit), offset: Number(offset) } }, user);
 
+  // console.log(orders);
+  const returnOrderList: any = [];
+  for(let i =0 ;i< orders.length;i++) {
+    let order = await orderServices.returnOrders(orders[i]);
+    returnOrderList.push(order);
+  }
+  console.log(returnOrderList)
+
   res.status(200).json({
     status: "success",
-    result: orders,
+    result: returnOrderList,
   });
 };
 

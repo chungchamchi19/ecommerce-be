@@ -33,7 +33,7 @@ const createOrUpdateShopInfo = async (data: ShopInfor) => {
 const getShopInfor = async () => {
   const shopInforRepository = getRepository(ShopInfor);
   const shopInfor = await shopInforRepository.createQueryBuilder("si").getMany();
-  return shopInfor;
+  return shopInfor[0];
 };
 
 export default {

@@ -1,4 +1,4 @@
-import { Product } from "./../../entities/product";
+import { Product } from "../../entities/product";
 import { Request, Response } from "express";
 import productServices from "./services";
 import CustomError from "../../errors/customError";
