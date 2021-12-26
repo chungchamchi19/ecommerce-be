@@ -214,8 +214,8 @@ const createVariants = async (newProduct: Product, cacheAvailableNumber: number,
  */
 const getProducts = async (params: ProductSearchParams): Promise<{ products: ProductResponse[]; total: number }> => {
   const pagination = {
-    limit: params.pagination.limit || configs.MAX_RECORDS_PER_REQ,
-    offset: params.pagination.offset || 0,
+    limit: params?.pagination?.limit || configs.MAX_RECORDS_PER_REQ,
+    offset: params?.pagination?.offset || 0,
   };
   const newParams = {
     ...params,
