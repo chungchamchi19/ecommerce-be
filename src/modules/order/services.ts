@@ -35,19 +35,11 @@ const returnOrders = async (order: any) => {
   for (let i = 0; i < order?.orderItems?.length; i++) {
     order.orderItems[i]["linePrice"] = order.orderItems[i].variant.price * order.orderItems[i].quantity;
     order.orderItems[i]["lineComparePrice"] = order.orderItems[i].variant.comparePrice * order.orderItems[i].quantity;
-    // totalPrice += order.orderItems[i].linePrice;
-    // totalComparePrice += order.orderItems[i].lineComparePrice;
     totalCountItems += order.orderItems[i].quantity;
   }
-  // order["totalPrice"] = totalPrice;
-  // order["totalComparePrice"] = totalComparePrice;
   order["totalCountItems"] = totalCountItems;
-  // const shopInfor = await shopInforService.getShopInfor();
-  // order["shipFee"] = shopInfor.shipFee;
   order["finalPrice"] = order.totalPrice + order.shipFee;
 
-  console.log(order);
-  // console.log(shopInfor);
   return order;
 };
 

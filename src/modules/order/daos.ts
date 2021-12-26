@@ -33,15 +33,8 @@ const createOrder = async (orderData: Order): Promise<Order> => {
 
   //Update quantity
   for (let i = 0; i < orderItems.length; i++) {
-    // let variant = await variantServices.getVariantById(orderItems[i].variantId);
-
-    // console.log(variant);
     orderItems[i].orderId = order.raw.insertId;
     let orderItem = await orderItemServices.createOrderItem(orderItems[i]);
-    //   variant.availableNumber =variant.availableNumber - orderItems[i].quantity
-    //   await variantServices.updateVariant(variant.id,
-    //     variant,
-    //   );
   }
   for (let i = 0; i < orderItems.length; i++) {
     let variant = await variantServices.getVariantById(orderItems[i].variantId);

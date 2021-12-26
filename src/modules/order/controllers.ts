@@ -7,7 +7,6 @@ import user from "../auth/daos/user";
 const createOrder = async (req: Request, res: Response) => {
   const { customerAddress, detailCustomerAddress, customerEmail, customerName, customerPhone, paymentMethod, status, deliveryMethod, orderItems, shipFee, comment } = req.body;
 
-  console.log(">S>S>>S>s", detailCustomerAddress);
   const userId = req.user.id;
   const orderData: Order = {
     userId,
@@ -60,9 +59,11 @@ const createOrder = async (req: Request, res: Response) => {
 const getOrderById = async (req: Request, res: Response) => {
   const { id } = req.params;
   const order = await orderServices.getOrderById(Number(id));
+  let returnOrder = await orderServices.returnOrders(order);
+ 
   res.status(200).json({
     status: "success",
-    result: order,
+    result: returnOrder,
   });
 };
 //admin
@@ -87,7 +88,6 @@ const adminGetOrders = async (req: Request, res: Response) => {
     let order = await orderServices.returnOrders(orders[i]);
     returnOrderList.push(order);
   }
-  console.log(returnOrderList)
 
   res.status(200).json({
     status: "success",
@@ -111,14 +111,11 @@ const userGetOrders = async (req: Request, res: Response) => {
   const { limit, offset } = req.query;
   const user = req.user;
   const orders = await orderServices.getUserOrders({ pagination: { limit: Number(limit), offset: Number(offset) } }, user);
-
-  // console.log(orders);
   const returnOrderList: any = [];
   for(let i =0 ;i< orders.length;i++) {
     let order = await orderServices.returnOrders(orders[i]);
     returnOrderList.push(order);
   }
-  console.log(returnOrderList)
 
   res.status(200).json({
     status: "success",
