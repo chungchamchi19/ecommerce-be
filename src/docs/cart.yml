@@ -78,5 +78,23 @@ paths:
                     type: string
                   result:
                     type: object
+  /api/v1/user/cart/checkout:
+    get:
+      summary: get infor checkout cart finalfee
+      tags:
+        - Cart
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  result:
+                    type: object
+
     
 

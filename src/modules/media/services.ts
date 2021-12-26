@@ -1,4 +1,4 @@
-import { Pagination } from "./../../types/type.pagination";
+import { Pagination } from "../../types/type.pagination";
 import { Media } from "../../entities/media";
 import codes from "../../errors/codes";
 import CustomError from "../../errors/customError";

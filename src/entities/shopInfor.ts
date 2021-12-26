@@ -23,4 +23,7 @@ export class ShopInfor {
 
   @Column({ nullable: true, default: null })
   bankAccountId: string;
+
+  @Column({ nullable: true, default: 0 })
+  shipFee: number;
 }

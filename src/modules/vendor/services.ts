@@ -2,7 +2,7 @@ import { Vendor } from "../../entities/vendor";
 import codes from "../../errors/codes";
 import CustomError from "../../errors/customError";
 import vendorDaos from "./daos";
-import { Pagination } from "./../../types/type.pagination";
+import { Pagination } from "../../types/type.pagination";
 import configs from "../../configs";
 
 const createVendor = async (vendorData: Vendor): Promise<Vendor> => {

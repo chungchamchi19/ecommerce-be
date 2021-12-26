@@ -1,5 +1,5 @@
-import { MediaMap } from "./../../entities/mediaMap";
-import { Product } from "./../../entities/product";
+import { MediaMap } from "../../entities/mediaMap";
+import { Product } from "../../entities/product";
 import { convertToSlug } from "../../utils/convertToSlug";
 import productDaos from "./daos";
 import configs from "../../configs";
