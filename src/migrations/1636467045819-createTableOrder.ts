@@ -22,7 +22,7 @@ export class createTableOrder1636467045819 implements MigrationInterface {
             type: "int",
           },
           {
-            name: "subTotal",
+            name: "totalComparePrice",
             type: "int",
           },
 

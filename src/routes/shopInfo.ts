@@ -5,5 +5,5 @@ import ROLES from "../constants/roles";
 import { validateCreateShopInfor } from "../validations/shopInfor";
 const router = express.Router();
 router.post("/shop-infor", validateCreateShopInfor(ROLES.ADMIN), asyncMiddleware(shopInforController.createOrUpdateShopInfor));
-router.get("/shop-infor",validateCreateShopInfor(ROLES.ADMIN), asyncMiddleware(shopInforController.getShopInfor));
+router.get("/shop-infor", asyncMiddleware(shopInforController.getShopInfor));
 export default router;

@@ -7,6 +7,7 @@ const router = express.Router();
 
 router.post("/cart", asyncMiddleware(cartController.createCart));
 router.get("/user/:userId/cart", asyncMiddleware(cartController.getCartByUserId));
+router.get("/user/cart/checkout", asyncMiddleware(cartController.getCheckoutInfor));
 router.put("/cart/:id", asyncMiddleware(cartController));
 router.get("/cart/:id", asyncMiddleware(cartController.getCartById));
 router.get("/cart", asyncMiddleware(cartController.getCart));

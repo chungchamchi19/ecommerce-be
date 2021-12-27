@@ -1,6 +1,6 @@
 import { OptionValueVariant } from "../../entities/optionValueVariant";
 import { VariantResponse } from "../../types/type.variant";
-import { Variant } from "./../../entities/variant";
+import { Variant } from "../../entities/variant";
 
 const formatVariant = (variant: Variant): VariantResponse => {
   const currentVariant: Variant = JSON.parse(JSON.stringify(variant));

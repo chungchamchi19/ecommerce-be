@@ -1,4 +1,4 @@
-import { Pagination } from "./../../types/type.pagination";
+import { Pagination } from "../../types/type.pagination";
 import { getRepository } from "typeorm";
 import { Media } from "../../entities/media";
 

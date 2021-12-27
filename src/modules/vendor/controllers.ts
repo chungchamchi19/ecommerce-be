@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import vendorServices from "../vendor/services";
+import vendorServices from "./services";
 import { Vendor } from "../../entities/vendor";
 
 const createVendor = async (req: Request, res: Response) => {
