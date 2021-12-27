@@ -6,8 +6,6 @@ import { Pagination } from "../../types/type.pagination";
 const createOrUpdateShopInfo = async (data: ShopInfor) => {
   const shopInforRepository = getRepository(ShopInfor);
   const oldOne = await shopInforRepository.find();
-  console.log(oldOne);
-  console.log(data);
   let shopInforData: any = {};
   if (oldOne.length > 0) {
     shopInforData = {
@@ -19,7 +17,6 @@ const createOrUpdateShopInfo = async (data: ShopInfor) => {
       phone: data.phone ? data.phone : oldOne[0].phone,
       bankAccountId: data.bankAccountId ? data.bankAccountId : oldOne[0].bankAccountId,
     };
-    console.log(shopInforData);
     const newShopInfor = await shopInforRepository.save(shopInforData);
     return await shopInforRepository.findOne(oldOne[0].id);
   }
