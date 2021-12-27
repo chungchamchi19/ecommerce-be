@@ -1,3 +1,4 @@
+import { ProductSearchParams } from "./../../types/type.product";
 import { Product } from "../../entities/product";
 import { Request, Response } from "express";
 import productServices from "./services";
@@ -74,7 +75,7 @@ const getProducts = async (req: Request, res: Response) => {
   if (createdAt && createdAt !== "DESC" && createdAt !== "ASC") {
     throw new CustomError(codes.BAD_REQUEST, "createdAt should be DESC or ASC");
   }
-  const data = await productServices.getProducts({
+  const params: ProductSearchParams = {
     pagination: { limit: Number(limit), offset: Number(offset) },
     title: title as string,
     status: status as string,
@@ -84,8 +85,11 @@ const getProducts = async (req: Request, res: Response) => {
     sortPrice: sortPrice as "DESC" | "ASC",
     createdAt: createdAt as "DESC" | "ASC",
     collectionId: Number(collectionId),
-    bestSelling: bestSelling === "true",
-  });
+  };
+  if (bestSelling) {
+    params.bestSelling = bestSelling === "true";
+  }
+  const data = await productServices.getProducts(params);
   res.status(200).json({
     status: "success",
     result: data.products,
