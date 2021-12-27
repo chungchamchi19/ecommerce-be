@@ -7,16 +7,13 @@ const createOrUpdateShopInfo = async (data: ShopInfor) => {
   const shopInforRepository = getRepository(ShopInfor);
   const oldOne = await shopInforRepository.find();
   let shopInforData: any = {};
+  console.log(data);
   if (oldOne.length > 0) {
     shopInforData = {
-      id: oldOne[0].id,
-      facebook: data.facebook ? data.facebook : oldOne[0].facebook,
-      zalo: data.zalo ? data.zalo : oldOne[0].zalo,
-      bossName: data.bossName ? data.bossName : oldOne[0].bossName,
-      email: data.email ? data.email : oldOne[0].email,
-      phone: data.phone ? data.phone : oldOne[0].phone,
-      bankAccountId: data.bankAccountId ? data.bankAccountId : oldOne[0].bankAccountId,
+      ...oldOne[0],
+      ...data,
     };
+    console.log(shopInforData);
     const newShopInfor = await shopInforRepository.save(shopInforData);
     return await shopInforRepository.findOne(oldOne[0].id);
   }
