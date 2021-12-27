@@ -63,7 +63,7 @@ const getProducts = async (params: ProductSearchParams): Promise<{ products: Pro
   if (params.status) {
     productQuery = productQuery.andWhere("p.status = :status", { status: params.status });
   }
-  if (params.bestSelling) {
+  if (params.bestSelling !== undefined ) {
     productQuery = productQuery.andWhere("p.bestSelling = :bestSelling", { bestSelling: params.bestSelling });
   }
   if (params.maxPrice) {
