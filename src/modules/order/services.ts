@@ -7,6 +7,7 @@ import codes from "../../errors/codes";
 import { User } from "../../entities/user";
 import user from "../auth/daos/user";
 import  shopInforService  from "../shopInfor/services";
+import cartServices from "../cart/services";
 const createOrder = async (orderData: Order) => {
   const newOrder = await orderDaos.createOrder(orderData);
   // console.log(newOrder);
@@ -36,6 +37,10 @@ const returnOrders = async (order: any) => {
     order.orderItems[i]["linePrice"] = order.orderItems[i].variant.price * order.orderItems[i].quantity;
     order.orderItems[i]["lineComparePrice"] = order.orderItems[i].variant.comparePrice * order.orderItems[i].quantity;
     totalCountItems += order.orderItems[i].quantity;
+  }
+  for (let i = 0; i < order?.orderItems?.length; i++) {
+    const newVariant = await cartServices.getVariantPublicTitle(order.orderItems[i].variant.id);
+    order.orderItems[i].variant[" publicTitle"] = newVariant.publicTitle;
   }
   order["totalCountItems"] = totalCountItems;
   order["finalPrice"] = order.totalPrice + order.shipFee;
