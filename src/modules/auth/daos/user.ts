@@ -1,6 +1,4 @@
 import { getRepository } from "typeorm";
-import codes from "../../../errors/codes";
-import CustomError from "../../../errors/customError";
 import { Register } from "../../../types/type.auth";
 import { User } from "../../../entities/user";
 
@@ -47,4 +45,9 @@ const findUser = async (dataFind: { email?: string; id?: number; deviceId?: stri
   return user;
 };
 
-export default { createUser, findUser };
+const updateUser = async (id: number, data: User) => {
+  const userReposity = getRepository(User);
+  await userReposity.update(id, data);
+}
+
+export default { createUser, findUser, updateUser };
