@@ -6,25 +6,25 @@ import { Tag } from "./tag";
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  id: number;
+  id?: number;
 
   @Column()
-  name: string;
+  name?: string;
 
   @Column({ nullable: true })
   avatar?: string | null;
 
   @Column()
-  email: string;
+  email?: string;
 
   @Column()
-  password: string;
+  password?: string;
 
   @Column({ type: "enum", default: "user" })
-  role: "admin" | "user";
+  role?: "admin" | "user";
 
   @Column({ nullable: true })
-  deviceId: string | null;
+  deviceId?: string | null;
 
   @OneToMany(() => Article, (article) => article.user) articles?: Article[];
   @OneToMany(() => Tag, (tag) => tag.user) tags?: Tag[];

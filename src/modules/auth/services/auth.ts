@@ -46,4 +46,25 @@ const createUserByDeviceId = async (params: { deviceId: string }) => {
   };
 };
 
-export default { register, login, createUserByDeviceId };
+const updatePassword = async (user: User, confirmPw: string, newPw: string) => {
+  const isCorrectPassword = await compareBcrypt(confirmPw, user.password);
+  if (!isCorrectPassword) {
+    throw new CustomError(codes.NOT_FOUND, "Wrong password!");
+  }
+  const salt = generateSalt(10);
+  const hashPassword = (await hashBcrypt(newPw, salt)) as string;
+  await userDao.updateUser(user.id, { password: hashPassword });
+};
+
+const updateUserInfo = async (user: User, data: User): Promise<User> => {
+  delete data.id;
+  delete data.email;
+  delete data.password;
+  await userDao.updateUser(user.id, data);
+  return {
+    ...user,
+    ...data,
+  };
+};
+
+export default { register, login, createUserByDeviceId, updateUserInfo, updatePassword };
