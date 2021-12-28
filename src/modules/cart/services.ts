@@ -4,7 +4,10 @@ import { Cart } from "../../entities/cart";
 import cartDaos from "./daos";
 import CustomError from "../../errors/customError";
 import codes from "../../errors/codes";
-import shopInforService from "../shopInfor/services"
+import shopInforService from "../shopInfor/services";
+import variantHelpers from "../variant/helpers";
+import variantServices from "../variant/services";
+import { Variant } from "../../entities/variant";
 
 const createCart = async (cartData: Cart) => {
   const checkExist = await checkCart(cartData.userId);
@@ -24,11 +27,19 @@ const returnCart = async (cart: any) => {
     totalComparePrice += cart.cartItems[i].lineComparePrice;
     totalCountItems += cart.cartItems[i].quantity;
   }
+  for (let i = 0; i < cart?.cartItems?.length; i++) {
+    const newVariant = await getVariantPublicTitle(cart.cartItems[i].variant.id);
+    cart.cartItems[i].variant[" publicTitle"] = newVariant.publicTitle;
+  }
   cart["totalPrice"] = totalPrice;
   cart["totalComparePrice"] = totalComparePrice;
   cart["totalCountItems"] = totalCountItems;
   console.log(cart);
   return cart;
+};
+const getVariantPublicTitle = async (variantId: number): Promise<Variant> => {
+  const variant = await variantServices.getVariantById(variantId);
+  return variant;
 };
 
 const returnCartWithTotalFee = async (cart: any) => {
@@ -42,16 +53,16 @@ const returnCartWithTotalFee = async (cart: any) => {
     totalComparePrice += cart.cartItems[i].lineComparePrice;
     totalCountItems += cart.cartItems[i].quantity;
   }
+  for (let i = 0; i < cart?.cartItems?.length; i++) {
+    const newVariant = await getVariantPublicTitle(cart.cartItems[i].variant.id);
+    cart.cartItems[i].variant[" publicTitle"] = newVariant.publicTitle;
+  }
   cart["totalPrice"] = totalPrice;
   cart["totalComparePrice"] = totalComparePrice;
   cart["totalCountItems"] = totalCountItems;
   const shopInfor = await shopInforService.getShopInfor();
   cart["shipFee"] = shopInfor.shipFee;
   cart["finalPrice"] = totalPrice + shopInfor.shipFee;
-  
-  
-  console.log(cart);
-  console.log(shopInfor)
   return cart;
 };
 
@@ -111,7 +122,8 @@ const cartServices = {
   getCartById,
   getMyCart,
   returnCart,
-  returnCartWithTotalFee
+  returnCartWithTotalFee,
+  getVariantPublicTitle,
 };
 
 export default cartServices;
