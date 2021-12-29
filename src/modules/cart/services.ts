@@ -29,7 +29,7 @@ const returnCart = async (cart: any) => {
   }
   for (let i = 0; i < cart?.cartItems?.length; i++) {
     const newVariant = await getVariantPublicTitle(cart.cartItems[i].variant.id);
-    cart.cartItems[i].variant[" publicTitle"] = newVariant.publicTitle;
+    cart.cartItems[i].variant["publicTitle"] = newVariant.publicTitle;
   }
   cart["totalPrice"] = totalPrice;
   cart["totalComparePrice"] = totalComparePrice;
@@ -55,7 +55,7 @@ const returnCartWithTotalFee = async (cart: any) => {
   }
   for (let i = 0; i < cart?.cartItems?.length; i++) {
     const newVariant = await getVariantPublicTitle(cart.cartItems[i].variant.id);
-    cart.cartItems[i].variant[" publicTitle"] = newVariant.publicTitle;
+    cart.cartItems[i].variant["publicTitle"] = newVariant.publicTitle;
   }
   cart["totalPrice"] = totalPrice;
   cart["totalComparePrice"] = totalComparePrice;
