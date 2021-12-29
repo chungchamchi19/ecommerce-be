@@ -23,6 +23,14 @@ export class ShopInfor {
 
   @Column({ nullable: true, default: null })
   bankAccountId: string;
+  @Column({ nullable: true, default: null })
+  address: string;
+
+  @Column({ nullable: true, default: null })
+  youtube: string;
+
+  @Column({ nullable: true, default: null })
+  instagram: string;
 
   @Column({ nullable: true, default: 0 })
   shipFee: number;
