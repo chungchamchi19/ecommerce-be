@@ -2,6 +2,7 @@ import { CartItem } from "../../entities/cartItem";
 import { Request, Response } from "express";
 import cartItemServices from "./services";
 import CartDaos from "../cart/daos";
+import cartServices from "../cart/services";
 
 const createCartItem = async (req: Request, res: Response) => {
   const userId  = req.user.id;
@@ -13,9 +14,14 @@ const createCartItem = async (req: Request, res: Response) => {
     quantity,
   };
   const newCartItem = await cartItemServices.createCartItem(cartData);
+  // res.status(200).json({
+  //   status: "success",
+  //   result: newCartItem,
+  // });
+  const updatedCart = await cartServices.getMyCart(Number(req.user.id));
   res.status(200).json({
     status: "success",
-    result: newCartItem,
+    result: updatedCart,
   });
 };
 
@@ -43,18 +49,20 @@ const updateCartItem = async (req: Request, res: Response) => {
   const { id } = req.params;
   const data = req.body;
   const cartItem = await cartItemServices.updateCartItem(Number(id), data);
+  const updatedCart = await cartServices.getMyCart(Number(req.user.id));
   res.status(200).json({
     status: "success",
-    result: cartItem,
+    result: updatedCart,
   });
 };
 
 const deleteCartItem = async (req: Request, res: Response) => {
   const { id } = req.params;
   const cartItem = await cartItemServices.deleteCartItem(Number(id));
+  const updatedCart = await cartServices.getMyCart(Number(req.user.id));
   res.status(200).json({
     status: "success",
-    result: cartItem,
+    result: updatedCart,
   });
 };
 

@@ -13,6 +13,18 @@ const createCart = async (req: Request, res: Response) => {
     result: newCart,
   });
 };
+// const updateCart = async (req: Request, res: Response) => {
+//   const userId = req.user.id;
+//   const cartData: Cart = {
+//     userId,
+//   };
+//   const newCart = await cartServices.createCart(cartData);
+//   res.status(200).json({
+//     status: "success",
+//     result: newCart,
+//   });
+// };
+
 
 const getCartById = async (req: Request, res: Response) => {
   const { id } = req.params;
@@ -34,24 +46,18 @@ const getCartByUserId = async (req: Request, res: Response) => {
 };
 
 const getCart = async (req: Request, res: Response) => {
-  const cart = await cartServices.getMyCart(Number(req.user?.id));
-
-  // console.log(cart.cartItems[0].variant);
-  //function in tien (compare,line price,line_price   , total, count)
-  const returnCart = await cartServices.returnCart(cart);
-  // console.log(returnCart)
+  const returnCart = await cartServices.getMyCart(Number(req.user?.id));
+  // const returnCart = await cartServices.returnCart(cart);
   res.status(200).json({
     status: "success",
     result: returnCart,
   });
 };
 const getCheckoutInfor = async (req: Request, res: Response) => {
-  const cart = await cartServices.getMyCart(Number(req.user?.id));
+  // const cart = await cartServices.getMyCart(Number(req.user?.id));
+  const returnCart = await cartServices.getMyCheckOutCart(Number(req.user?.id))
+  // const returnCart = await cartServices.returnCartWithTotalFee(cart);
 
-  // console.log(cart.cartItems[0].variant);
-  //function in tien (compare,line price,line_price   , total, count)
-  console.log('??')
-  const returnCart = await cartServices.returnCartWithTotalFee(cart);
   // console.log(returnCart)
   res.status(200).json({
     status: "success",
