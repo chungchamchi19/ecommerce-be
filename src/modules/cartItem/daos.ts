@@ -43,6 +43,12 @@ const deleteCartItem = async (id: number) => {
   const cartItemRepo = getRepository(CartItem);
   return await cartItemRepo.delete(id);
 };
+const getCartId = async (cartItemId: number) : Promise<number> => {
+  const cartItemRepo = getRepository(CartItem);
+  const cartItem = await cartItemRepo.findOne(cartItemId);
+  console.log(cartItem);
+  return cartItem.cartId;
+};
 const checkExistedItem = async (cartId: number, variantId: number) => {
   return await getRepository(CartItem).findOne({ cartId: cartId, variantId: variantId });
 };
@@ -54,6 +60,7 @@ const cartItemDaos = {
   updateCartItem,
   deleteCartItem,
   checkExistedItem,
+  getCartId
 };
 
 export default cartItemDaos;

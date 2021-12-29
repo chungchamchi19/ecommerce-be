@@ -40,7 +40,7 @@ const returnOrders = async (order: any) => {
   }
   for (let i = 0; i < order?.orderItems?.length; i++) {
     const newVariant = await cartServices.getVariantPublicTitle(order.orderItems[i].variant.id);
-    order.orderItems[i].variant[" publicTitle"] = newVariant.publicTitle;
+    order.orderItems[i].variant["publicTitle"] = newVariant.publicTitle;
   }
   order["totalCountItems"] = totalCountItems;
   order["finalPrice"] = order.totalPrice + order.shipFee;
