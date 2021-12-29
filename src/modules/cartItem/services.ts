@@ -7,6 +7,7 @@ import mediaServices from "../media/services";
 import CustomError from "../../errors/customError";
 import codes from "../../errors/codes";
 import { Media } from "../../entities/media";
+import cartServices from "../cart/services";
 
 const createCartItem = async (cartItemData: CartItem) => {
   const foundItem = await cartItemDaos.checkExistedItem(cartItemData.cartId, cartItemData.variantId);
@@ -16,6 +17,7 @@ const createCartItem = async (cartItemData: CartItem) => {
     return updateCartItem(foundItem.id, cartItemData);
   }
   const newcartItem = await cartItemDaos.createCartItem(cartItemData);
+  
 };
 
 const getCartItems = async (params: { pagination: Pagination }): Promise<CartItem[]> => {
@@ -40,6 +42,9 @@ const updateCartItem = async (id: number, data: CartItem): Promise<CartItem> => 
   if (!findCartItem) {
     throw new CustomError(codes.NOT_FOUND, "cartItem not found!");
   }
+  if(data.quantity==0) {
+    return await deleteCartItem(id);  
+  }
   delete data.id;
   await cartItemDaos.updateCartItem(id, data);
   return await getCartItemById(id);
@@ -54,6 +59,7 @@ const deleteCartItem = async (id: number) => {
   cartItemDaos.deleteCartItem(id);
   return findCartItem;
 };
+
 const cartItemServices = {
   createCartItem,
   getCartItems,

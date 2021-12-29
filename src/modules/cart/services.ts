@@ -91,7 +91,23 @@ const getMyCart = async (userId: number): Promise<Cart> => {
     await cartDaos.createCart(newCart);
     return await cartDaos.getMyCart(userId);
   }
-  return findCart;
+  //  cartServices.returnCart(cart);
+
+  const returnCart = await cartServices.returnCart(findCart);
+  return returnCart;
+};
+const getMyCheckOutCart = async (userId: number): Promise<Cart> => {
+  const findCart = await cartDaos.getMyCart(userId);
+  if (!findCart) {
+    let newCart = new Cart();
+    newCart.userId = userId;
+    await cartDaos.createCart(newCart);
+    return await cartDaos.getMyCart(userId);
+  }
+  //  cartServices.returnCart(cart);
+
+  const returnCart = await cartServices.returnCartWithTotalFee(findCart);
+  return returnCart;
 };
 
 const updateCart = async (id: number, data: Cart): Promise<Cart> => {
@@ -124,6 +140,7 @@ const cartServices = {
   returnCart,
   returnCartWithTotalFee,
   getVariantPublicTitle,
+  getMyCheckOutCart
 };
 
 export default cartServices;
