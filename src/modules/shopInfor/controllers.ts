@@ -7,7 +7,7 @@ import CustomError from "../../errors/customError";
 import shopInforService from "./services";
 
 const createOrUpdateShopInfor = async (req: Request, res: Response) => {
-  const { bossName, email, facebook, zalo,bankAccountId,phone,shipFee } = req.body;
+  const { bossName, email, facebook, zalo,bankAccountId,phone,youtube,instagram,address,shipFee } = req.body;
 //   const oldShopInfor =  shopInfor = await shopInforService
   // const currentUserId = req.user.id;
   const newShopInfor = new ShopInfor();
@@ -17,6 +17,9 @@ const createOrUpdateShopInfor = async (req: Request, res: Response) => {
   newShopInfor.zalo = zalo;
   newShopInfor.phone = phone;
   newShopInfor.bankAccountId = bankAccountId;
+  newShopInfor.address = address;
+  newShopInfor.youtube = youtube;
+  newShopInfor.instagram = instagram;
   newShopInfor.shipFee = shipFee;
   const shopInfor = await shopInforService.createOrUpdateShopInfor(newShopInfor);
   res.status(200).json({
