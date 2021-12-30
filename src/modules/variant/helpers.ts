@@ -5,7 +5,7 @@ import { Variant } from "../../entities/variant";
 const formatVariant = (variant: Variant): VariantResponse => {
   const currentVariant: Variant = JSON.parse(JSON.stringify(variant));
   const newOptionValues =
-    currentVariant.optionValueVariants.map((optionValVar: OptionValueVariant) => {
+    currentVariant.optionValueVariants?.map((optionValVar: OptionValueVariant) => {
       return {
         value: optionValVar?.optionValue?.value,
         position: optionValVar?.optionValue?.option?.position,

@@ -100,6 +100,8 @@ const getAllArticles = async (params: Pagination) => {
     .createQueryBuilder("a")
     .leftJoinAndSelect("a.articleTags", "at")
     .leftJoinAndSelect("at.tag", "t", "t.isDeleted = false")
+    .leftJoinAndSelect("a.user", "u")
+    .select(["a", "at", "t", "u.id", "u.name", "u.avatar"])
     .where("a.isDeleted = false")
     .orderBy("a.createdAt", "DESC")
     .skip(params.offset)

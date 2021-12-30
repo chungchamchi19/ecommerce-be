@@ -3,6 +3,7 @@ import { Media } from "../entities/media";
 import { VariantResponse } from "./type.variant";
 import { Pagination } from "./type.pagination";
 import { Collection } from "../entities/collection";
+import { Variant } from "../entities/variant";
 
 export type OptionProductResponse = {
   id?: number;
@@ -30,6 +31,8 @@ export type ProductResponse = {
   media?: Media[];
   collections?: Collection[];
   // productCollections?: ProductCollection[];
+  firstAvailableVariant?: Variant;
+  totalVariant?: number;
 };
 
 export type ProductSearchParams = {

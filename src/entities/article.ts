@@ -32,7 +32,9 @@ export class Article {
   @Column()
   userId: number;
 
-  @ManyToOne(() => User, (user) => user.articles) @JoinColumn({ name: "userId" }) user: User;
+  @ManyToOne(() => User, (user) => user.articles)
+  @JoinColumn({ name: "userId" })
+  user: User;
 
   @OneToMany(() => ArticleTag, (articleTag) => articleTag.article)
   articleTags: ArticleTag[];

@@ -223,7 +223,15 @@ const getProducts = async (params: ProductSearchParams): Promise<{ products: Pro
   };
   let result = await productDaos.getProducts(newParams);
   const formatProducts = result.products.map((product: Product) => {
-    return productHelpers.formatProductResponse(product, { disableOptions: true, disableVariants: true });
+    const formatProd = productHelpers.formatProductResponse(product, { disableOptions: true, disableVariants: false, disableFormatVariant: true });
+    const firstAvailableVariant = formatProd.variants?.find((item) => item.availableNumber > 0);
+    const returnProd = {
+      ...formatProd,
+      firstAvailableVariant: firstAvailableVariant || null,
+      totalVariant: formatProd.variants.length
+    }
+    delete returnProd.variants;
+    return returnProd;
   });
   return {
     products: formatProducts,
