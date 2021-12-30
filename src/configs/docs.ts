@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+dotenv.config({ path: "./.env" });
+
 const docOptions = {
   definition: {
     openapi: "3.0.0",
@@ -17,7 +20,7 @@ const docOptions = {
     },
     servers: [
       {
-        url: "https://msd.japaneast.cloudapp.azure.com",
+        url: process.env.SERVER_URL,
       },
     ],
     components: {

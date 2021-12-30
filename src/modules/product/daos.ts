@@ -36,15 +36,16 @@ const getProducts = async (params: ProductSearchParams): Promise<{ products: Pro
   const productRepo = getRepository(Product);
   let productQuery = productRepo
     .createQueryBuilder("p")
+    .select(["p.id", "p.title", "p.status", "p.price", "p.comparePrice", "p.url", "p.bestSelling", "p.createdAt", "p.updatedAt"])
     .leftJoinAndSelect("p.mediaMaps", "mm", "mm.targetType='product'")
     .leftJoinAndSelect("mm.media", "m")
     .leftJoinAndSelect("p.featureImage", "fm")
     .leftJoinAndSelect("p.productCollections", "pc")
     .leftJoinAndSelect("pc.collection", "c")
-    .leftJoinAndSelect("p.vendor", "vd");
+    .leftJoinAndSelect("p.vendor", "vd")
+    .leftJoinAndSelect("p.variants", "v");
   // .leftJoinAndSelect("p.options", "o")
   // .leftJoinAndSelect("o.optionValues", "ov")
-  // .leftJoinAndSelect("p.variants", "v")
   // .leftJoinAndSelect("v.featureImage", "v_fm")
   // .leftJoinAndSelect("v.optionValueVariants", "ovv")
   // .leftJoinAndSelect("ovv.optionValue", "ovv_ov")

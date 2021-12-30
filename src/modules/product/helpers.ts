@@ -19,7 +19,7 @@ import variantHelpers from "../variant/helpers";
  * @param condition.disableVariants có bỏ variants trong response hay không?
  * @returns
  */
-const formatProductResponse = (product: Product, condition?: { disableOptions: boolean; disableVariants: boolean }): ProductResponse => {
+const formatProductResponse = (product: Product, condition?: { disableOptions?: boolean; disableVariants?: boolean; disableFormatVariant?: boolean }): ProductResponse => {
   const currentProduct: Product = JSON.parse(JSON.stringify(product));
   // format options
   const formatOptions =
@@ -38,10 +38,13 @@ const formatProductResponse = (product: Product, condition?: { disableOptions: b
     }) || [];
   formatMediaProd = formatMedia(currentProduct.featureImage, formatMediaProd);
   // format variants
-  const formatVariants: VariantResponse[] =
-    currentProduct.variants?.map((variant: Variant) => {
-      return variantHelpers.formatVariant(variant);
-    }) || [];
+  let formatVariants: VariantResponse[] = currentProduct.variants;
+  if (!condition?.disableFormatVariant) {
+    formatVariants =
+      currentProduct.variants?.map((variant: Variant) => {
+        return variantHelpers.formatVariant(variant);
+      }) || [];
+  }
   // format collections
   const formatCollections: Collection[] = currentProduct.productCollections.map((pc) => {
     return pc.collection;
@@ -55,7 +58,7 @@ const formatProductResponse = (product: Product, condition?: { disableOptions: b
     ...currentProduct,
     options: !condition?.disableOptions ? formatOptions : undefined,
     media: formatMediaProd,
-    variants: !condition?.disableOptions ? formatVariants : undefined,
+    variants: !condition?.disableVariants ? formatVariants : undefined,
     collections: formatCollections,
   };
   return formatProduct;
