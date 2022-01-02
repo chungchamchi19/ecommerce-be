@@ -24,8 +24,6 @@ paths:
                   type: string
                 paymentMethod:
                   type: string
-                status: 
-                  type: string
                 deliveryMethod:
                   type: string
                 shipFee:
@@ -53,7 +51,7 @@ paths:
                     type: object
   /api/v1/admin/orders:
     get:
-      summary: get orders
+      summary: Admin get orders
       tags:
         - Orders
       parameters:
@@ -86,6 +84,36 @@ paths:
                 type: array
                 items:
                   type: object
+    put:
+      summary: Admin update status order (Switch from NEW to COMMING)
+      tags:
+        - Orders
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: order id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  result:
+                    type: object
   
   /api/v1/orders/{id}:
     get:
@@ -138,5 +166,35 @@ paths:
                     type: string
                   result:
                     type: object
-    
+    put:
+      summary: User update status order(switch status from (NEW or COMMING) -> (DONE or CANCEL))
+      tags:
+        - Orders
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: order id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  result:
+                    type: object
+
 
