@@ -6,7 +6,7 @@ import CustomError from "../../errors/customError";
 import codes from "../../errors/codes";
 import { User } from "../../entities/user";
 import user from "../auth/daos/user";
-import  shopInforService  from "../shopInfor/services";
+import shopInforService from "../shopInfor/services";
 import cartServices from "../cart/services";
 const createOrder = async (orderData: Order) => {
   const newOrder = await orderDaos.createOrder(orderData);
@@ -48,12 +48,12 @@ const returnOrders = async (order: any) => {
   return order;
 };
 
-const getUserOrders = async (params: { pagination: Pagination }, user: User): Promise<Order[]> => {
+const getUserOrders = async (params: { pagination: Pagination }, userId: number, email:any, phone: any): Promise<Order[]> => {
   const pagination = {
     limit: params.pagination.limit || configs.MAX_RECORDS_PER_REQ,
     offset: params.pagination.offset || 0,
   };
-  let listOrder = await orderDaos.getUserOrders({ pagination }, user.id);
+  let listOrder = await orderDaos.getUserOrders({ pagination }, userId,email,phone);
   return listOrder;
 };
 
@@ -71,6 +71,18 @@ const deleteOrder = async (id: number) => {
   orderDaos.deleteOrder(id);
   return findOrder;
 };
+const adminUpdateStatus = async (status: string, id: number) => {
+  const findOrder = await getOrderById(id);
+  await orderDaos.adminUpdateStatus(status, id);
+  return await getOrderById(id);;
+};
+
+const userUpdateStatus = async (userId: number, status: string, id: number) => {
+  const findOrder = await getOrderById(id);
+  await orderDaos.userUpdateStatus(userId,status,id);
+  const updateOrder = await getOrderById(id);
+  return updateOrder;
+};
 
 const orderServices = {
   createOrder,
@@ -79,8 +91,10 @@ const orderServices = {
   getOrderById,
   deleteOrder,
   getUserOrders,
-  returnOrders
+  returnOrders,
   // checkoutAllItems
+  adminUpdateStatus,
+  userUpdateStatus,
 };
 
 export default orderServices;

@@ -1,4 +1,4 @@
-import { getRepository } from "typeorm";
+import { getRepository, ReturningStatementNotSupportedError } from "typeorm";
 import { Pagination } from "../../types/type.pagination";
 import { Order } from "../../entities/order";
 import orderItemServices from "../orderItem/services";
@@ -6,6 +6,7 @@ import variantServices from "../variant/services";
 import CustomError from "../../errors/customError";
 import codes from "../../errors/codes";
 import { Variant } from "../../entities/variant";
+import orderStatus from "../../constants/orderStatus";
 
 const createOrder = async (orderData: Order): Promise<Order> => {
   const orderRepo = getRepository(Order);
@@ -41,12 +42,12 @@ const createOrder = async (orderData: Order): Promise<Order> => {
 
     variant.availableNumber = variant.availableNumber - orderItems[i].quantity;
     console.log(variant);
-    const newVariant : Variant = {
-      price:variant.price,
-      comparePrice:variant.comparePrice,
-      featureImageId:variant.featureImageId,
-      availableNumber:variant.availableNumber,
-      options:variant.options,
+    const newVariant: Variant = {
+      price: variant.price,
+      comparePrice: variant.comparePrice,
+      featureImageId: variant.featureImageId,
+      availableNumber: variant.availableNumber,
+      options: variant.options,
       productId: variant.productId,
     };
     newVariant.availableNumber = variant.availableNumber;
@@ -128,22 +129,59 @@ const getOrders = async (params: { pagination: Pagination }, userId: number, sea
   query.skip(params.pagination.offset).take(params.pagination.limit);
   return await query.getMany();
 };
-const getUserOrders = async (params: { pagination: Pagination }, userId: number): Promise<Order[]> => {
+const getUserOrders = async (params: { pagination: Pagination }, userId: number, email: any, phone: any): Promise<Order[]> => {
   const orderRepo = getRepository(Order);
-  return await orderRepo
+  let query = orderRepo
     .createQueryBuilder("o")
     .leftJoinAndSelect("o.orderItems", "orderItems")
     .leftJoinAndSelect("orderItems.variant", "variant", "variant.id=orderItems.variantId")
     .leftJoinAndSelect("variant.product", "product", "variant.productId=product.id")
-    .where(`o.userId=${userId}`)
-    .skip(params.pagination.offset)
-    .take(params.pagination.limit)
-    .getMany();
+    .where(`o.userId=${userId}`);
+  if (phone && !email) {
+    query.andWhere(`o.customerPhone=${phone}`);
+  }
+  if (email && !phone) {
+    query.andWhere(`o.customerEmail=${email}`);
+  }
+  if (email && phone) {
+    query.andWhere(`o.customerEmail=${email}`).andWhere(`o.customerPhone=${phone}`);
+  }
+  query.skip(params.pagination.offset).take(params.pagination.limit).orderBy("o.createdAt", "DESC");
+  return query.getMany();
 };
 
 const deleteOrder = async (id: number) => {
   const orderRepo = getRepository(Order);
   await orderRepo.delete(id);
+};
+const userUpdateStatus = async (userId: number, status: string, id: number) => {
+  const orderRepo = getRepository(Order);
+  let oldOrder = await orderRepo.findOne(id, { where: { userId: userId, id: id } });
+
+  console.log(oldOrder);
+  if (oldOrder.status == orderStatus.NEW || oldOrder.status == orderStatus.COMMING) {
+    if (status == orderStatus.CANCEL) {
+      oldOrder.status = orderStatus.CANCEL;
+    } else if (status == orderStatus.DONE) {
+      oldOrder.status = orderStatus.DONE;
+    } else {
+      throw new CustomError(codes.BAD_REQUEST);
+    }
+
+    await orderRepo.update(oldOrder.id, oldOrder);
+  }
+};
+const adminUpdateStatus = async (status: string, id: number) => {
+  const orderRepo = getRepository(Order);
+
+  let order = await orderRepo.findOne(id);
+  console.log(order);
+
+  if (order.status == orderStatus.COMMING) {
+    order.status = orderStatus.COMMING;
+  }
+  await orderRepo.update(order.id, order);
+  return order;
 };
 
 const orderDaos = {
@@ -152,6 +190,8 @@ const orderDaos = {
   getOrders,
   deleteOrder,
   getUserOrders,
+  userUpdateStatus,
+  adminUpdateStatus,
 };
 
 export default orderDaos;
