@@ -3,9 +3,10 @@ import { Request, Response } from "express";
 import orderServices from "./services";
 import shopInforService from "../shopInfor/services";
 import user from "../auth/daos/user";
+import orderStatus from "../../constants/orderStatus";
 
 const createOrder = async (req: Request, res: Response) => {
-  const { customerAddress, detailCustomerAddress, customerEmail, customerName, customerPhone, paymentMethod, status, deliveryMethod, orderItems, shipFee, comment } = req.body;
+  const { customerAddress, detailCustomerAddress, customerEmail, customerName, customerPhone, paymentMethod, deliveryMethod, orderItems, shipFee, comment } = req.body;
 
   const userId = req.user.id;
   const orderData: Order = {
@@ -16,8 +17,8 @@ const createOrder = async (req: Request, res: Response) => {
     customerName,
     customerPhone,
     paymentMethod,
-    status,
     deliveryMethod,
+    status: orderStatus.NEW,
     orderItems,
     shipFee,
     comment,
