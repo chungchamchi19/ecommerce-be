@@ -154,6 +154,16 @@ paths:
           schema:
             type: number
           description: skip number
+        - in: query
+          name: email
+          schema:
+            type: string
+          description: search order by email
+        - in: query
+          name: phone
+          schema:
+            type: string
+          description: search order by phone
       responses:
         "200": # status code
           description: Json format of srt file
