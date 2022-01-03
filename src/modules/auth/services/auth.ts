@@ -7,10 +7,18 @@ import { User } from "../../../entities/user";
 import crypto from "crypto";
 
 const register = async (dataRegister: Register) => {
-  const { email, name, password } = dataRegister;
+  const { email, name, password, phone, avatar } = dataRegister;
+  const findUserByEmail = await userDao.findUser({ email: email });
+  if (findUserByEmail) {
+    throw new CustomError(codes.NOT_FOUND, "Your email has been registed!");
+  }
+  const findUserByName = await userDao.findUser({ name: name });
+  if (findUserByName) {
+    throw new CustomError(codes.NOT_FOUND, "Your name has been registed!");
+  }
   const salt = generateSalt(10);
   const hashPassword = (await hashBcrypt(password, salt)) as string;
-  const user = await userDao.createUser({ email, password: hashPassword, name });
+  const user = await userDao.createUser({ email, password: hashPassword, name, phone, avatar });
   return user;
 };
 

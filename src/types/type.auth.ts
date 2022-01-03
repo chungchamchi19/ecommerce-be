@@ -3,6 +3,8 @@ export type Register = {
   name?: string;
   password?: string;
   deviceId?: string;
+  phone?: string;
+  avatar?: number;
 };
 
 export type Login = {

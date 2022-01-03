@@ -5,8 +5,8 @@ import CustomError from "../../../errors/customError";
 import codes from "../../../errors/codes";
 
 const register = async (req: Request, res: Response) => {
-  const { email, password, name } = req.body;
-  const user: User = (await authService.register({ email, password, name })) as User;
+  const { email, password, name, phone, avatar } = req.body;
+  const user: User = (await authService.register({ email, password, name, phone, avatar })) as User;
   delete user.password;
   delete user.role;
   return res.status(200).json({
@@ -63,7 +63,7 @@ const updatePassword = async (req: Request, res: Response) => {
 };
 
 const updateInfo = async (req: Request, res: Response) => {
-  const { name, avatar } = req.body;
+  const { name, avatar, phone } = req.body;
   const user = req.user;
   let newInfo: User;
   if (name) {
@@ -73,6 +73,10 @@ const updateInfo = async (req: Request, res: Response) => {
   if (avatar) {
     newInfo = newInfo || {};
     newInfo.avatar = avatar;
+  }
+  if (phone) {
+    newInfo = newInfo || {};
+    newInfo.phone = phone;
   }
   if (!newInfo) {
     throw new CustomError(codes.BAD_REQUEST, "No update information about user!");
