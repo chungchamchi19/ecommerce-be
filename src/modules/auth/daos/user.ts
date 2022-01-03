@@ -4,23 +4,21 @@ import { User } from "../../../entities/user";
 
 const createUser = async (dataRegister: Register) => {
   const userReposity = getRepository(User);
-  const { deviceId, name, email, password } = dataRegister;
-  if (deviceId) {
-    const user = new User();
-    user.name = name;
-    user.email = email;
-    user.password = password;
-    user.deviceId = deviceId;
-    return await userReposity.save(user);
-  }
+  const { deviceId, name, email, password, avatar, phone } = dataRegister;
   const user = new User();
   user.name = name;
   user.email = email;
   user.password = password;
+  user.avatar = avatar;
+  user.phone = phone;
+  if (deviceId) {
+    user.deviceId = deviceId;
+    return await userReposity.save(user);
+  }
   return await userReposity.save(user);
 };
 
-const findUser = async (dataFind: { email?: string; id?: number; deviceId?: string }) => {
+const findUser = async (dataFind: { email?: string; id?: number; deviceId?: string; name?: string }) => {
   const userReposity = getRepository(User);
   let user: User;
   if (dataFind.email) {
@@ -41,6 +39,12 @@ const findUser = async (dataFind: { email?: string; id?: number; deviceId?: stri
         deviceId: dataFind.deviceId,
       },
     });
+  } else if (dataFind.name) {
+    user = await userReposity.findOne({
+      where: {
+        name: dataFind.name,
+      },
+    });
   }
   return user;
 };
@@ -48,6 +52,6 @@ const findUser = async (dataFind: { email?: string; id?: number; deviceId?: stri
 const updateUser = async (id: number, data: User) => {
   const userReposity = getRepository(User);
   await userReposity.update(id, data);
-}
+};
 
 export default { createUser, findUser, updateUser };

@@ -53,6 +53,36 @@ paths:
                 type: array
                 items:
                   type: object
+  /api/v1/auth/register:
+    post:
+      summary: Register
+      tags:
+        - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                name:
+                  type: string
+                phone:
+                  type: string
+                avatar:
+                  type: number
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
   /api/v1/me:
     get:
       summary: get user info
@@ -78,6 +108,8 @@ paths:
                 name:
                   type: string
                 avatar:
+                  type: number
+                phone:
                   type: string
       responses:
         "200": # status code

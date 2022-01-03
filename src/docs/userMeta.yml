@@ -1,0 +1,128 @@
+paths:
+  /api/v1/user-metas:
+    post:
+      summary: create user-meta
+      tags:
+        - UserMeta
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                key:
+                  type: string
+                value:
+                  type: string
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  result:
+                    type: object
+    get:
+      summary: get user-metas
+      tags:
+        - UserMeta
+      parameters:
+        - in: query
+          name: key
+          schema:
+            type: string
+          description: key
+        - in: query
+          name: offset
+          schema:
+            type: number
+          description: offset
+        - in: query
+          name: limit
+          schema:
+            type: number
+          description: limit
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  result:
+                    type: object
+  /api/v1/user-metas/{id}:
+    get:
+      summary: get user meta by id
+      tags:
+        - UserMeta
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          description: id product
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+    put:
+      summary: update user meta by id
+      tags:
+        - UserMeta
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          description: id product
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                key:
+                  type: string
+                value:
+                  type: string
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+    delete:
+      summary: delete user meta by id
+      tags:
+        - UserMeta
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          description: id product
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
