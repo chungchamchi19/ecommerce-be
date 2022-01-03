@@ -8,6 +8,7 @@ import codes from "../../errors/codes";
 import { Variant } from "../../entities/variant";
 import orderStatus from "../../constants/orderStatus";
 import { stat } from "fs";
+import cartItemServices from "../cartItem/services";
 
 const createOrder = async (orderData: Order): Promise<Order> => {
   const orderRepo = getRepository(Order);
@@ -59,10 +60,9 @@ const createOrder = async (orderData: Order): Promise<Order> => {
   }
 
   //Delete items in cart
-  for (let i = 0; i < orderItems.length; i++) { 
-  
+  for (let i = 0; i < orderItems.length; i++) {
+    cartItemServices.deleteCartItemByItemId(orderData.userId, orderItems[i].variantId);
   }
-
 
   return await orderRepo.findOne({
     where: {
@@ -167,18 +167,16 @@ const userUpdateStatus = async (userId: number, status: string, id: number) => {
   let oldOrder = await orderRepo.findOne(id, { where: { userId: userId } });
 
   // console.log(oldOrder);
-  console.log("ANNNNNNN")
+  console.log("ANNNNNNN");
   if (status == orderStatus.CANCEL) {
     if (oldOrder.status == orderStatus.NEW || oldOrder.status == orderStatus.COMING) {
       await orderRepo.save({ id: oldOrder.id, ...oldOrder, status: status });
-
-    }  else {
+    } else {
       throw new CustomError(codes.BAD_REQUEST);
     }
   } else if (status == orderStatus.DONE) {
     if (oldOrder.status == orderStatus.NEW || oldOrder.status == orderStatus.COMING) {
       await orderRepo.save({ id: oldOrder.id, ...oldOrder, status: status });
-
     } else {
       throw new CustomError(codes.BAD_REQUEST);
     }
@@ -187,18 +185,17 @@ const userUpdateStatus = async (userId: number, status: string, id: number) => {
   }
 
   return getOrderById(id);
-
 };
 const adminUpdateStatus = async (status: string, id: number) => {
   const orderRepo = getRepository(Order);
 
   let order = await orderRepo.findOne(id);
-  if(!order) throw new CustomError(codes.BAD_REQUEST)
-  console.log(order,status)
+  if (!order) throw new CustomError(codes.BAD_REQUEST);
+  console.log(order, status);
 
-  if (order.status == orderStatus.NEW && status ==  orderStatus.COMING) {
+  if (order.status == orderStatus.NEW && status == orderStatus.COMING) {
     await orderRepo.save({ id: order.id, ...order, status: status });
-  } else throw new CustomError(codes.BAD_REQUEST)
+  } else throw new CustomError(codes.BAD_REQUEST);
   return getOrderById(id);
 };
 

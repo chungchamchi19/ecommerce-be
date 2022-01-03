@@ -8,7 +8,7 @@ import { User } from "../../entities/user";
 import user from "../auth/daos/user";
 import shopInforService from "../shopInfor/services";
 import cartServices from "../cart/services";
-const createOrder = async (orderData: Order) => {
+const createOrder = async (orderData: Order, userId: number) => {
   const newOrder = await orderDaos.createOrder(orderData);
   // console.log(newOrder);
   return newOrder;
@@ -19,14 +19,14 @@ const createOrder = async (orderData: Order) => {
 //   return newOrder;
 // };
 
-const getOrders = async (params: { pagination: Pagination }, search: string, userId: number): Promise<[Order[],number]> => {
+const getOrders = async (params: { pagination: Pagination }, search: string, userId: number): Promise<[Order[], number]> => {
   const pagination = {
     limit: params.pagination.limit || configs.MAX_RECORDS_PER_REQ,
     offset: params.pagination.offset || 0,
   };
-  let [listOrder,total] = await orderDaos.getOrders({ pagination }, userId, search);
-  console.log(listOrder,total)
-  return [listOrder,total];
+  let [listOrder, total] = await orderDaos.getOrders({ pagination }, userId, search);
+  console.log(listOrder, total);
+  return [listOrder, total];
 };
 
 const returnOrders = async (order: any) => {
@@ -48,14 +48,14 @@ const returnOrders = async (order: any) => {
   return order;
 };
 
-const getUserOrders = async (params: { pagination: Pagination }, userId: number, email:string, phone: string): Promise<[Order[],number]> => {
+const getUserOrders = async (params: { pagination: Pagination }, userId: number, email: string, phone: string): Promise<[Order[], number]> => {
   const pagination = {
     limit: params.pagination.limit || configs.MAX_RECORDS_PER_REQ,
     offset: params.pagination.offset || 0,
   };
-  let [listOrder,total] = await orderDaos.getUserOrders({ pagination }, userId,email,phone);
-  console.log(listOrder,total)
-  return [listOrder,total];
+  let [listOrder, total] = await orderDaos.getUserOrders({ pagination }, userId, email, phone);
+  console.log(listOrder, total);
+  return [listOrder, total];
 };
 
 const getOrderById = async (id: number): Promise<Order> => {
@@ -75,12 +75,12 @@ const deleteOrder = async (id: number) => {
 const adminUpdateStatus = async (status: string, id: number) => {
   const findOrder = await getOrderById(id);
   await orderDaos.adminUpdateStatus(status, id);
-  return await getOrderById(id);;
+  return await getOrderById(id);
 };
 
 const userUpdateStatus = async (userId: number, status: string, id: number) => {
   const findOrder = await getOrderById(id);
-  await orderDaos.userUpdateStatus(userId,status,id);
+  await orderDaos.userUpdateStatus(userId, status, id);
   const updateOrder = await getOrderById(id);
   return updateOrder;
 };
