@@ -25,7 +25,6 @@ const authMiddleware = async (req: Request, res: Response, next: NextFunction) =
 const apiCheckAuth = (path: string, method: string) => {
   // method != get thì check auth
   if (method !== "get" && !path.includes("/auth")) {
-
     return true;
   }
   // những api liên quan tới những bảng sau thì cần check auth
