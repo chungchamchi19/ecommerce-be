@@ -12,8 +12,6 @@ paths:
               properties:
                 customerAddress:
                   type: string
-                detailCustomerAddress:
-                  type: string
                 comment:
                   type: string
                 customerEmail:
@@ -84,8 +82,9 @@ paths:
                 type: array
                 items:
                   type: object
+  /api/v1/admin/orders/{id}:
     put:
-      summary: Admin update status order (Switch from NEW to COMMING)
+      summary: Admin update status order (Switch from NEW to COMING)
       tags:
         - Orders
       parameters:
@@ -140,7 +139,7 @@ paths:
                     type: object
   /api/v1/user/orders:
     get:
-      summary: get order by userId
+      summary: get list order
       tags:
         - Orders
       parameters:
@@ -176,8 +175,9 @@ paths:
                     type: string
                   result:
                     type: object
+  /api/v1/user/orders/{id}:
     put:
-      summary: User update status order(switch status from (NEW or COMMING) -> (DONE or CANCEL))
+      summary: User update status order(switch status from (NEW or COMING) -> (DONE or CANCEL))
       tags:
         - Orders
       parameters:

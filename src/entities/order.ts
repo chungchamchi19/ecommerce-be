@@ -26,8 +26,6 @@ export class Order {
   @Column()
   customerAddress: string;
   @Column()
-  detailCustomerAddress: string;
-  @Column()
   paymentMethod: string;
   @Column()
   status: string;
