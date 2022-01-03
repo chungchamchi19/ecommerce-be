@@ -7,6 +7,7 @@ import CustomError from "../../errors/customError";
 import codes from "../../errors/codes";
 import { Variant } from "../../entities/variant";
 import orderStatus from "../../constants/orderStatus";
+import { stat } from "fs";
 
 const createOrder = async (orderData: Order): Promise<Order> => {
   const orderRepo = getRepository(Order);
@@ -56,6 +57,12 @@ const createOrder = async (orderData: Order): Promise<Order> => {
 
     // console.log(newVariant);
   }
+
+  //Delete items in cart
+  for (let i = 0; i < orderItems.length; i++) { 
+  
+  }
+
 
   return await orderRepo.findOne({
     where: {
@@ -113,7 +120,7 @@ const getOrderById = async (id: number): Promise<Order> => {
   return order;
 };
 
-const getOrders = async (params: { pagination: Pagination }, userId: number, search: string): Promise<Order[]> => {
+const getOrders = async (params: { pagination: Pagination }, userId: number, search: string): Promise<[Order[], number]> => {
   const orderRepo = getRepository(Order);
   let query = orderRepo
     .createQueryBuilder("o")
@@ -127,27 +134,28 @@ const getOrders = async (params: { pagination: Pagination }, userId: number, sea
     query.andWhere("(o.customerName )LIKE :name OR o.customerEmail LIKE :name", { name: `%${search}%` });
   }
   query.skip(params.pagination.offset).take(params.pagination.limit);
-  return await query.getMany();
+  return await query.getManyAndCount();
 };
-const getUserOrders = async (params: { pagination: Pagination }, userId: number, email: any, phone: any): Promise<Order[]> => {
+const getUserOrders = async (params: { pagination: Pagination }, userId: number, email: string, phone: string): Promise<[Order[], number]> => {
   const orderRepo = getRepository(Order);
   let query = orderRepo
     .createQueryBuilder("o")
     .leftJoinAndSelect("o.orderItems", "orderItems")
     .leftJoinAndSelect("orderItems.variant", "variant", "variant.id=orderItems.variantId")
     .leftJoinAndSelect("variant.product", "product", "variant.productId=product.id")
-    .where(`o.userId=${userId}`);
+    .where(`(o.userId=${userId})`);
   if (phone && !email) {
-    query.andWhere(`o.customerPhone=${phone}`);
+    query.andWhere("(o.customerPhone=:phone)", { phone: phone });
   }
   if (email && !phone) {
-    query.andWhere(`o.customerEmail=${email}`);
+    query.andWhere("(o.customerEmail=:email)", { email: email });
   }
   if (email && phone) {
-    query.andWhere(`o.customerEmail=${email}`).andWhere(`o.customerPhone=${phone}`);
+    query.andWhere("((o.customerEmail=:email) AND (o.customerPhone=:phone))", { email: email, phone: phone });
   }
   query.skip(params.pagination.offset).take(params.pagination.limit).orderBy("o.createdAt", "DESC");
-  return query.getMany();
+  console.log(query);
+  return query.getManyAndCount();
 };
 
 const deleteOrder = async (id: number) => {
@@ -156,32 +164,42 @@ const deleteOrder = async (id: number) => {
 };
 const userUpdateStatus = async (userId: number, status: string, id: number) => {
   const orderRepo = getRepository(Order);
-  let oldOrder = await orderRepo.findOne(id, { where: { userId: userId, id: id } });
+  let oldOrder = await orderRepo.findOne(id, { where: { userId: userId } });
 
-  console.log(oldOrder);
-  if (oldOrder.status == orderStatus.NEW || oldOrder.status == orderStatus.COMMING) {
-    if (status == orderStatus.CANCEL) {
-      oldOrder.status = orderStatus.CANCEL;
-    } else if (status == orderStatus.DONE) {
-      oldOrder.status = orderStatus.DONE;
+  // console.log(oldOrder);
+  console.log("ANNNNNNN")
+  if (status == orderStatus.CANCEL) {
+    if (oldOrder.status == orderStatus.NEW || oldOrder.status == orderStatus.COMING) {
+      await orderRepo.save({ id: oldOrder.id, ...oldOrder, status: status });
+
+    }  else {
+      throw new CustomError(codes.BAD_REQUEST);
+    }
+  } else if (status == orderStatus.DONE) {
+    if (oldOrder.status == orderStatus.NEW || oldOrder.status == orderStatus.COMING) {
+      await orderRepo.save({ id: oldOrder.id, ...oldOrder, status: status });
+
     } else {
       throw new CustomError(codes.BAD_REQUEST);
     }
-
-    await orderRepo.update(oldOrder.id, oldOrder);
+  } else {
+    throw new CustomError(codes.BAD_REQUEST);
   }
+
+  return getOrderById(id);
+
 };
 const adminUpdateStatus = async (status: string, id: number) => {
   const orderRepo = getRepository(Order);
 
   let order = await orderRepo.findOne(id);
-  console.log(order);
+  if(!order) throw new CustomError(codes.BAD_REQUEST)
+  console.log(order,status)
 
-  if (order.status == orderStatus.COMMING) {
-    order.status = orderStatus.COMMING;
-  }
-  await orderRepo.update(order.id, order);
-  return order;
+  if (order.status == orderStatus.NEW && status ==  orderStatus.COMING) {
+    await orderRepo.save({ id: order.id, ...order, status: status });
+  } else throw new CustomError(codes.BAD_REQUEST)
+  return getOrderById(id);
 };
 
 const orderDaos = {

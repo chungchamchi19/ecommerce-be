@@ -4,15 +4,15 @@ import orderServices from "./services";
 import shopInforService from "../shopInfor/services";
 import user from "../auth/daos/user";
 import orderStatus from "../../constants/orderStatus";
+import { stat } from "fs";
 
 const createOrder = async (req: Request, res: Response) => {
-  const { customerAddress, detailCustomerAddress, customerEmail, customerName, customerPhone, paymentMethod, deliveryMethod, orderItems, shipFee, comment } = req.body;
+  const { customerAddress,customerEmail, customerName, customerPhone, paymentMethod, deliveryMethod, orderItems, shipFee, comment } = req.body;
 
   const userId = req.user.id;
   const orderData: Order = {
     userId,
     customerAddress,
-    detailCustomerAddress,
     customerEmail,
     customerName,
     customerPhone,
@@ -37,7 +37,6 @@ const adminUpdateOrder = async (req: Request, res: Response) => {
   const orderData: Order = {
     userId,
     customerAddress,
-    detailCustomerAddress,
     customerEmail,
     customerName,
     customerPhone,
@@ -55,39 +54,6 @@ const adminUpdateOrder = async (req: Request, res: Response) => {
     result: newOrder,
   });
 };
-// const userUpdateOrder = async (req: Request, res: Response) => {
-//   const { status,orderId } = req.body;
-//   const newOrder = await orderServices.userUpdateOrder(user,id,status);
-//   res.status(200).json({
-//     status: "success",
-//     result: newOrder,
-//   });
-// };
-
-
-// const checkOutAllItemInCart = async (req: Request, res: Response) => {
-//   const { customerAddress,detailCustomerAddress, customerEmail, customerName, customerPhone, paymentMethod, status, deliveryMethod, orderItems, shipFee,comment } = req.body;
-
-//   const userId =req.user.id;
-//   const orderData: Order = {
-//     userId,
-//     customerAddress,
-//     detailCustomerAddress,
-//     customerEmail,
-//     customerName,
-//     customerPhone,
-//     paymentMethod,
-//     status,
-//     deliveryMethod,
-//     shipFee,
-//     comment
-//   };
-//   const newOrder = await orderServices.checkoutAllItems(orderData);
-//   res.status(200).json({
-//     status: "success",
-//     result: newOrder,
-//   });
-// };
 
 
 //admin order
@@ -113,20 +79,25 @@ const getOrderById = async (req: Request, res: Response) => {
 // };
 //admin
 const adminGetOrders = async (req: Request, res: Response) => {
+  console.log("???? DAAAAAAAAAAAAA")
   let { limit, offset, userId, search } = req.query;
+  
   search = search ? search : "";
   userId = userId ? userId : "-1";
 
+
   const orders = await orderServices.getOrders({ pagination: { limit: Number(limit), offset: Number(offset) } }, String(search), Number(userId));
+  console.log(orders)
   const returnOrderList: any = [];
-  for(let i =0 ;i< orders.length;i++) {
-    let order = await orderServices.returnOrders(orders[i]);
+  for(let i =0 ;i< orders[0].length;i++) {
+    let order = await orderServices.returnOrders(orders[0][i]);
     returnOrderList.push(order);
   }
 
   res.status(200).json({
     status: "success",
     result: returnOrderList,
+    total: orders[1]
   });
 
 };
@@ -145,6 +116,7 @@ const deleteOrder = async (req: Request, res: Response) => {
 const adminUpdateStatus = async (req: Request, res: Response) => {
   const { id } = req.params;
   const {status } =  req.body
+  console.log(status)
   const order = await orderServices.adminUpdateStatus(status,Number(id));
   res.status(200).json({
     status: "success",
@@ -165,18 +137,29 @@ const userUpdateStatus = async (req: Request, res: Response) => {
 //User order
 const userGetOrders = async (req: Request, res: Response) => {
   // limit, offset, userId, search
+  console.log("???? DAAAAAAAAAAAAA")
+  
   const { limit, offset,email, phone } = req.query;
+  // console.log(email)
   const userId = req.user.id;
-  const orders = await orderServices.getUserOrders({ pagination: { limit: Number(limit), offset: Number(offset) } }, userId, email, phone);
+  const params:any = {
+    
+    email: email as string,
+    phone: phone as string,
+  }
+  // console.log(params)
+  const orders = await orderServices.getUserOrders({ pagination: { limit: Number(limit), offset: Number(offset) } }, userId, params.email, params.phone);
+  console.log(orders)
   const returnOrderList: any = [];
-  for(let i =0 ;i< orders.length;i++) {
-    let order = await orderServices.returnOrders(orders[i]);
+  for(let i =0 ;i< orders[0].length;i++) {
+    let order = await orderServices.returnOrders(orders[0][i]);
     returnOrderList.push(order);
   }
 
   res.status(200).json({
     status: "success",
     result: returnOrderList,
+    total: orders[1]
   });
 };
 
