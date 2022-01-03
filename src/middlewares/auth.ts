@@ -25,11 +25,14 @@ const authMiddleware = async (req: Request, res: Response, next: NextFunction) =
 const apiCheckAuth = (path: string, method: string) => {
   // method != get thì check auth
   if (method !== "get" && !path.includes("/auth")) {
+
     return true;
   }
   // những api liên quan tới những bảng sau thì cần check auth
   const checkApis = ["/cart", "/orders", "/cart-items", "/order-items", "/admin", "/me", "/user-metas"];
-  const findPath = checkApis.find((api) => path.includes(api));
+  // check những trường hợp như /me và /media
+  const notIncludeApis = ["/media"];
+  const findPath = checkApis.find((api) => path.includes(api) && !notIncludeApis.find((notItem) => path.includes(notItem)));
   if (findPath) {
     return true;
   }
