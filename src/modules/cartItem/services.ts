@@ -17,7 +17,6 @@ const createCartItem = async (cartItemData: CartItem) => {
     return updateCartItem(foundItem.id, cartItemData);
   }
   const newcartItem = await cartItemDaos.createCartItem(cartItemData);
-  
 };
 
 const getCartItems = async (params: { pagination: Pagination }): Promise<CartItem[]> => {
@@ -42,8 +41,8 @@ const updateCartItem = async (id: number, data: CartItem): Promise<CartItem> => 
   if (!findCartItem) {
     throw new CustomError(codes.NOT_FOUND, "cartItem not found!");
   }
-  if(data.quantity==0) {
-    return await deleteCartItem(id);  
+  if (data.quantity == 0) {
+    return await deleteCartItem(id);
   }
   delete data.id;
   await cartItemDaos.updateCartItem(id, data);
@@ -60,12 +59,20 @@ const deleteCartItem = async (id: number) => {
   return findCartItem;
 };
 
+const deleteCartItemByItemId = async (userId: number, itemId: number) => {
+  const cart = await cartServices.getCartByUserId(userId);
+  const cartId = cart.id;
+
+  await cartItemDaos.deleteCartItemByItemId(cartId, itemId);
+  return;
+};
 const cartItemServices = {
   createCartItem,
   getCartItems,
   updateCartItem,
   deleteCartItem,
   getCartItemById,
+  deleteCartItemByItemId,
 };
 
 export default cartItemServices;

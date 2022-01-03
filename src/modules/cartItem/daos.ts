@@ -2,6 +2,8 @@ import { CartItem } from "../../entities/cartItem";
 import { getRepository } from "typeorm";
 import { Pagination } from "../../types/type.pagination";
 import { Cart } from "../../entities/cart";
+import CustomError from "../../errors/customError";
+import codes from "../../errors/codes";
 
 const createCartItem = async (cartItemData: CartItem): Promise<CartItem> => {
   const cartItemRepo = getRepository(CartItem);
@@ -43,10 +45,19 @@ const deleteCartItem = async (id: number) => {
   const cartItemRepo = getRepository(CartItem);
   return await cartItemRepo.delete(id);
 };
-const getCartId = async (cartItemId: number) : Promise<number> => {
+const deleteCartItemByItemId = async (cartId: number, itemId: number) => {
+  // const cartRepo = getRepository(Cart);
+  const cartItemRepo = getRepository(CartItem);
+  const deleteOne = await cartItemRepo.findOne({ variantId: itemId });
+  if (deleteOne) {
+    if (deleteOne?.cartId == cartId) {
+      return await deleteCartItem(deleteOne.id);
+    }
+  } else throw new CustomError(codes.BAD_REQUEST);
+};
+const getCartId = async (cartItemId: number): Promise<number> => {
   const cartItemRepo = getRepository(CartItem);
   const cartItem = await cartItemRepo.findOne(cartItemId);
-  console.log(cartItem);
   return cartItem.cartId;
 };
 const checkExistedItem = async (cartId: number, variantId: number) => {
@@ -60,7 +71,8 @@ const cartItemDaos = {
   updateCartItem,
   deleteCartItem,
   checkExistedItem,
-  getCartId
+  getCartId,
+  deleteCartItemByItemId,
 };
 
 export default cartItemDaos;
