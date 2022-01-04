@@ -20,14 +20,17 @@ const getCollectionById = async (id: number): Promise<Collection> => {
   return collection;
 };
 
-const getCollections = async (params: { pagination: Pagination }): Promise<Collection[]> => {
+const getCollections = async (params: {
+  pagination: Pagination;
+}): Promise<{ collections: Collection[]; total: number }> => {
   const collectionRepo = getRepository(Collection);
-  const collections = await collectionRepo
-    .createQueryBuilder("c")
-    .skip(params.pagination.offset)
-    .take(params.pagination.limit)
-    .getMany();
-  return collections;
+  let collectionQuery = await collectionRepo.createQueryBuilder("c").orderBy("c.createdAt", "DESC");
+  const collections = await collectionQuery.skip(params.pagination.offset).take(params.pagination.limit).getMany();
+  const total = await collectionQuery.getCount();
+  return {
+    collections,
+    total,
+  };
 };
 
 const deleteCollection = async (id: number) => {
