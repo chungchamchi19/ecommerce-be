@@ -23,12 +23,13 @@ const getCollectionById = async (req: Request, res: Response) => {
 
 const getCollections = async (req: Request, res: Response) => {
   const { limit, offset } = req.query;
-  const collections = await collectionServices.getCollections({
+  const data = await collectionServices.getCollections({
     pagination: { limit: Number(limit), offset: Number(offset) },
   });
   res.status(200).json({
     status: "success",
-    result: collections,
+    result: data.collections,
+    total: data.total,
   });
 };
 
