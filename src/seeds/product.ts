@@ -8,7 +8,7 @@ import vendorServices from "../modules/vendor/services";
 
 const productSeeding = async () => {
   const listColRecord = await collectionServices.getCollections({ pagination: { limit: 25, offset: 0 } });
-  const listCollection = listColRecord.map((item) => item.id);
+  const listCollection = listColRecord.collections.map((item) => item.id);
   const listMediaRecord = await mediaDaos.getMedias({ pagination: { limit: 25, offset: 0 } });
   const listMedia = listMediaRecord.map((item) => item.id);
   const listVendorRecord = await vendorServices.getVendors({ pagination: { limit: 25, offset: 0 } });
