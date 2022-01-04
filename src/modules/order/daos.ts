@@ -27,16 +27,20 @@ const createOrder = async (orderData: Order): Promise<Order> => {
     comparePrice += variant.comparePrice * orderItems[i].quantity;
     totalPrice += variant.price * orderItems[i].quantity;
   }
-  const order = await orderRepo.insert({
+  const createOrder = await orderRepo.insert({
     ...newOrder,
     totalPrice: totalPrice,
     totalComparePrice: comparePrice,
     shipFee: orderData.shipFee,
   });
-
+  const code = "LOCVUNG_" + createOrder.raw.insertId;
+  const order = await orderRepo.save({
+    id: createOrder.raw.insertId,
+    code: code,
+  });
   //Update quantity
   for (let i = 0; i < orderItems.length; i++) {
-    orderItems[i].orderId = order.raw.insertId;
+    orderItems[i].orderId = createOrder.raw.insertId;
     let orderItem = await orderItemServices.createOrderItem(orderItems[i]);
   }
   for (let i = 0; i < orderItems.length; i++) {
@@ -66,7 +70,7 @@ const createOrder = async (orderData: Order): Promise<Order> => {
 
   return await orderRepo.findOne({
     where: {
-      id: order.raw.insertId,
+      id: createOrder.raw.insertId,
     },
     relations: ["orderItems"],
   });

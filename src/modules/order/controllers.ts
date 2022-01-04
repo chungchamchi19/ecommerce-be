@@ -25,6 +25,7 @@ const createOrder = async (req: Request, res: Response) => {
   };
 
   const newOrder = await orderServices.createOrder(orderData, userId);
+  // const updateOrder =  await 
   res.status(200).json({
     status: "success",
     result: newOrder,
@@ -134,8 +135,6 @@ const userUpdateStatus = async (req: Request, res: Response) => {
 //User order
 const userGetOrders = async (req: Request, res: Response) => {
   // limit, offset, userId, search
-  console.log("???? DAAAAAAAAAAAAA");
-
   const { limit, offset, email, phone } = req.query;
   // console.log(email)
   const userId = req.user.id;

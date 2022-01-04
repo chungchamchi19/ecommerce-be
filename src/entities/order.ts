@@ -10,6 +10,9 @@ export class Order {
   id?: number;
 
   @Column()
+  code?: string;
+
+  @Column()
   userId?: number;
 
   @Column()
