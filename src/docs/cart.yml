@@ -95,6 +95,23 @@ paths:
                     type: string
                   result:
                     type: object
+  /api/v1/user/cart/check-available-items:
+    get:
+      summary: check available number of items in  cart
+      tags:
+        - Cart
+      responses:
+        "200": # status code
+          description: Json format of srt file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  result:
+                    type: object
 
     
 

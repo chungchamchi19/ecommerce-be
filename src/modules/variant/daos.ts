@@ -14,6 +14,20 @@ const getVariantById = async (id: number): Promise<Variant> => {
     .getOne();
   return variant;
 };
+const getVariantWithProductById = async (id: number): Promise<Variant> => {
+  const variantRepo = getRepository(Variant);
+  const variant = await variantRepo
+    .createQueryBuilder("v")
+    .leftJoinAndSelect("v.product", "product","productId=product.id")
+    .leftJoinAndSelect("v.featureImage", "fm")
+    .leftJoinAndSelect("v.optionValueVariants", "ovv")
+    .leftJoinAndSelect("ovv.optionValue", "ov")
+    .leftJoinAndSelect("ov.option", "o")
+   
+    .where(`v.id=${id}`)
+    .getOne();
+  return variant;
+};
 
 const getVariants = async (params: { pagination: Pagination }): Promise<Variant[]> => {
   const variantRepo = getRepository(Variant);
@@ -59,6 +73,7 @@ const variantDaos = {
   deleteVariant,
   getVariants,
   deleteVariantByIds,
+  getVariantWithProductById
 };
 
 export default variantDaos;

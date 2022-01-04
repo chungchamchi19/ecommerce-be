@@ -129,7 +129,22 @@ const deleteCart = async (id: number) => {
 const checkCart = (userId: number) => {
   return cartDaos.checkCart(userId);
 };
+const checkNumberAvailable = async (userId: number): Promise<any[]> => {
+  const findCart = await cartDaos.getMyCart(userId);
+  let listUnavailable: { variantId: number; productTitle: string; publicTitle: string; message: string }[] = [];
+  console.log(findCart);
+  for (let i = 0; i < findCart?.cartItems.length; i++) {
+    const variant = await variantServices.getVariantWithProductById(findCart?.cartItems[i].variantId);
 
+    if (variant.availableNumber < findCart?.cartItems[i].quantity) {
+      console.log(variant);
+      console.log(listUnavailable);
+      listUnavailable.push({ variantId: variant.id, productTitle: variant.product.title, publicTitle: variant.publicTitle, message: "Không đủ sảng phẩm" });
+    }
+  }
+
+  return listUnavailable;
+};
 const cartServices = {
   createCart,
   getCartByUserId,
@@ -140,7 +155,8 @@ const cartServices = {
   returnCart,
   returnCartWithTotalFee,
   getVariantPublicTitle,
-  getMyCheckOutCart
+  getMyCheckOutCart,
+  checkNumberAvailable,
 };
 
 export default cartServices;

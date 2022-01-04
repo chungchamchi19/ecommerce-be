@@ -18,6 +18,13 @@ const getVariantById = async (id: number): Promise<Variant> => {
   }
   return variantHelpers.formatVariant(findvariant);
 };
+const getVariantWithProductById = async (id: number): Promise<Variant> => {
+  const findvariant = await variantDaos.getVariantWithProductById(id);
+  if (!findvariant) {
+    throw new CustomError(codes.NOT_FOUND, "Variant not found!");
+  }
+  return variantHelpers.formatVariant(findvariant);
+};
 
 const createVariant = async (data: Variant): Promise<Variant> => {
   const cacheOptions = data.options;
@@ -185,6 +192,7 @@ const variantServices = {
   updateVariant,
   deleteVariantByIds,
   deleteVariantById,
+  getVariantWithProductById
 };
 
 export default variantServices;
