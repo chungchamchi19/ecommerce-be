@@ -27,7 +27,7 @@ const updateCollection = async (id: number, collection: Collection): Promise<Col
   return newCollection;
 };
 
-const getCollections = async (params: { pagination: Pagination }): Promise<Collection[]> => {
+const getCollections = async (params: {pagination: Pagination}): Promise<{collections: Collection[]; total: number}> => {
   const pagination = {
     limit: params.pagination.limit || configs.MAX_RECORDS_PER_REQ,
     offset: params.pagination.offset || 0,
