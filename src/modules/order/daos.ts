@@ -23,7 +23,7 @@ const createOrder = async (orderData: Order): Promise<Order> => {
   for (let i = 0; i < orderItems.length; i++) {
     let variant = await variantServices.getVariantById(orderItems[i].variantId);
     console.log(variant);
-    if (variant.availableNumber < orderItems[i].quantity) throw new CustomError(codes.BAD_REQUEST, "Invalid quantity");
+    if (variant.availableNumber < orderItems[i].quantity) throw new CustomError(codes.BAD_REQUEST, `Number of item has name ${variant.publicTitle} is not enough`);
     comparePrice += variant.comparePrice * orderItems[i].quantity;
     totalPrice += variant.price * orderItems[i].quantity;
   }

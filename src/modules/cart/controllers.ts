@@ -25,7 +25,6 @@ const createCart = async (req: Request, res: Response) => {
 //   });
 // };
 
-
 const getCartById = async (req: Request, res: Response) => {
   const { id } = req.params;
   const cart = await cartServices.getCartById(Number(id));
@@ -46,7 +45,7 @@ const getCartByUserId = async (req: Request, res: Response) => {
 };
 
 const getCart = async (req: Request, res: Response) => {
-  console.log("???? DAAAAAAAAAAAAA")
+  console.log("???? DAAAAAAAAAAAAA");
   const returnCart = await cartServices.getMyCart(Number(req.user?.id));
   // const returnCart = await cartServices.returnCart(cart);
   res.status(200).json({
@@ -54,12 +53,18 @@ const getCart = async (req: Request, res: Response) => {
     result: returnCart,
   });
 };
+
+const checkNumberAvailable = async (req: Request, res: Response) => {
+  const result= await cartServices.checkNumberAvailable(Number(req.user?.id));
+  // const returnCart = await cartServices.returnCart(cart);
+  return  res.status(200).json({
+    result,
+  });
+};
 const getCheckoutInfor = async (req: Request, res: Response) => {
   // const cart = await cartServices.getMyCart(Number(req.user?.id));
-  const returnCart = await cartServices.getMyCheckOutCart(Number(req.user?.id))
-  // const returnCart = await cartServices.returnCartWithTotalFee(cart);
+  const returnCart = await cartServices.getMyCheckOutCart(Number(req.user?.id));
 
-  // console.log(returnCart)
   res.status(200).json({
     status: "success",
     result: returnCart,
@@ -81,7 +86,8 @@ const cartControllers = {
   getCartById,
   deleteCart,
   getCart,
-  getCheckoutInfor
+  getCheckoutInfor,
+  checkNumberAvailable
 };
 
 export default cartControllers;
