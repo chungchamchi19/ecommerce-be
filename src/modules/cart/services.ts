@@ -61,8 +61,15 @@ const returnCartWithTotalFee = async (cart: any) => {
   cart["totalComparePrice"] = totalComparePrice;
   cart["totalCountItems"] = totalCountItems;
   const shopInfor = await shopInforService.getShopInfor();
-  cart["shipFee"] = shopInfor.shipFee;
-  cart["finalPrice"] = totalPrice + shopInfor.shipFee;
+
+  if (totalPrice > 300000) {
+    cart["shipFee"] = 0;
+    cart["finalPrice"] = totalPrice;
+  } else {
+    cart["shipFee"] = shopInfor.shipFee;
+    cart["finalPrice"] = totalPrice + shopInfor.shipFee;
+  }
+
   return cart;
 };
 

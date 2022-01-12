@@ -48,7 +48,7 @@ const deleteCartItem = async (id: number) => {
 const deleteCartItemByItemId = async (cartId: number, itemId: number) => {
   // const cartRepo = getRepository(Cart);
   const cartItemRepo = getRepository(CartItem);
-  const deleteOne = await cartItemRepo.findOne({ variantId: itemId });
+  const deleteOne = await cartItemRepo.findOne({ variantId: itemId, cartId: cartId });
   if (deleteOne) {
     if (deleteOne?.cartId == cartId) {
       return await deleteCartItem(deleteOne.id);

@@ -65,6 +65,8 @@ const createOrder = async (orderData: Order): Promise<Order> => {
 
   //Delete items in cart
   for (let i = 0; i < orderItems.length; i++) {
+    console.log("xxxx",orderItems[i].variantId),
+    console.log(orderData.userId)
     cartItemServices.deleteCartItemByItemId(orderData.userId, orderItems[i].variantId);
   }
 
