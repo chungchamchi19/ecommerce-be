@@ -22,7 +22,6 @@ const createOrder = async (orderData: Order): Promise<Order> => {
 
   for (let i = 0; i < orderItems.length; i++) {
     let variant = await variantServices.getVariantById(orderItems[i].variantId);
-    console.log(variant);
     if (variant.availableNumber < orderItems[i].quantity) throw new CustomError(codes.BAD_REQUEST, `Number of item has name ${variant.publicTitle} is not enough`);
     comparePrice += variant.comparePrice * orderItems[i].quantity;
     totalPrice += variant.price * orderItems[i].quantity;
@@ -47,7 +46,6 @@ const createOrder = async (orderData: Order): Promise<Order> => {
     let variant = await variantServices.getVariantById(orderItems[i].variantId);
 
     variant.availableNumber = variant.availableNumber - orderItems[i].quantity;
-    console.log(variant);
     const newVariant: Variant = {
       price: variant.price,
       comparePrice: variant.comparePrice,
@@ -58,15 +56,10 @@ const createOrder = async (orderData: Order): Promise<Order> => {
     };
     newVariant.availableNumber = variant.availableNumber;
     await variantServices.updateVariant(variant.id, newVariant);
-    // let variant = await variantServices.getVariantById(orderItems[i].variantId);
-
-    // console.log(newVariant);
   }
 
   //Delete items in cart
   for (let i = 0; i < orderItems.length; i++) {
-    console.log("xxxx",orderItems[i].variantId),
-    console.log(orderData.userId)
     cartItemServices.deleteCartItemByItemId(orderData.userId, orderItems[i].variantId);
   }
 
@@ -77,42 +70,6 @@ const createOrder = async (orderData: Order): Promise<Order> => {
     relations: ["orderItems"],
   });
 };
-
-// const  checkOutAllItems = async (orderData: Order): Promise<Order> => {
-//   const orderRepo = getRepository(Order);
-//   let newOrder = new Order();
-
-//   newOrder = orderData;
-//   let orderItems = orderData.orderItems;
-//   delete orderData.orderItems;
-//   let totalPrice = 0;
-//   let comparePrice = 0;
-//   let obj: any = {};
-//   let newOrderItems = [];
-
-//   for (let i = 0; i < orderItems.length; i++) {
-//     let variant = await variantServices.getVariantById(orderItems[i].variantId);
-//     comparePrice += variant.comparePrice * orderItems[i].quantity;
-//     totalPrice += variant.price * orderItems[i].quantity;
-//   }
-//   const order = await orderRepo.insert({
-//     ...newOrder,
-//     totalPrice: totalPrice,
-//     subTotal: comparePrice,
-//   });
-//   for (let i = 0; i < orderItems.length; i++) {
-//     let variant = await variantServices.getVariantById(orderItems[i].variantId);
-//     orderItems[i].orderId = order.raw.insertId;
-//     let orderItem = await orderItemServices.createOrderItem(orderItems[i]);
-//   }
-
-//   return await orderRepo.findOne({
-//     where: {
-//       id: order.raw.insertId,
-//     },
-//     relations: ["orderItems"],
-//   });
-// };
 
 const getOrderById = async (id: number): Promise<Order> => {
   const orderRepo = getRepository(Order);
@@ -160,7 +117,6 @@ const getUserOrders = async (params: { pagination: Pagination }, userId: number,
     query.andWhere("((o.customerEmail=:email) AND (o.customerPhone=:phone))", { email: email, phone: phone });
   }
   query.skip(params.pagination.offset).take(params.pagination.limit).orderBy("o.createdAt", "DESC");
-  console.log(query);
   return query.getManyAndCount();
 };
 
@@ -172,8 +128,6 @@ const userUpdateStatus = async (userId: number, status: string, id: number) => {
   const orderRepo = getRepository(Order);
   let oldOrder = await orderRepo.findOne(id, { where: { userId: userId } });
 
-  // console.log(oldOrder);
-  console.log("ANNNNNNN");
   if (status == orderStatus.CANCEL) {
     if (oldOrder.status == orderStatus.NEW || oldOrder.status == orderStatus.COMING) {
       await orderRepo.save({ id: oldOrder.id, ...oldOrder, status: status });
@@ -197,8 +151,6 @@ const adminUpdateStatus = async (status: string, id: number) => {
 
   let order = await orderRepo.findOne(id);
   if (!order) throw new CustomError(codes.BAD_REQUEST);
-  console.log(order, status);
-
   if (order.status == orderStatus.NEW && status == orderStatus.COMING) {
     await orderRepo.save({ id: order.id, ...order, status: status });
   } else throw new CustomError(codes.BAD_REQUEST);

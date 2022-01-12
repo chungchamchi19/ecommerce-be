@@ -42,7 +42,6 @@ const getMyCart = async (userId: number): Promise<Cart> => {
     .leftJoinAndSelect("variant.product", "product", "variant.productId=product.id")
     .where(`c.userId=${userId}`)
     .getOne();
-  // console.log(cart);
   return cart;
 };
 const checkCart = async (userId: number): Promise<Cart> => {

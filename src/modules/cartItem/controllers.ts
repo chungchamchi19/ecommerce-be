@@ -8,7 +8,6 @@ import { Cart } from "../../entities/cart";
 const createCartItem = async (req: Request, res: Response) => {
   const userId = req.user.id;
   let cart = await CartDaos.getCartByUserId(userId);
-  console.log(cart);
   if (!cart) {
     const newCart = new Cart();
     newCart.userId = userId;
