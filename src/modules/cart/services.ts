@@ -34,7 +34,6 @@ const returnCart = async (cart: any) => {
   cart["totalPrice"] = totalPrice;
   cart["totalComparePrice"] = totalComparePrice;
   cart["totalCountItems"] = totalCountItems;
-  console.log(cart);
   return cart;
 };
 const getVariantPublicTitle = async (variantId: number): Promise<Variant> => {
@@ -61,8 +60,15 @@ const returnCartWithTotalFee = async (cart: any) => {
   cart["totalComparePrice"] = totalComparePrice;
   cart["totalCountItems"] = totalCountItems;
   const shopInfor = await shopInforService.getShopInfor();
-  cart["shipFee"] = shopInfor.shipFee;
-  cart["finalPrice"] = totalPrice + shopInfor.shipFee;
+
+  if (totalPrice > 300000) {
+    cart["shipFee"] = 0;
+    cart["finalPrice"] = totalPrice;
+  } else {
+    cart["shipFee"] = shopInfor.shipFee;
+    cart["finalPrice"] = totalPrice + shopInfor.shipFee;
+  }
+
   return cart;
 };
 
@@ -132,13 +138,10 @@ const checkCart = (userId: number) => {
 const checkNumberAvailable = async (userId: number): Promise<any[]> => {
   const findCart = await cartDaos.getMyCart(userId);
   let listUnavailable: { variantId: number; productTitle: string; publicTitle: string; message: string }[] = [];
-  console.log(findCart);
   for (let i = 0; i < findCart?.cartItems.length; i++) {
     const variant = await variantServices.getVariantWithProductById(findCart?.cartItems[i].variantId);
 
     if (variant.availableNumber < findCart?.cartItems[i].quantity) {
-      console.log(variant);
-      console.log(listUnavailable);
       listUnavailable.push({ variantId: variant.id, productTitle: variant.product.title, publicTitle: variant.publicTitle, message: "Không đủ sảng phẩm" });
     }
   }

@@ -4,7 +4,6 @@ import shopInfor from "../constants/shopInfor";
 dotenv.config({ path: "./.env" });
 
 export const sendEmail = async (payload: any) => {
-  console.log(shopInfor);
   let transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {

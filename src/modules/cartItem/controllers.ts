@@ -3,10 +3,16 @@ import { Request, Response } from "express";
 import cartItemServices from "./services";
 import CartDaos from "../cart/daos";
 import cartServices from "../cart/services";
+import { Cart } from "../../entities/cart";
 
 const createCartItem = async (req: Request, res: Response) => {
-  const userId  = req.user.id;
-  const cart = await CartDaos.getCartByUserId(userId);
+  const userId = req.user.id;
+  let cart = await CartDaos.getCartByUserId(userId);
+  if (!cart) {
+    const newCart = new Cart();
+    newCart.userId = userId;
+    cart = await CartDaos.createCart(newCart);
+  }
   const { variantId, quantity } = req.body;
   const cartData: CartItem = {
     cartId: cart?.id,
@@ -14,10 +20,6 @@ const createCartItem = async (req: Request, res: Response) => {
     quantity,
   };
   const newCartItem = await cartItemServices.createCartItem(cartData);
-  // res.status(200).json({
-  //   status: "success",
-  //   result: newCartItem,
-  // });
   const updatedCart = await cartServices.getMyCart(Number(req.user.id));
   res.status(200).json({
     status: "success",

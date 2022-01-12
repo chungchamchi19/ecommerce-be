@@ -45,7 +45,6 @@ const getCartByUserId = async (req: Request, res: Response) => {
 };
 
 const getCart = async (req: Request, res: Response) => {
-  console.log("???? DAAAAAAAAAAAAA");
   const returnCart = await cartServices.getMyCart(Number(req.user?.id));
   // const returnCart = await cartServices.returnCart(cart);
   res.status(200).json({

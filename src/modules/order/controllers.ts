@@ -79,7 +79,6 @@ const getOrderById = async (req: Request, res: Response) => {
 // };
 //admin
 const adminGetOrders = async (req: Request, res: Response) => {
-  console.log("???? DAAAAAAAAAAAAA");
   let { limit, offset, userId, search } = req.query;
 
   search = search ? search : "";

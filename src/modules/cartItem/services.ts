@@ -61,8 +61,8 @@ const deleteCartItem = async (id: number) => {
 
 const deleteCartItemByItemId = async (userId: number, itemId: number) => {
   const cart = await cartServices.getCartByUserId(userId);
-  const cartId = cart.id;
 
+  const cartId = cart.id;
   await cartItemDaos.deleteCartItemByItemId(cartId, itemId);
   return;
 };
