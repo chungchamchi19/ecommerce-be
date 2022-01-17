@@ -8,8 +8,6 @@ import shopInforService from "./services";
 
 const createOrUpdateShopInfor = async (req: Request, res: Response) => {
   const { bossName, email, facebook, zalo,bankAccountId,phone,youtube,instagram,address,shipFee } = req.body;
-//   const oldShopInfor =  shopInfor = await shopInforService
-  // const currentUserId = req.user.id;
   const newShopInfor = new ShopInfor();
   newShopInfor.bossName = bossName;
   newShopInfor.email = email;

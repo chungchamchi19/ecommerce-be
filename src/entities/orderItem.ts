@@ -19,8 +19,6 @@ export class OrderItem {
   orderId?: number;
   @Column()
   variantId?: number;
-  //   @Column()
-  //   poductTitle: string;
 
   @ManyToOne(() => Order, (order) => order.orderItems)
   @JoinColumn({ name: "orderId", referencedColumnName: "id" })

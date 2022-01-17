@@ -7,13 +7,11 @@ const createOrUpdateShopInfo = async (data: ShopInfor) => {
   const shopInforRepository = getRepository(ShopInfor);
   const oldOne = await shopInforRepository.find();
   let shopInforData: any = {};
-  console.log(data);
   if (oldOne.length > 0) {
     shopInforData = {
       ...oldOne[0],
       ...data,
     };
-    console.log(shopInforData);
     const newShopInfor = await shopInforRepository.save(shopInforData);
     return await shopInforRepository.findOne(oldOne[0].id);
   }

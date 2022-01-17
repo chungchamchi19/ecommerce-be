@@ -10,22 +10,15 @@ import shopInforService from "../shopInfor/services";
 import cartServices from "../cart/services";
 const createOrder = async (orderData: Order, userId: number) => {
   const newOrder = await orderDaos.createOrder(orderData);
-  // console.log(newOrder);
   return newOrder;
 };
 
-// const checkoutAllItems = async (orderData: Order) => {
-//   const newOrder = await orderDaos.checkOutAllItems(orderData);
-//   return newOrder;
-// };
-
-const getOrders = async (params: { pagination: Pagination }, search: string, userId: number): Promise<[Order[], number]> => {
+const getOrders = async (params: { pagination: Pagination }, search: string, userId: number, status: string): Promise<[Order[], number]> => {
   const pagination = {
     limit: params.pagination.limit || configs.MAX_RECORDS_PER_REQ,
     offset: params.pagination.offset || 0,
   };
-  let [listOrder, total] = await orderDaos.getOrders({ pagination }, userId, search);
-  console.log(listOrder, total);
+  let [listOrder, total] = await orderDaos.getOrders({ pagination }, userId, search, status);
   return [listOrder, total];
 };
 
@@ -48,13 +41,12 @@ const returnOrders = async (order: any) => {
   return order;
 };
 
-const getUserOrders = async (params: { pagination: Pagination }, userId: number, email: string, phone: string): Promise<[Order[], number]> => {
+const getUserOrders = async (params: { pagination: Pagination }, userId: number, email: string, phone: string, status: string): Promise<[Order[], number]> => {
   const pagination = {
     limit: params.pagination.limit || configs.MAX_RECORDS_PER_REQ,
     offset: params.pagination.offset || 0,
   };
-  let [listOrder, total] = await orderDaos.getUserOrders({ pagination }, userId, email, phone);
-  console.log(listOrder, total);
+  let [listOrder, total] = await orderDaos.getUserOrders({ pagination }, userId, email, phone,status);
   return [listOrder, total];
 };
 

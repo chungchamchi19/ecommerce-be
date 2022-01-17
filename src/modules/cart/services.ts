@@ -97,7 +97,6 @@ const getMyCart = async (userId: number): Promise<Cart> => {
     await cartDaos.createCart(newCart);
     return await cartDaos.getMyCart(userId);
   }
-  //  cartServices.returnCart(cart);
 
   const returnCart = await cartServices.returnCart(findCart);
   return returnCart;
@@ -110,7 +109,6 @@ const getMyCheckOutCart = async (userId: number): Promise<Cart> => {
     await cartDaos.createCart(newCart);
     return await cartDaos.getMyCart(userId);
   }
-  //  cartServices.returnCart(cart);
 
   const returnCart = await cartServices.returnCartWithTotalFee(findCart);
   return returnCart;

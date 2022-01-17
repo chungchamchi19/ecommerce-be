@@ -13,17 +13,6 @@ const createCart = async (req: Request, res: Response) => {
     result: newCart,
   });
 };
-// const updateCart = async (req: Request, res: Response) => {
-//   const userId = req.user.id;
-//   const cartData: Cart = {
-//     userId,
-//   };
-//   const newCart = await cartServices.createCart(cartData);
-//   res.status(200).json({
-//     status: "success",
-//     result: newCart,
-//   });
-// };
 
 const getCartById = async (req: Request, res: Response) => {
   const { id } = req.params;

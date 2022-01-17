@@ -36,12 +36,6 @@ const getOrderItems = async (params: { pagination: Pagination }): Promise<OrderI
     .getMany();
 };
 
-// const updateOrderItem = async (id: number, orderData: OrderItem): Promise<OrderItem> => {
-//     const orderItemRepo = getRepository(OrderItem);
-//     const newUpdate = await orderItemRepo.update(id, orderData);
-//     return newUpdate.raw;
-// };
-
 const deleteOrderItem = async (id: number) => {
   const orderItemRepo = getRepository(OrderItem);
   await orderItemRepo.delete(id);

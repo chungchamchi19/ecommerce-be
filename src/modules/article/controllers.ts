@@ -35,10 +35,6 @@ const getArticles = async (req: Request, res: Response) => {
 
 const getArticleById = async (req: Request, res: Response) => {
   const id: number = Number(req.params.articleId);
-  // const currentUserId: number = req.user?.id;
-  // if (!currentUserId) {
-  //   throw new CustomError(codes.NOT_FOUND);
-  // }
   const response = await articleService.getArticleById(id);
   res.status(200).json({
     status: "success",
