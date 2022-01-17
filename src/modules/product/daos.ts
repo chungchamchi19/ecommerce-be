@@ -44,12 +44,6 @@ const getProducts = async (params: ProductSearchParams): Promise<{ products: Pro
     .leftJoinAndSelect("pc.collection", "c")
     .leftJoinAndSelect("p.vendor", "vd")
     .leftJoinAndSelect("p.variants", "v");
-  // .leftJoinAndSelect("p.options", "o")
-  // .leftJoinAndSelect("o.optionValues", "ov")
-  // .leftJoinAndSelect("v.featureImage", "v_fm")
-  // .leftJoinAndSelect("v.optionValueVariants", "ovv")
-  // .leftJoinAndSelect("ovv.optionValue", "ovv_ov")
-  // .leftJoinAndSelect("ovv_ov.option", "ovv_ov_o");
   if (params.collectionId) {
     productQuery = productQuery.andWhere("pc.collectionId=:collectionId", {
       collectionId: params.collectionId,
@@ -58,9 +52,7 @@ const getProducts = async (params: ProductSearchParams): Promise<{ products: Pro
   if (params.title) {
     productQuery = productQuery.andWhere("p.title like :title", { title: `%${params.title}%` });
   }
-  // if (params.vendorId) {
-  //   productQuery = productQuery.andWhere("vd.id = :vendorId", { vendorId: params.vendorId });
-  // }
+
   if (params.status) {
     productQuery = productQuery.andWhere("p.status = :status", { status: params.status });
   }

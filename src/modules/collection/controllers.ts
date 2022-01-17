@@ -52,15 +52,6 @@ const deleteCollection = async (req: Request, res: Response) => {
   });
 };
 
-// const deleteCollections = async (req: Request, res: Response) => {
-//     const { ids } = req.params;
-//     const collections = await collectionServices.deleteCollections(Array<number>(ids));
-//     res.status(200).json({
-//         status: "success",
-//         result: collections,
-//       });
-// }
-
 const collectionControllers = {
   createCollection,
   getCollectionById,

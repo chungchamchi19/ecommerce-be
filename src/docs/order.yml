@@ -73,6 +73,11 @@ paths:
           schema:
             type: number
           description: user id
+        - in: query
+          name: status
+          schema:
+            type: string
+          description: search by status
       responses:
         "200": # status code
           description: Json format of srt file
@@ -163,6 +168,11 @@ paths:
           schema:
             type: string
           description: search order by phone
+        - in: query
+          name: status
+          schema:
+            type: string
+          description: search order by status
       responses:
         "200": # status code
           description: Json format of srt file

@@ -31,32 +31,6 @@ const createOrder = async (req: Request, res: Response) => {
     result: newOrder,
   });
 };
-// const adminUpdateOrder = async (req: Request, res: Response) => {
-//   const { customerAddress, detailCustomerAddress, customerEmail, customerName, customerPhone, paymentMethod, status, deliveryMethod, orderItems, shipFee, comment } = req.body;
-
-//   const userId = req.user.id;
-//   const orderData: Order = {
-//     userId,
-//     customerAddress,
-//     customerEmail,
-//     customerName,
-//     customerPhone,
-//     paymentMethod,
-//     status,
-//     deliveryMethod,
-//     orderItems,
-//     shipFee,
-//     comment,
-//   };
-
-//   const newOrder = await orderServices.createOrder(orderData);
-//   res.status(200).json({
-//     status: "success",
-//     result: newOrder,
-//   });
-// };
-
-//admin order
 const getOrderById = async (req: Request, res: Response) => {
   const { id } = req.params;
   const order = await orderServices.getOrderById(Number(id));
@@ -67,25 +41,15 @@ const getOrderById = async (req: Request, res: Response) => {
     result: returnOrder,
   });
 };
-//admin
-// const getOrderByUserId = async (req: Request, res: Response) => {
-//     const { userId } = req.params;
 
-//     const orders = await orderServices.getOrderByUserId(Number(userId));
-//     res.status(200).json({
-//         status: "success",
-//         result: orders,
-//     });
-// };
 //admin
 const adminGetOrders = async (req: Request, res: Response) => {
-  let { limit, offset, userId, search } = req.query;
+  let { limit, offset, userId, search , status } = req.query;
 
   search = search ? search : "";
   userId = userId ? userId : "-1";
 
-  const orders = await orderServices.getOrders({ pagination: { limit: Number(limit), offset: Number(offset) } }, String(search), Number(userId));
-  console.log(orders);
+  const orders = await orderServices.getOrders({ pagination: { limit: Number(limit), offset: Number(offset) } }, String(search), Number(userId), String(status));
   const returnOrderList: any = [];
   for (let i = 0; i < orders[0].length; i++) {
     let order = await orderServices.returnOrders(orders[0][i]);
@@ -113,7 +77,6 @@ const deleteOrder = async (req: Request, res: Response) => {
 const adminUpdateStatus = async (req: Request, res: Response) => {
   const { id } = req.params;
   const { status } = req.body;
-  console.log(status);
   const order = await orderServices.adminUpdateStatus(status, Number(id));
   res.status(200).json({
     status: "success",
@@ -134,16 +97,14 @@ const userUpdateStatus = async (req: Request, res: Response) => {
 //User order
 const userGetOrders = async (req: Request, res: Response) => {
   // limit, offset, userId, search
-  const { limit, offset, email, phone } = req.query;
-  // console.log(email)
+  const { limit, offset, email, phone ,status } = req.query;
   const userId = req.user.id;
   const params: any = {
     email: email as string,
     phone: phone as string,
+    status: status as string
   };
-  // console.log(params)
-  const orders = await orderServices.getUserOrders({ pagination: { limit: Number(limit), offset: Number(offset) } }, userId, params.email, params.phone);
-  console.log(orders);
+  const orders = await orderServices.getUserOrders({ pagination: { limit: Number(limit), offset: Number(offset) } }, userId, params.email, params.phone ,params.status);
   const returnOrderList: any = [];
   for (let i = 0; i < orders[0].length; i++) {
     let order = await orderServices.returnOrders(orders[0][i]);

@@ -21,18 +21,6 @@ const createContact = async (req: Request, res: Response) => {
   });
 };
 
-// const getAllContacts = async (req: Request, res: Response) => {
-//   const currentUserId = req.user;
-//   if (currentUserId.role !== 'admin') {
-//     throw new CustomError(codes.FORBIDDEN);
-//   }
-//   const contacts = await contactService.getAllContacts();
-//   res.status(200).json({
-//     status: "success",
-//     result: contacts,
-//   });
-// };
-
 const getContactById = async (req: Request, res: Response) => {
   const id: number = Number(req.params.contactId);
   const currentUserId = req.user;

@@ -83,7 +83,8 @@ const getOrderById = async (id: number): Promise<Order> => {
   return order;
 };
 
-const getOrders = async (params: { pagination: Pagination }, userId: number, search: string): Promise<[Order[], number]> => {
+const getOrders = async (params: { pagination: Pagination }, userId: number, search: string, status: string): Promise<[Order[], number]> => {
+  
   const orderRepo = getRepository(Order);
   let query = orderRepo
     .createQueryBuilder("o")
@@ -96,10 +97,14 @@ const getOrders = async (params: { pagination: Pagination }, userId: number, sea
   if (search != "") {
     query.andWhere("(o.customerName )LIKE :name OR o.customerEmail LIKE :name", { name: `%${search}%` });
   }
+  if (status != 'undefined') {
+    query.andWhere("o.status = :status", { status: `${status}` });
+  }
+  query.orderBy('o.status','DESC').addOrderBy('o.createdAt','DESC');
   query.skip(params.pagination.offset).take(params.pagination.limit);
   return await query.getManyAndCount();
 };
-const getUserOrders = async (params: { pagination: Pagination }, userId: number, email: string, phone: string): Promise<[Order[], number]> => {
+const getUserOrders = async (params: { pagination: Pagination }, userId: number, email: string, phone: string,status: string): Promise<[Order[], number]> => {
   const orderRepo = getRepository(Order);
   let query = orderRepo
     .createQueryBuilder("o")
@@ -116,7 +121,12 @@ const getUserOrders = async (params: { pagination: Pagination }, userId: number,
   if (email && phone) {
     query.andWhere("((o.customerEmail=:email) AND (o.customerPhone=:phone))", { email: email, phone: phone });
   }
-  query.skip(params.pagination.offset).take(params.pagination.limit).orderBy("o.createdAt", "DESC");
+  if (status) {
+    query.andWhere("o.status = :status", { status: `${status}` });
+  }
+  query.orderBy('o.status','DESC').addOrderBy('o.createdAt','DESC');
+  
+  query.skip(params.pagination.offset).take(params.pagination.limit);
   return query.getManyAndCount();
 };
 
