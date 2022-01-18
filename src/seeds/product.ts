@@ -13,28 +13,44 @@ const productSeeding = async () => {
   const listMedia = listMediaRecord.map((item) => item.id);
   const listVendorRecord = await vendorServices.getVendors({ pagination: { limit: 25, offset: 0 } });
   const listVendor = listVendorRecord.vendors.map((item) => item.id);
-  const options = [
-    {
-      title: "Color",
-      values: [faker.commerce.color(), faker.commerce.color(), faker.commerce.color()],
-    },
-    {
-      title: "Material",
-      values: [faker.commerce.productMaterial(), faker.commerce.productMaterial(), faker.commerce.productMaterial()],
-    },
-  ];
-  const formatOption: Option[] = options?.map((option: { title: string; values: string[] }) => {
-    const optionValues = option.values.map((optionVal) => {
+  for (let i = 0; i < 100; i++) {
+    const listColor: string[] = [];
+    for (let i = 0; i < 3; i++) {
+      let randomColor = faker.commerce.color();
+      while (listColor.find((item) => item === randomColor)) {
+        randomColor = faker.commerce.color();
+      }
+      listColor.push(randomColor);
+    }
+    const listMaterial: string[] = [];
+    for (let i = 0; i < 3; i++) {
+      let randomMaterial = faker.commerce.productMaterial();
+      while (listMaterial.find((item) => item === randomMaterial)) {
+        randomMaterial = faker.commerce.productMaterial();
+      }
+      listMaterial.push(randomMaterial);
+    }
+    const options = [
+      {
+        title: "Color",
+        values: listColor,
+      },
+      {
+        title: "Material",
+        values: listMaterial,
+      },
+    ];
+    const formatOption: Option[] = options?.map((option: { title: string; values: string[] }) => {
+      const optionValues = option.values.map((optionVal) => {
+        return {
+          value: optionVal,
+        };
+      });
       return {
-        value: optionVal,
+        title: option.title,
+        optionValues,
       };
     });
-    return {
-      title: option.title,
-      optionValues,
-    };
-  });
-  for (let i = 0; i < 100; i++) {
     const collectionId = listCollection[Math.floor(Math.random() * listCollection.length)];
     const vendorId = listVendor[Math.floor(Math.random() * listVendor.length)];
     const listRandomMedia: number[] = [];
