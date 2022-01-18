@@ -89,7 +89,7 @@ paths:
                   type: object
   /api/v1/admin/orders/{id}:
     put:
-      summary: Admin update status order (Switch from NEW to COMING)
+      summary: Admin update status order (Switch NEW COMING, DONE,CANCEL)
       tags:
         - Orders
       parameters:
