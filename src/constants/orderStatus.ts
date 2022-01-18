@@ -1,6 +1,6 @@
 const orderStatus: any = {
     NEW: "NEW",
-    COMING: "COMING",
+    INCOMING: "INCOMING",
     DONE: "DONE",
     CANCEL: "CANCEL"
 }   
