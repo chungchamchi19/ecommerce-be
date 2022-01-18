@@ -89,7 +89,7 @@ paths:
                   type: object
   /api/v1/admin/orders/{id}:
     put:
-      summary: Admin update status order (Switch NEW COMING, DONE,CANCEL)
+      summary: Admin update status order (Switch NEW INCOMING, DONE,CANCEL)
       tags:
         - Orders
       parameters:
@@ -187,7 +187,7 @@ paths:
                     type: object
   /api/v1/user/orders/{id}:
     put:
-      summary: User update status order(switch status from (NEW or COMING) -> (DONE or CANCEL))
+      summary: User update status order(switch status from (NEW or INCOMING) -> (DONE or CANCEL))
       tags:
         - Orders
       parameters:
