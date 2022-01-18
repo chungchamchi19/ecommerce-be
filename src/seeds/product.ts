@@ -37,8 +37,16 @@ const productSeeding = async () => {
   for (let i = 0; i < 100; i++) {
     const collectionId = listCollection[Math.floor(Math.random() * listCollection.length)];
     const vendorId = listVendor[Math.floor(Math.random() * listVendor.length)];
-    const featureImageId = listMedia[Math.floor(Math.random() * listMedia.length)];
-    const formatMedia: Media[] = [featureImageId].map((item: number) => {
+    const listRandomMedia: number[] = [];
+    for (let i = 0; i < 6; i++) {
+      let randomMedia = listMedia[Math.floor(Math.random() * listMedia.length)];
+      while (listRandomMedia.find((item) => item === randomMedia)) {
+        randomMedia = listMedia[Math.floor(Math.random() * listMedia.length)];
+      }
+      listRandomMedia.push(randomMedia);
+    }
+    const featureImageId = listRandomMedia[0];
+    const formatMedia: Media[] = listRandomMedia.map((item: number) => {
       return {
         id: item,
       };
@@ -48,8 +56,8 @@ const productSeeding = async () => {
       description: faker.commerce.productDescription(),
       status: "active",
       vendorId: vendorId,
-      price: Number(faker.commerce.price()),
-      comparePrice: Number(faker.commerce.price()) + 1000,
+      price: Number(faker.commerce.price()) * 1000,
+      comparePrice: (Number(faker.commerce.price()) + 1000) * 1000,
       featureImageId: featureImageId,
       media: formatMedia,
       availableNumber: 80,
