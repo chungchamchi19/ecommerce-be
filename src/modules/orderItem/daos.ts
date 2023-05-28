@@ -1,12 +1,11 @@
+import { appDataSource } from "./../../database/connectDB";
 import { OrderItem } from "../../entities/orderItem";
-import { getRepository } from "typeorm";
 import { Pagination } from "../../types/type.pagination";
-import { Order } from "../../entities/order";
 import variantServices from "../variant/services";
 
 const createOrderItem = async (orderItemData: OrderItem): Promise<OrderItem> => {
   const variant = await variantServices.getVariantById(orderItemData.variantId);
-  const orderItemRepo = getRepository(OrderItem);
+  const orderItemRepo = appDataSource.getRepository(OrderItem);
   let newOrderItem = new OrderItem();
   newOrderItem = orderItemData;
   newOrderItem.price = variant.price;
@@ -16,7 +15,7 @@ const createOrderItem = async (orderItemData: OrderItem): Promise<OrderItem> => 
 };
 
 const getOrderItemById = async (id: number): Promise<OrderItem> => {
-  const orderItemRepo = getRepository(OrderItem);
+  const orderItemRepo = appDataSource.getRepository(OrderItem);
   const orderItem = await orderItemRepo
     .createQueryBuilder("ci")
     .leftJoinAndSelect("ci.variant", "variant")
@@ -27,17 +26,12 @@ const getOrderItemById = async (id: number): Promise<OrderItem> => {
 };
 
 const getOrderItems = async (params: { pagination: Pagination }): Promise<OrderItem[]> => {
-  const orderItemRepo = getRepository(OrderItem);
-  return await orderItemRepo
-    .createQueryBuilder("ci")
-    .leftJoinAndSelect("ci.variant", "variant")
-    .skip(params.pagination.offset)
-    .take(params.pagination.limit)
-    .getMany();
+  const orderItemRepo = appDataSource.getRepository(OrderItem);
+  return await orderItemRepo.createQueryBuilder("ci").leftJoinAndSelect("ci.variant", "variant").skip(params.pagination.offset).take(params.pagination.limit).getMany();
 };
 
 const deleteOrderItem = async (id: number) => {
-  const orderItemRepo = getRepository(OrderItem);
+  const orderItemRepo = appDataSource.getRepository(OrderItem);
   await orderItemRepo.delete(id);
 };
 

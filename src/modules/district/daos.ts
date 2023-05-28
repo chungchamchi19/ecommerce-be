@@ -1,9 +1,9 @@
-import { getRepository } from "typeorm";
+import { appDataSource } from "./../../database/connectDB";
 import { District } from "../../entities/district";
 
 const districtDaos = {
   async getList(provinceId: string) {
-    const districtRepo = getRepository(District);
+    const districtRepo = appDataSource.getRepository(District);
     const districts = await districtRepo.find({
       where: {
         provinceId: provinceId,

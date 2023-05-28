@@ -1,16 +1,16 @@
-import { getRepository } from "typeorm";
+import { appDataSource } from "./../../database/connectDB";
 import { Pagination } from "../../types/type.pagination";
 import { Cart } from "../../entities/cart";
 
 const createCart = async (cartData: Cart): Promise<Cart> => {
-  const cartRepo = getRepository(Cart);
+  const cartRepo = appDataSource.getRepository(Cart);
   const newCart = cartRepo.create(cartData);
   const cart = await cartRepo.save(newCart);
   return cart;
 };
 
 const getCartById = async (id: number): Promise<Cart> => {
-  const cartRepo = getRepository(Cart);
+  const cartRepo = appDataSource.getRepository(Cart);
   const cart = await cartRepo
     .createQueryBuilder("c")
     .leftJoinAndSelect("c.cartItems", "cartItems", "c.id=cartItems.cartId")
@@ -22,7 +22,7 @@ const getCartById = async (id: number): Promise<Cart> => {
 };
 
 const getCartByUserId = async (userId: number): Promise<Cart> => {
-  const cartRepo = getRepository(Cart);
+  const cartRepo = appDataSource.getRepository(Cart);
   const cart = await cartRepo
     .createQueryBuilder("c")
     .leftJoinAndSelect("c.cartItems", "cartItems", "c.id=cartItems.cartId")
@@ -34,7 +34,7 @@ const getCartByUserId = async (userId: number): Promise<Cart> => {
 };
 
 const getMyCart = async (userId: number): Promise<Cart> => {
-  const cartRepo = getRepository(Cart);
+  const cartRepo = appDataSource.getRepository(Cart);
   const cart = await cartRepo
     .createQueryBuilder("c")
     .leftJoinAndSelect("c.cartItems", "cartItems")
@@ -45,23 +45,23 @@ const getMyCart = async (userId: number): Promise<Cart> => {
   return cart;
 };
 const checkCart = async (userId: number): Promise<Cart> => {
-  const cartRepo = getRepository(Cart);
-  const cart = await cartRepo.findOne({ userId: userId });
+  const cartRepo = appDataSource.getRepository(Cart);
+  const cart = await cartRepo.findOne({ where: { userId: userId } });
   return cart;
 };
 const getCarts = async (params: { pagination: Pagination }): Promise<Cart[]> => {
-  const CartRepo = getRepository(Cart);
+  const CartRepo = appDataSource.getRepository(Cart);
   return await CartRepo.createQueryBuilder("c").leftJoinAndSelect("c.cartItems", "cartItems").skip(params.pagination.offset).take(params.pagination.limit).getMany();
 };
 
 const updateCart = async (id: number, cartData: Cart): Promise<Cart> => {
-  const cartRepo = getRepository(Cart);
+  const cartRepo = appDataSource.getRepository(Cart);
   const newUpdate = await cartRepo.update(id, cartData);
   return newUpdate.raw;
 };
 
 const deleteCart = async (id: number) => {
-  const CartRepo = getRepository(Cart);
+  const CartRepo = appDataSource.getRepository(Cart);
   await CartRepo.delete(id);
 };
 

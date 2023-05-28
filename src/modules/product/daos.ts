@@ -1,19 +1,19 @@
+import { appDataSource } from "./../../database/connectDB";
 import { Product } from "../../entities/product";
-import { getRepository } from "typeorm";
 import { ProductSearchParams } from "../../types/type.product";
 
 const createProduct = async (productData: Product): Promise<Product> => {
-  const productRepo = getRepository(Product);
+  const productRepo = appDataSource.getRepository(Product);
   const newProduct = productRepo.create(productData);
   const product = await productRepo.save(newProduct);
   return product;
 };
 
 const getProductById = async (id: number): Promise<Product> => {
-  const productRepo = getRepository(Product);
+  const productRepo = appDataSource.getRepository(Product);
   const product = await productRepo
     .createQueryBuilder("p")
-    .leftJoinAndSelect("p.mediaMaps", "mm", `mm.targetType='product'`)
+    .leftJoinAndSelect("p.mediaMaps", "mm", "mm.targetType='product'")
     .leftJoinAndSelect("mm.media", "m")
     .leftJoinAndSelect("p.featureImage", "fm")
     .leftJoinAndSelect("p.vendor", "vd")
@@ -26,14 +26,14 @@ const getProductById = async (id: number): Promise<Product> => {
     .leftJoinAndSelect("ovv_ov.option", "ovv_ov_o")
     .leftJoinAndSelect("p.productCollections", "pc")
     .leftJoinAndSelect("pc.collection", "c")
-    .where(`p.id=:id`)
+    .where("p.id=:id")
     .setParameters({ id: id })
     .getOne();
   return product;
 };
 
 const getProducts = async (params: ProductSearchParams): Promise<{ products: Product[]; total: number }> => {
-  const productRepo = getRepository(Product);
+  const productRepo = appDataSource.getRepository(Product);
   let productQuery = productRepo
     .createQueryBuilder("p")
     .select(["p.id", "p.title", "p.status", "p.price", "p.comparePrice", "p.url", "p.bestSelling", "p.createdAt", "p.updatedAt"])
@@ -56,7 +56,7 @@ const getProducts = async (params: ProductSearchParams): Promise<{ products: Pro
   if (params.status) {
     productQuery = productQuery.andWhere("p.status = :status", { status: params.status });
   }
-  if (params.bestSelling !== undefined ) {
+  if (params.bestSelling !== undefined) {
     productQuery = productQuery.andWhere("p.bestSelling = :bestSelling", { bestSelling: params.bestSelling });
   }
   if (params.maxPrice) {
@@ -79,7 +79,7 @@ const getProducts = async (params: ProductSearchParams): Promise<{ products: Pro
 };
 
 const countProducts = async (params: { url?: string; title?: string }): Promise<number> => {
-  const productRepo = getRepository(Product);
+  const productRepo = appDataSource.getRepository(Product);
   let countQuery = productRepo.createQueryBuilder("p");
   if (params.url) {
     countQuery = countQuery.andWhere(`url="${params.url}"`);
@@ -92,13 +92,13 @@ const countProducts = async (params: { url?: string; title?: string }): Promise<
 };
 
 const updateProduct = async (id: number, productData: Product): Promise<Product> => {
-  const productRepo = getRepository(Product);
+  const productRepo = appDataSource.getRepository(Product);
   await productRepo.update(id, productData);
   return productData;
 };
 
 const deleteProduct = async (id: number) => {
-  const productRepo = getRepository(Product);
+  const productRepo = appDataSource.getRepository(Product);
   await productRepo.delete(id);
 };
 

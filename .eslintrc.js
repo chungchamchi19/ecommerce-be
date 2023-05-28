@@ -28,7 +28,7 @@ module.exports = {
       "error",
       {
         singleQuote: false,
-        printWidth: 120,
+        printWidth: 180,
         tabWidth: 2,
         endOfLine: "lf",
         arrowParens: "always",
@@ -38,5 +38,9 @@ module.exports = {
     "jest/no-identical-title": "error",
     "jest/prefer-to-have-length": "warn",
     "jest/valid-expect": "error",
+  },
+  globals: {
+    Express: true,
+    NodeJS: true,
   },
 };

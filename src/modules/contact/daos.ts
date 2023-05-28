@@ -1,11 +1,10 @@
-import { getRepository } from "typeorm";
+import { appDataSource } from "./../../database/connectDB";
 import configs from "../../configs";
 import { Contact } from "../../entities/contact";
-import { User } from "../../entities/user";
 import { Pagination } from "../../types/type.pagination";
 
 const createContact = async (data: Contact) => {
-  const contactRepository = getRepository(Contact);
+  const contactRepository = appDataSource.getRepository(Contact);
   const contactData = {
     ...data,
     createdAt: new Date(),
@@ -17,22 +16,18 @@ const createContact = async (data: Contact) => {
 };
 
 const getContactById = async (id: number) => {
-  const contactRepository = getRepository(Contact);
-  const contact = await contactRepository
-    .createQueryBuilder("c")
-    .where(`c.id = ${id}`)
-    .getOne();
+  const contactRepository = appDataSource.getRepository(Contact);
+  const contact = await contactRepository.createQueryBuilder("c").where(`c.id = ${id}`).getOne();
   return contact;
 };
 const deleteContactById = async (id: number) => {
-  const contactRepository = getRepository(Contact);
+  const contactRepository = appDataSource.getRepository(Contact);
   const contact = await contactRepository.delete(id);
   return contact;
 };
 
-
 const getAllContacts = async (params: Pagination) => {
-  const contactRepository = getRepository(Contact);
+  const contactRepository = appDataSource.getRepository(Contact);
   const contacts = await contactRepository
     .createQueryBuilder("c")
     .orderBy("c.createdAt", "DESC")

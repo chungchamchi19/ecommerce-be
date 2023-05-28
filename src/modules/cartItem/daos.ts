@@ -1,19 +1,18 @@
+import { appDataSource } from "./../../database/connectDB";
 import { CartItem } from "../../entities/cartItem";
-import { getRepository } from "typeorm";
 import { Pagination } from "../../types/type.pagination";
-import { Cart } from "../../entities/cart";
 import CustomError from "../../errors/customError";
 import codes from "../../errors/codes";
 
 const createCartItem = async (cartItemData: CartItem): Promise<CartItem> => {
-  const cartItemRepo = getRepository(CartItem);
+  const cartItemRepo = appDataSource.getRepository(CartItem);
   const newCartItem = cartItemRepo.create(cartItemData);
   const cartItem = await cartItemRepo.save(newCartItem);
   return cartItem;
 };
 
 const getCartItemById = async (id: number): Promise<CartItem> => {
-  const cartItemRepo = getRepository(CartItem);
+  const cartItemRepo = appDataSource.getRepository(CartItem);
   const cartItem = await cartItemRepo
     .createQueryBuilder("ci")
     .leftJoinAndSelect("ci.variant", "variant")
@@ -25,7 +24,7 @@ const getCartItemById = async (id: number): Promise<CartItem> => {
 };
 
 const getCartItems = async (params: { pagination: Pagination }): Promise<CartItem[]> => {
-  const cartItemRepo = getRepository(CartItem);
+  const cartItemRepo = appDataSource.getRepository(CartItem);
   return await cartItemRepo
     .createQueryBuilder("ci")
     .leftJoinAndSelect("ci.variant", "variant")
@@ -36,18 +35,18 @@ const getCartItems = async (params: { pagination: Pagination }): Promise<CartIte
 };
 
 const updateCartItem = async (id: number, cartData: CartItem): Promise<CartItem> => {
-  const cartItemRepo = getRepository(CartItem);
+  const cartItemRepo = appDataSource.getRepository(CartItem);
   const newUpdate = await cartItemRepo.update(id, cartData);
   return newUpdate.raw;
 };
 
 const deleteCartItem = async (id: number) => {
-  const cartItemRepo = getRepository(CartItem);
+  const cartItemRepo = appDataSource.getRepository(CartItem);
   return await cartItemRepo.delete(id);
 };
 const deleteCartItemByItemId = async (cartId: number, itemId: number) => {
-  const cartItemRepo = getRepository(CartItem);
-  const deleteOne = await cartItemRepo.findOne({ variantId: itemId, cartId: cartId });
+  const cartItemRepo = appDataSource.getRepository(CartItem);
+  const deleteOne = await cartItemRepo.findOne({ where: { variantId: itemId, cartId: cartId } });
   if (deleteOne) {
     if (deleteOne?.cartId == cartId) {
       return await deleteCartItem(deleteOne.id);
@@ -55,12 +54,12 @@ const deleteCartItemByItemId = async (cartId: number, itemId: number) => {
   } else throw new CustomError(codes.BAD_REQUEST);
 };
 const getCartId = async (cartItemId: number): Promise<number> => {
-  const cartItemRepo = getRepository(CartItem);
-  const cartItem = await cartItemRepo.findOne(cartItemId);
+  const cartItemRepo = appDataSource.getRepository(CartItem);
+  const cartItem = await cartItemRepo.findOne({ where: { id: cartItemId } });
   return cartItem.cartId;
 };
 const checkExistedItem = async (cartId: number, variantId: number) => {
-  return await getRepository(CartItem).findOne({ cartId: cartId, variantId: variantId });
+  return await appDataSource.getRepository(CartItem).findOne({ where: { cartId: cartId, variantId: variantId } });
 };
 
 const cartItemDaos = {

@@ -1,20 +1,20 @@
-import { getRepository } from "typeorm";
+import { appDataSource } from "./../../database/connectDB";
 import { OptionValueVariant } from "../../entities/optionValueVariant";
 
 const createOptionValueVariant = async (data: OptionValueVariant): Promise<OptionValueVariant> => {
-  const optionValueVariantRepo = getRepository(OptionValueVariant);
+  const optionValueVariantRepo = appDataSource.getRepository(OptionValueVariant);
   const newOptionValVariant = optionValueVariantRepo.create(data);
   return await optionValueVariantRepo.save(newOptionValVariant);
 };
 
 const getOptionValueById = async (id: number): Promise<OptionValueVariant> => {
-  const optionValueVariantRepo = getRepository(OptionValueVariant);
-  const optionValVar = await optionValueVariantRepo.findOne(id);
+  const optionValueVariantRepo = appDataSource.getRepository(OptionValueVariant);
+  const optionValVar = await optionValueVariantRepo.findOne({ where: { id } });
   return optionValVar;
 };
 
 const getOptionValueVariants = async (data: OptionValueVariant): Promise<OptionValueVariant[]> => {
-  const optionValueVariantRepo = getRepository(OptionValueVariant);
+  const optionValueVariantRepo = appDataSource.getRepository(OptionValueVariant);
   let optionValVarQuery = optionValueVariantRepo.createQueryBuilder("ovv");
   if (data.id) {
     optionValVarQuery = optionValVarQuery.andWhere("ovv.id=:id");
@@ -36,13 +36,13 @@ const getOptionValueVariants = async (data: OptionValueVariant): Promise<OptionV
 };
 
 const updateOptionValueVariant = async (id: number, data: OptionValueVariant): Promise<OptionValueVariant> => {
-  const optionValueVariantRepo = getRepository(OptionValueVariant);
+  const optionValueVariantRepo = appDataSource.getRepository(OptionValueVariant);
   await optionValueVariantRepo.update(id, data);
   return data;
 };
 
 const deleteOptionValueVariants = async (data: OptionValueVariant) => {
-  const optionValueVariantRepo = getRepository(OptionValueVariant);
+  const optionValueVariantRepo = appDataSource.getRepository(OptionValueVariant);
   let optionValVarQuery = optionValueVariantRepo.createQueryBuilder();
   if (data.id) {
     optionValVarQuery = optionValVarQuery.andWhere("id=:id");

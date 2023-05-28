@@ -1,10 +1,8 @@
-import { getRepository } from "typeorm";
-import configs from "../../configs";
+import { appDataSource } from "./../../database/connectDB";
 import { ShopInfor } from "../../entities/shopInfor";
-import { Pagination } from "../../types/type.pagination";
 
 const createOrUpdateShopInfo = async (data: ShopInfor) => {
-  const shopInforRepository = getRepository(ShopInfor);
+  const shopInforRepository = appDataSource.getRepository(ShopInfor);
   const oldOne = await shopInforRepository.find();
   let shopInforData: any = {};
   if (oldOne.length > 0) {
@@ -12,8 +10,7 @@ const createOrUpdateShopInfo = async (data: ShopInfor) => {
       ...oldOne[0],
       ...data,
     };
-    const newShopInfor = await shopInforRepository.save(shopInforData);
-    return await shopInforRepository.findOne(oldOne[0].id);
+    return await shopInforRepository.findOne({ where: { id: oldOne[0].id } });
   }
   shopInforData = {
     ...data,
@@ -23,7 +20,7 @@ const createOrUpdateShopInfo = async (data: ShopInfor) => {
 };
 
 const getShopInfor = async () => {
-  const shopInforRepository = getRepository(ShopInfor);
+  const shopInforRepository = appDataSource.getRepository(ShopInfor);
   const shopInfor = await shopInforRepository.createQueryBuilder("si").getMany();
   return shopInfor[0];
 };

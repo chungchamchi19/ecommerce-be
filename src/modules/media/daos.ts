@@ -1,9 +1,9 @@
+import { appDataSource } from "./../../database/connectDB";
 import { Pagination } from "../../types/type.pagination";
-import { getRepository } from "typeorm";
 import { Media } from "../../entities/media";
 
 const createMedia = async (params: { url: string; type: string }): Promise<Media> => {
-  const mediaRepo = getRepository(Media);
+  const mediaRepo = appDataSource.getRepository(Media);
   const media = new Media();
   media.link = params.url;
   media.type = params.type;
@@ -11,19 +11,19 @@ const createMedia = async (params: { url: string; type: string }): Promise<Media
 };
 
 const getMediaById = async (id: number): Promise<Media> => {
-  const mediaRepo = getRepository(Media);
-  const media = await mediaRepo.findOne({ id: id });
+  const mediaRepo = appDataSource.getRepository(Media);
+  const media = await mediaRepo.findOne({ where: { id } });
   return media;
 };
 
 const updateMedia = async (id: number, data: Media): Promise<Media> => {
-  const mediaRepo = getRepository(Media);
+  const mediaRepo = appDataSource.getRepository(Media);
   await mediaRepo.update(id, data);
   return data;
 };
 
 const getMedias = async (params: { pagination: Pagination }): Promise<Media[]> => {
-  const mediaRepo = getRepository(Media);
+  const mediaRepo = appDataSource.getRepository(Media);
   const medias = await mediaRepo.createQueryBuilder("m").skip(params.pagination.offset).take(params.pagination.limit).getMany();
   return medias;
 };

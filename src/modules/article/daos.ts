@@ -1,4 +1,4 @@
-import { getRepository } from "typeorm";
+import { appDataSource } from "./../../database/connectDB";
 import configs from "../../configs";
 import { Article } from "../../entities/article";
 import { User } from "../../entities/user";
@@ -7,7 +7,7 @@ import { Pagination } from "../../types/type.pagination";
 import articleTagDaos from "../articleTag/daos";
 
 const createArticle = async (data: ArticleCreateParamsType) => {
-  const articleRepository = getRepository(Article);
+  const articleRepository = appDataSource.getRepository(Article);
   const articleData = {
     ...data,
     createdAt: new Date(),
@@ -19,7 +19,7 @@ const createArticle = async (data: ArticleCreateParamsType) => {
 };
 
 const getArticleById = async (id: number) => {
-  const articleRepository = getRepository(Article);
+  const articleRepository = appDataSource.getRepository(Article);
   const article = await articleRepository
     .createQueryBuilder("a")
     .leftJoinAndSelect("a.articleTags", "at", "at.isDeleted = false")
@@ -30,7 +30,7 @@ const getArticleById = async (id: number) => {
 };
 
 const getArticlesByUserId = async (condition: { userId: number; exceptArticleId?: number; limit?: number; offset?: number }) => {
-  const articleRepository = getRepository(Article);
+  const articleRepository = appDataSource.getRepository(Article);
   let whereConditionGetArticle = `a.userId = ${condition.userId} and a.isDeleted = false`;
   if (condition.exceptArticleId) {
     whereConditionGetArticle += ` and a.id != ${condition.exceptArticleId}`;
@@ -52,7 +52,7 @@ const getArticlesByUserId = async (condition: { userId: number; exceptArticleId?
 };
 
 const updateArticle = async (articleId: number, data: ArticleUpdateParamsType, tags: { id: number; articleTagId?: number }[]) => {
-  const articleRepository = getRepository(Article);
+  const articleRepository = appDataSource.getRepository(Article);
   const articleData = {
     ...data,
     updatedAt: new Date(),
@@ -70,12 +70,12 @@ const updateArticle = async (articleId: number, data: ArticleUpdateParamsType, t
         });
       }
     }));
-  const article: Article = await articleRepository.findOne(articleId);
+  const article: Article = await articleRepository.findOne({ where: { id: articleId } });
   return article;
 };
 
 const getArticlesByTagId = async (tagId: number, userId: number) => {
-  const articleRepository = getRepository(Article);
+  const articleRepository = appDataSource.getRepository(Article);
   const articles = await articleRepository
     .createQueryBuilder("a")
     .innerJoin("a.articleTags", "at", `at.tagId = ${tagId} and at.isDeleted = false`)
@@ -85,7 +85,7 @@ const getArticlesByTagId = async (tagId: number, userId: number) => {
 };
 
 const getArticlesByUserIdFilterByTag = async (condition: { userId: number; limit?: number }) => {
-  const userRepository = getRepository(User);
+  const userRepository = appDataSource.getRepository(User);
   const data = await userRepository
     .createQueryBuilder("u")
     .leftJoinAndSelect("u.tags", "t")
@@ -95,7 +95,7 @@ const getArticlesByUserIdFilterByTag = async (condition: { userId: number; limit
 };
 
 const getAllArticles = async (params: Pagination) => {
-  const articleRepository = getRepository(Article);
+  const articleRepository = appDataSource.getRepository(Article);
   const articles = await articleRepository
     .createQueryBuilder("a")
     .leftJoinAndSelect("a.articleTags", "at")

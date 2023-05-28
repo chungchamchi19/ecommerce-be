@@ -1,9 +1,9 @@
-import { getRepository } from "typeorm";
+import { appDataSource } from "./../../../database/connectDB";
 import { Register } from "../../../types/type.auth";
 import { User } from "../../../entities/user";
 
 const createUser = async (dataRegister: Register) => {
-  const userReposity = getRepository(User);
+  const userReposity = appDataSource.getRepository(User);
   const { deviceId, name, email, password, avatar, phone } = dataRegister;
   const user = new User();
   user.name = name;
@@ -19,7 +19,7 @@ const createUser = async (dataRegister: Register) => {
 };
 
 const findUser = async (dataFind: { email?: string; id?: number; deviceId?: string; name?: string }) => {
-  const userReposity = getRepository(User);
+  const userReposity = appDataSource.getRepository(User);
   let user: User;
   if (dataFind.email) {
     user = await userReposity.findOne({
@@ -50,7 +50,7 @@ const findUser = async (dataFind: { email?: string; id?: number; deviceId?: stri
 };
 
 const updateUser = async (id: number, data: User) => {
-  const userReposity = getRepository(User);
+  const userReposity = appDataSource.getRepository(User);
   await userReposity.update(id, data);
 };
 

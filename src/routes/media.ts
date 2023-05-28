@@ -1,15 +1,15 @@
 import multer from "multer";
-import express from "express";
+import express, { Request } from "express";
 import mediaControllers from "../modules/media/controllers";
 import asyncMiddleware from "../middlewares/async";
 
 const router = express.Router();
 
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
+  destination: function (req: Request, file: Express.Multer.File, cb: any) {
     cb(null, "uploads");
   },
-  filename: function (req, file, cb) {
+  filename: function (req: Request, file: Express.Multer.File, cb: any) {
     cb(null, Date.now() + "-" + file.originalname);
   },
 });

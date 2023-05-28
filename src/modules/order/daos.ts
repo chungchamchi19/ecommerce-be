@@ -1,4 +1,4 @@
-import { getRepository, ReturningStatementNotSupportedError } from "typeorm";
+import { appDataSource } from "./../../database/connectDB";
 import { Pagination } from "../../types/type.pagination";
 import { Order } from "../../entities/order";
 import orderItemServices from "../orderItem/services";
@@ -7,11 +7,10 @@ import CustomError from "../../errors/customError";
 import codes from "../../errors/codes";
 import { Variant } from "../../entities/variant";
 import orderStatus from "../../constants/orderStatus";
-import { stat } from "fs";
 import cartItemServices from "../cartItem/services";
 
 const createOrder = async (orderData: Order): Promise<Order> => {
-  const orderRepo = getRepository(Order);
+  const orderRepo = appDataSource.getRepository(Order);
   let newOrder = new Order();
 
   newOrder = orderData;
@@ -33,14 +32,14 @@ const createOrder = async (orderData: Order): Promise<Order> => {
     shipFee: orderData.shipFee,
   });
   const code = "LOCVUNG_" + createOrder.raw.insertId;
-  const order = await orderRepo.save({
+  await orderRepo.save({
     id: createOrder.raw.insertId,
     code: code,
   });
   //Update quantity
   for (let i = 0; i < orderItems.length; i++) {
     orderItems[i].orderId = createOrder.raw.insertId;
-    let orderItem = await orderItemServices.createOrderItem(orderItems[i]);
+    await orderItemServices.createOrderItem(orderItems[i]);
   }
   for (let i = 0; i < orderItems.length; i++) {
     let variant = await variantServices.getVariantById(orderItems[i].variantId);
@@ -72,7 +71,7 @@ const createOrder = async (orderData: Order): Promise<Order> => {
 };
 
 const getOrderById = async (id: number): Promise<Order> => {
-  const orderRepo = getRepository(Order);
+  const orderRepo = appDataSource.getRepository(Order);
   const order = await orderRepo
     .createQueryBuilder("o")
     .leftJoinAndSelect("o.orderItems", "orderItems")
@@ -84,7 +83,7 @@ const getOrderById = async (id: number): Promise<Order> => {
 };
 
 const getOrders = async (params: { pagination: Pagination }, userId: number, search: string, status: string): Promise<[Order[], number]> => {
-  const orderRepo = getRepository(Order);
+  const orderRepo = appDataSource.getRepository(Order);
   let query = orderRepo
     .createQueryBuilder("o")
     .leftJoinAndSelect("o.orderItems", "orderItems")
@@ -104,7 +103,7 @@ const getOrders = async (params: { pagination: Pagination }, userId: number, sea
   return await query.getManyAndCount();
 };
 const getUserOrders = async (params: { pagination: Pagination }, userId: number, email: string, phone: string, status: string): Promise<[Order[], number]> => {
-  const orderRepo = getRepository(Order);
+  const orderRepo = appDataSource.getRepository(Order);
   let query = orderRepo
     .createQueryBuilder("o")
     .leftJoinAndSelect("o.orderItems", "orderItems")
@@ -130,12 +129,12 @@ const getUserOrders = async (params: { pagination: Pagination }, userId: number,
 };
 
 const deleteOrder = async (id: number) => {
-  const orderRepo = getRepository(Order);
+  const orderRepo = appDataSource.getRepository(Order);
   await orderRepo.delete(id);
 };
 const userUpdateStatus = async (userId: number, status: string, id: number) => {
-  const orderRepo = getRepository(Order);
-  let oldOrder = await orderRepo.findOne(id, { where: { userId: userId } });
+  const orderRepo = appDataSource.getRepository(Order);
+  let oldOrder = await orderRepo.findOne({ where: { id, userId: userId } });
 
   if (status == orderStatus.CANCEL) {
     if (oldOrder.status == orderStatus.NEW || oldOrder.status == orderStatus.INCOMING) {
@@ -156,10 +155,9 @@ const userUpdateStatus = async (userId: number, status: string, id: number) => {
   return getOrderById(id);
 };
 const adminUpdateStatus = async (status: string, id: number) => {
-  console.log(status);
-  const orderRepo = getRepository(Order);
+  const orderRepo = appDataSource.getRepository(Order);
 
-  let order = await orderRepo.findOne(id);
+  let order = await orderRepo.findOne({ where: { id } });
   if (!order) throw new CustomError(codes.BAD_REQUEST);
 
   if (order.status == orderStatus.NEW) {
@@ -170,7 +168,6 @@ const adminUpdateStatus = async (status: string, id: number) => {
     }
   }
   if (order.status == orderStatus.INCOMING) {
-
     if (status != orderStatus.NEW && status != orderStatus.INCOMING) {
       await orderRepo.save({ id: order.id, ...order, status: status });
     } else {
