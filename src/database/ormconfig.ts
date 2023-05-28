@@ -5,11 +5,11 @@ dotenv.config({ path: "./.env" });
 export default {
   name: "default",
   type: "postgres",
-  host: process.env.MYSQL_HOST,
-  port: process.env.MYSQL_PORT,
-  username: process.env.MYSQL_USERNAME,
-  password: process.env.MYSQL_PASSWORD,
-  database: process.env.MYSQL_DATABASE,
+  host: process.env.POSTGRES_HOST,
+  port: process.env.POSTGRES_PORT,
+  username: process.env.POSTGRES_USERNAME,
+  password: process.env.POSTGRES_PASSWORD,
+  database: process.env.POSTGRES_DATABASE,
   extra: {
     ssl: true,
   },
