@@ -1,0 +1,4 @@
+{
+  "ignorePaths": ["node_modules"],
+  "ignoreWords": ["gemx", "childrens", "xcenter", "xleft", "xright", "ycenter", "yleft", "yright"]
+}

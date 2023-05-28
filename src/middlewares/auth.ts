@@ -31,7 +31,9 @@ const apiCheckAuth = (path: string, method: string) => {
   const checkApis = ["/cart", "/orders", "/cart-items", "/order-items", "/admin", "/me", "/user-metas"];
   // check những trường hợp như /me và /media
   const notIncludeApis = ["/media"];
-  const findPath = checkApis.find((api) => path.includes(api) && !notIncludeApis.find((notItem) => path.includes(notItem)));
+  const findPath = checkApis.find(
+    (api) => path.includes(api) && !notIncludeApis.find((notItem) => path.includes(notItem)),
+  );
   if (findPath) {
     return true;
   }

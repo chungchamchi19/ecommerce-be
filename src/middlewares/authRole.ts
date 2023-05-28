@@ -1,4 +1,3 @@
-import { verifyAccessToken } from "../modules/auth/services/helper";
 import { NextFunction, Request, Response } from "express";
 import codes from "../errors/codes";
 import CustomError from "../errors/customError";

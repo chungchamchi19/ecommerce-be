@@ -1,6 +1,4 @@
-import { Column, Entity, OneToMany, JoinColumn, PrimaryGeneratedColumn, OneToOne } from "typeorm";
-import { collection1637198775086 } from "../migrations/1637198775086-collection";
-
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn, OneToOne } from "typeorm";
 import { ProductCollection } from "./productCollection";
 import { Media } from "./media";
 
@@ -15,7 +13,7 @@ export class Collection {
   @Column()
   description?: string;
 
-  @Column()
+  @Column({ unique: true })
   thumbnailId?: number;
 
   @OneToMany(() => ProductCollection, (productCollection) => productCollection.collection)

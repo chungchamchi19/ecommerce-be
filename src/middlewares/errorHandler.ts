@@ -7,7 +7,6 @@ const errorHandler = (
   res: Response,
   next: NextFunction,
 ) => {
-  console.log("err", err);
   let statusCode = Number(err.code) || Number(err.statusCode) || 400;
   let { message } = err;
   let details;

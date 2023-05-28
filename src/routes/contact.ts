@@ -6,5 +6,5 @@ import { validateCreateContact } from "../validations/contact";
 const router = express.Router();
 router.get("/admin/contacts", validateCreateContact(ROLES.ADMIN), asyncMiddleware(contactController.getAllContacts));
 router.post("/contacts", asyncMiddleware(contactController.createContact));
-router.get("/admin/contact/:id",validateCreateContact(ROLES.ADMIN), asyncMiddleware(contactController.getContactById));
+router.get("/admin/contact/:id", validateCreateContact(ROLES.ADMIN), asyncMiddleware(contactController.getContactById));
 export default router;

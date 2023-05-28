@@ -1,5 +1,5 @@
 import { Option } from "./option";
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToOne, OneToMany } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from "typeorm";
 import "reflect-metadata";
 import { OptionValueVariant } from "./optionValueVariant";
 

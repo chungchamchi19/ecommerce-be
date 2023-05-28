@@ -8,10 +8,10 @@
     "esModuleInterop": true,
     "strictNullChecks": false,
     "strict": true,
-    "typeRoots": ["./src/types"],
-    "types": ["node"],
+    "typeRoots": ["./src/types", "./core/types"],
+    "types": ["node", "jest", "@types/jest"],
     "emitDecoratorMetadata": true
   },
   "include": ["./src/**/*.tsx", "./src/**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "**/*.test.*", "**/__mocks__/*", "**/__tests__/*"]
 }

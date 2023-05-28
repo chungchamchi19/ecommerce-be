@@ -4,6 +4,11 @@ import { Order } from "./order";
 import { Tag } from "./tag";
 import { UserMeta } from "./userMeta";
 
+enum Role {
+  ADMIN = "admin",
+  User = "user",
+}
+
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
@@ -24,7 +29,7 @@ export class User {
   @Column()
   password?: string;
 
-  @Column({ type: "enum", default: "user" })
+  @Column({ type: "enum", default: Role.User, enum: Role })
   role?: "admin" | "user";
 
   @Column({ nullable: true })
