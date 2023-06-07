@@ -4,15 +4,17 @@ import CustomError from "../../errors/customError";
 import mediaServices from "./services";
 import { Media } from "../../entities/media";
 import fs from "fs";
+import { uploadFile } from "../../supabase/upload-file";
 
 const uploadImage = async (req: Request, res: Response) => {
-  if (!req.files?.length) {
+  if (!req.files?.files) {
     throw new CustomError(codes.NOT_FOUND);
   }
-  const listMedia: Media[] = await mediaServices.createMedia(req.files as Express.Multer.File[]);
+  await uploadFile(req.files?.files, "img.png");
+  // const listMedia: Media[] = await mediaServices.createMedia(req.files as Express.Multer.File[]);
   res.status(200).json({
     status: "success",
-    result: listMedia,
+    result: [],
   });
 };
 

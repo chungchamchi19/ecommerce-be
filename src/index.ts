@@ -17,11 +17,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 connectDB();
 const specs = swaggerJsdoc(docOptions);
-app.use(
-  "/api-docs",
-  swaggerUi.serve,
-  swaggerUi.setup(specs, { explorer: true, customSiteTitle: "Ecommerce Api Document" }),
-);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs, { explorer: true, customSiteTitle: "Ecommerce Api Document" }));
 
 app.use(cors());
 app.use(bodyParser.json());
