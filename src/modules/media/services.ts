@@ -5,23 +5,14 @@ import CustomError from "../../errors/customError";
 import mediaDaos from "./daos";
 import configs from "../../configs";
 
-const createMedia = async (files: Express.Multer.File[]): Promise<Media[]> => {
+const createMedia = async (files: string[]): Promise<Media[]> => {
   const listMedia: Media[] = [];
   for (let i = 0; i < files.length; i++) {
     const file = files[i];
-    const fileData = {
-      url: file.path,
-      type: file.mimetype.split("/")[0],
-    };
-    const newMedia = await mediaDaos.createMedia(fileData);
-    delete newMedia.link;
+    const newMedia = await mediaDaos.createMedia({ url: file, type: "image" });
     listMedia.push(newMedia);
   }
   return listMedia;
-};
-
-const getMediaById = async (id: number): Promise<Media> => {
-  return await mediaDaos.getMediaById(id);
 };
 
 const updateMedia = async (id: number, mediaData: Media): Promise<Media> => {
@@ -48,7 +39,6 @@ const getMedias = async (params: { pagination: Pagination }): Promise<Media[]> =
 
 const mediaServices = {
   createMedia,
-  getMediaById,
   updateMedia,
   getMedias,
 };

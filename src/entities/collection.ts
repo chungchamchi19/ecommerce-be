@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn, OneToOne } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn, OneToOne, JoinColumn } from "typeorm";
 import { ProductCollection } from "./productCollection";
 import { Media } from "./media";
 
@@ -20,5 +20,6 @@ export class Collection {
   productCollections?: ProductCollection[];
 
   @OneToOne(() => Media, (media) => media.collection)
+  @JoinColumn({ name: "thumbnailId", referencedColumnName: "id" })
   media?: Media;
 }

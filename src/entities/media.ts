@@ -32,6 +32,5 @@ export class Media {
   mediaMaps?: MediaMap[];
 
   @OneToOne(() => Collection, (collection) => collection.media)
-  @JoinColumn({ name: "id", referencedColumnName: "thumbnailId" })
   collection?: Collection;
 }
